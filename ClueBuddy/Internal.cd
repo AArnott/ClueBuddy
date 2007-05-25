@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ClueBuddy.SelectionCountConstraint">
+    <Position X="2.25" Y="1.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAMBCAFAAAAAAAAAAABIAAAAIACAEAgCAADAA=</HashCode>
+      <FileName>SelectionCountConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClueBuddy.CompositeConstraint" Collapsed="true">
+    <Position X="4.5" Y="0.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAFAAAAAAAAAAAAIABQAAACAEQgCAAAAA=</HashCode>
+      <FileName>CompositeConstraint.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClueBuddy.ConstraintBase" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAgAAABAACAFAAAAAAAAAAAAIABQAAACAEAgCAAIAA=</HashCode>
+      <FileName>ConstraintBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="ClueBuddy.ExactSelectedConstraint" Collapsed="true">
+    <Position X="4.5" Y="1.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ExactSelectedConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ClueBuddy.Node">
+    <Position X="10.25" Y="0.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>ECBAAAAQQAAAEAAAAAAAAAAAAAAAAAAAIAAAABAAAAA=</HashCode>
+      <FileName>Node.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="ClueBuddy.IConstraint">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAFAAAAAAAAAAAAIABQAAACAEAgCAAAAA=</HashCode>
+      <FileName>IConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClueBuddy.ICardHolder">
+    <Position X="6.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>ICardHolder.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ClueBuddy.INode">
+    <Position X="8.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>INode.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
