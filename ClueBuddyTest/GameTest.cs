@@ -24,6 +24,17 @@ namespace ClueBuddyTest {
 		}
 
 		[TestMethod]
+		[ExpectedException(typeof(InvalidOperationException))]
+		public void StartWithoutHandSizesAppropriatelySized() {
+			Game g = Game.GreatDetective;
+			g.Players.AddRange(players);
+			g.AssignApproximatePlayerHandSizes();
+			Debug.Assert(players[0].CardsHeldCount > 1);
+			players[0].CardsHeldCount--;
+			g.Start();
+		}
+
+		[TestMethod]
 		public void StartPresetGameTest() {
 			Game g = StartPresetGame();
 			Assert.IsNotNull(g.CaseFile);
