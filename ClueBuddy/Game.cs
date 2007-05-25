@@ -167,6 +167,16 @@ namespace ClueBuddy {
 
 			clues = new List<Clue>();
 		}
+		public void Reset() {
+			foreach (Player player in players) {
+				player.Game = null;
+			}
+			players = null;
+			caseFile = null;
+			nodes = null;
+			constraints = null;
+		}
+
 		public void AddClue(Clue clue) {
 			if (clue == null) throw new ArgumentNullException("clue");
 			clues.Add(clue);

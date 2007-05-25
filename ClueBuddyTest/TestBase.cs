@@ -26,10 +26,15 @@ namespace ClueBuddyTest {
 		protected Player[] players;
 
 		protected Game StartPresetGame() {
+			Game g = PreparePresetGame();
+			g.Start();
+			return g;
+		}
+
+		protected Game PreparePresetGame() {
 			Game g = Game.GreatDetective;
 			g.Players.AddRange(players);
 			g.AssignApproximatePlayerHandSizes();
-			g.Start();
 			return g;
 		}
 
