@@ -33,30 +33,6 @@ namespace ClueBuddyTest {
 			yield return SelectionCountConstraint.ExactSelected(0, constrainedNodes);
 		}
 	}
-	static class Extensions {
-		public static void disproved(this Player player, params Card[] cards) {
-			player.Game.AddClue(new DisprovedAnyCards(player, cards));
-		}
-		public static void see_card(this Player player, params Card[] cards) {
-			foreach (Card card in cards)
-				player.Game.AddClue(new SpyCard(player, card));
-		}
-		public static void cannot_disprove(this Player player, params Card[] cards) {
-			player.Game.AddClue(new CannotDisproveAnyCards(player, cards));
-		}
-		public static bool? has(this ICardHolder player, Card card) {
-			return player.Game.IsCardHeld(player, card);
-		}
-		public static bool? has_not(this ICardHolder player, Card card) {
-			bool? value = player.Game.IsCardHeld(player, card);
-			return value.HasValue ? !value.Value : value;
-		}
-		public static void set(this CaseFile caseFile, Card card) {
-			caseFile.Game.Nodes.Where(n => n.CardHolder == caseFile && n.Card == card).First().IsSelected = true;
-			CompositeConstraint cc = new CompositeConstraint(caseFile.Game.Constraints);
-			cc.ResolvePartially();
-		}
-	}
 
 	// These tests were ported from the Ruby implementation
 	[TestClass]
@@ -210,16 +186,18 @@ namespace ClueBuddyTest {
 		/// </summary>
 		[TestMethod]
 		public void test_simple_greedy_algorithm_alabi_disproved_last() {
-			game.Reset();
-			var player = players[0];
-			var orig_unknown_cards = (from n in game.Nodes
-									  where n.CardHolder == player && !n.IsSelected.HasValue
-									  select n.Card).ToArray();
 			// we seek to reproduce something that looks similar to:
 			// 0 0 A 1 0 B 0 1 BA 0  A  0  B  <-- "BA", index 8, is the card to choose!
 			// 0 1 2 3 4 5 6 7 8  9 10 11 12  <-- indexes into cards
+			game.Reset();
+			game = PreparePresetGame();
+			var player = players[0];
+			players[1].CardsHeldCount += player.CardsHeldCount - 3;
 			player.CardsHeldCount = 3;
 			game.Start();
+			var orig_unknown_cards = (from n in game.Nodes
+									  where n.CardHolder == player && !n.IsSelected.HasValue
+									  select n.Card).ToArray();
 			player.see_card(cards[3]);
 			player.see_card(cards[7]);
 			Assert.AreEqual(orig_unknown_cards.Length - 2, (from n in game.Nodes
@@ -245,16 +223,18 @@ namespace ClueBuddyTest {
 		/// </summary>
 		[TestMethod]
 		public void test_simple_greedy_algorithm_alabi_see_card_last() {
-			game.Reset();
-			var player = players[0];
-			var orig_unknown_cards = (from n in game.Nodes
-									  where n.CardHolder == player && !n.IsSelected.HasValue
-									  select n.Card).ToArray();
 			// we seek to reproduce something that looks similar to:
 			// 0 0 A 1 0 B 0 1 BA 0  A  0  B  <-- "BA", index 8, is the card to choose!
 			// 0 1 2 3 4 5 6 7 8  9 10 11 12  <-- indexes into cards
+			game.Reset();
+			game = PreparePresetGame();
+			var player = players[0];
+			players[1].CardsHeldCount += player.CardsHeldCount - 3;
 			player.CardsHeldCount = 3;
 			game.Start();
+			var orig_unknown_cards = (from n in game.Nodes
+									  where n.CardHolder == player && !n.IsSelected.HasValue
+									  select n.Card).ToArray();
 			player.disproved(cards[2], cards[8], cards[10]);
 			player.disproved(cards[5], cards[8], cards[12]);
 			player.see_card(cards[3], cards[7]);

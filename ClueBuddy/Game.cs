@@ -40,8 +40,21 @@ namespace ClueBuddy {
 		/// <summary>
 		/// The players in the game.
 		/// </summary>
-		public List<Player> Players {
-			get { return players; }
+		public IList<Player> Players {
+			get { return IsStarted ? (IList<Player>)players.AsReadOnly() : players; }
+		}
+
+		/// <summary>
+		/// Whether the game is in a playing state.
+		/// </summary>
+		/// <remarks>
+		/// Calling the <see cref="Start"/> method causes this to return true, and
+		/// calling the <see cref="Reset"/> method causes it to return false.
+		/// </remarks>
+		public bool IsStarted {
+			get {
+				return CaseFile != null;
+			}
 		}
 
 		IEnumerable<ICardHolder> cardHolders {
@@ -130,6 +143,8 @@ namespace ClueBuddy {
 			}
 		}
 		public void Start() {
+			if (Players.Count == 0)
+				throw new InvalidOperationException(Strings.PlayersRequired);
 			// Verify that the right number of cards are distributed.
 			if (Players.Sum(p => p.CardsHeldCount) != Cards.Count() - 3)
 				throw new InvalidOperationException(Strings.CardsToPlayersDistributionError);
@@ -171,10 +186,11 @@ namespace ClueBuddy {
 			foreach (Player player in players) {
 				player.Game = null;
 			}
-			players = null;
+			players.Clear();
 			caseFile = null;
 			nodes = null;
 			constraints = null;
+			clues = null;
 		}
 
 		public void AddClue(Clue clue) {

@@ -45,7 +45,6 @@ namespace ClueBuddyTest
 		[ExpectedException(typeof(InvalidOperationException))]
 		public void CardsHeldCountCannotSetDuringGameTest() {
 			Game game = StartPresetGame();
-			game.Players.AddRange(players);
 			players[0].CardsHeldCount++;
 		}
 

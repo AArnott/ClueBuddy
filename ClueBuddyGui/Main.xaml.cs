@@ -24,7 +24,8 @@ namespace ClueBuddyGui {
 			InitializeComponent();
 
 			Game game = Game.GreatDetective;
-			game.Players.AddRange(new Player[] { new Player("DB1"), new Player("DB2") });
+			game.Players.Add(new Player("DB1"));
+			game.Players.Add(new Player("DB2"));
 			this.matrix.DataContext = game.Players;
 			this.sidePanel.DataContext = game;
 

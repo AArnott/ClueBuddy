@@ -48,6 +48,13 @@ namespace ClueBuddyTest {
 		}
 
 		[TestMethod]
+		[ExpectedException(typeof(NotSupportedException))]
+		public void AddPlayersAfterGameStartTest() {
+			Game g = StartPresetGame();
+			g.Players.Add(new Player("some new player"));
+		}
+
+		[TestMethod]
 		public void CluesTest() {
 			Game newGame = Game.GreatDetective;
 			Assert.IsNull(newGame.Clues);

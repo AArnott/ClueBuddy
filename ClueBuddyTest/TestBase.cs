@@ -6,6 +6,36 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ClueBuddy;
 
 namespace ClueBuddyTest {
+	static class Extensions {
+		public static void disproved(this Player player, params Card[] cards) {
+			player.Game.AddClue(new DisprovedAnyCards(player, cards));
+		}
+		public static void see_card(this Player player, params Card[] cards) {
+			foreach (Card card in cards)
+				player.Game.AddClue(new SpyCard(player, card));
+		}
+		public static void cannot_disprove(this Player player, params Card[] cards) {
+			player.Game.AddClue(new CannotDisproveAnyCards(player, cards));
+		}
+		public static bool? has(this ICardHolder player, Card card) {
+			return player.Game.IsCardHeld(player, card);
+		}
+		public static bool? has_not(this ICardHolder player, Card card) {
+			bool? value = player.Game.IsCardHeld(player, card);
+			return value.HasValue ? !value.Value : value;
+		}
+		public static void set(this CaseFile caseFile, Card card) {
+			caseFile.Game.Nodes.Where(n => n.CardHolder == caseFile && n.Card == card).First().IsSelected = true;
+			CompositeConstraint cc = new CompositeConstraint(caseFile.Game.Constraints);
+			cc.ResolvePartially();
+		}
+		public static void AddRange<T>(this IList<T> list, IEnumerable<T> addition) {
+			foreach (T add in addition) {
+				list.Add(add);
+			}
+		}
+	}
+
 	public class TestBase {
 
 		private TestContext testContextInstance;
