@@ -25,8 +25,8 @@ namespace ClueBuddy {
 		/// <summary>
 		/// Where the murder took place.
 		/// </summary>
-		public Location Location {
-			get { return getCardInCaseFile<Location>(); }
+		public Place Place {
+			get { return getCardInCaseFile<Place>(); }
 		}
 
 		/// <summary>

@@ -101,10 +101,10 @@ namespace ClueBuddy {
 			get { return getCardsOfType<Weapon>(); }
 		}
 		/// <summary>
-		/// The locations in the game.
+		/// The places in the game.
 		/// </summary>
-		public IEnumerable<Location> Locations {
-			get { return getCardsOfType<Location>(); }
+		public IEnumerable<Place> Places {
+			get { return getCardsOfType<Place>(); }
 		}
 		/// <summary>
 		/// The suspects in the game.

@@ -49,7 +49,7 @@ namespace ClueBuddyGui {
 		}
 
 		void applyButton_Click(object sender, EventArgs e) {
-			Suspicion s = new Suspicion((Suspect)chooseSuspect.SelectedItem, (Weapon)chooseWeapon.SelectedItem, (Location)choosePlace.SelectedItem);
+			Suspicion s = new Suspicion((Suspect)chooseSuspect.SelectedItem, (Weapon)chooseWeapon.SelectedItem, (Place)choosePlace.SelectedItem);
 			int depth = game.AnalysisDepth;
 			game.AnalysisDepth = 0;
 			foreach (Player p in game.Players) {

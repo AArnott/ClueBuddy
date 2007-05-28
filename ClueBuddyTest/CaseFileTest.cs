@@ -37,10 +37,10 @@ namespace ClueBuddyTest {
 		public void LocationTest() {
 			Game game = StartPresetGame();
 			CaseFile target = game.CaseFile;
-			Assert.IsNull(target.Location);
-			var c = game.Locations.First();
+			Assert.IsNull(target.Place);
+			var c = game.Places.First();
 			game.Nodes.Where(n => n.Card == c && n.CardHolder == target).First().IsSelected = true;
-			Assert.AreSame(c, target.Location);
+			Assert.AreSame(c, target.Place);
 		}
 
 		[TestMethod]

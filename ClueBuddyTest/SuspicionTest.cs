@@ -11,7 +11,7 @@ namespace ClueBuddyTest {
 		public void CardsTest() {
 			var w = new Weapon("weapon");
 			var s = new Suspect("suspect");
-			var l = new Location("location");
+			var l = new Place("location");
 			Suspicion target = new Suspicion(s, w, l);
 			List<Card> cards = target.Cards.ToList();
 			CollectionAssert.Contains(cards, w);
@@ -23,13 +23,13 @@ namespace ClueBuddyTest {
 		[TestMethod]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void SuspicionConstructorNullSuspectTest() {
-			new Suspicion(null, new Weapon("weapon"), new Location("location"));
+			new Suspicion(null, new Weapon("weapon"), new Place("location"));
 		}
 
 		[TestMethod]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void SuspicionConstructorNullWeaponTest() {
-			new Suspicion(new Suspect("suspect"), null, new Location("location"));
+			new Suspicion(new Suspect("suspect"), null, new Place("location"));
 		}
 
 		[TestMethod]

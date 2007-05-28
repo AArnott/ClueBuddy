@@ -11,7 +11,7 @@ namespace ClueBuddy {
 		/// of another opponent (besides the interacting <see cref="Player"/>.)
 		/// </summary>
 		/// <param name="disprovingPlayer">The player disproving the <see cref="Suspicion">suggestion</see>.</param>
-		/// <param name="suggestion">The weapon, suspect and location being suspected.</param>
+		/// <param name="suggestion">The weapon, suspect and place being suspected.</param>
 		public Disproved(Player disprovingPlayer, Suspicion suggestion)
 			: base(disprovingPlayer) {
 			if (suggestion == null) throw new ArgumentNullException("suggestion");
@@ -22,7 +22,7 @@ namespace ClueBuddy {
 		/// of the interacting <see cref="Player"/>.
 		/// </summary>
 		/// <param name="opponent">The player who disproved the <see cref="Suspicion"/>.</param>
-		/// <param name="suggestion">The weapon, suspect and location being suspected.</param>
+		/// <param name="suggestion">The weapon, suspect and place being suspected.</param>
 		/// <param name="cardShown">The card that the opponent showed to disprove the <see cref="Suspicion"/>.</param>
 		public Disproved(Player opponent, Suspicion suggestion, Card cardShown)
 			: this(opponent, suggestion) {

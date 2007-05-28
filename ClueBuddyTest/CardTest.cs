@@ -8,7 +8,7 @@ namespace ClueBuddyTest {
 		[TestMethod]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ConstructorNullNameTest() {
-			new Location(null);
+			new Place(null);
 		}
 
 		[TestMethod]
@@ -26,7 +26,7 @@ namespace ClueBuddyTest {
 		[TestMethod]
 		public void LocationConstructorTest() {
 			const string name = "Test";
-			Card c = new Location(name);
+			Card c = new Place(name);
 			Assert.AreEqual(name, c.Name);
 		}
 

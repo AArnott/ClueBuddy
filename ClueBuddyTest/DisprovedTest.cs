@@ -45,7 +45,7 @@ namespace ClueBuddyTest {
 		[ExpectedException(typeof(ArgumentException))]
 		public void DisprovedConstructorWithForeignCardTest() {
 			Player disprovingPlayer = new Player("opponent");
-			Suspicion suggestion = new Suspicion(new Suspect("test"), new Weapon("test"), new Location("test"));
+			Suspicion suggestion = new Suspicion(new Suspect("test"), new Weapon("test"), new Place("test"));
 			Card cardShown = new Suspect("some other suspect");
 			new Disproved(disprovingPlayer, suggestion, cardShown);
 		}

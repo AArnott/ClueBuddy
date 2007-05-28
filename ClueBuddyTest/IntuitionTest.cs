@@ -41,7 +41,7 @@ namespace ClueBuddyTest {
 		Card[] cards;
 		Suspect[] suspects;
 		Weapon[] weapons;
-		Location[] places;
+		Place[] places;
 
 		public override void Setup() {
 			base.Setup();
@@ -53,7 +53,7 @@ namespace ClueBuddyTest {
 			cards = g.Cards.ToArray();
 			suspects = g.Suspects.ToArray();
 			weapons = g.Weapons.ToArray();
-			places = g.Locations.ToArray();
+			places = g.Places.ToArray();
 			return g;
 		}
 
@@ -160,14 +160,14 @@ namespace ClueBuddyTest {
 		public void test_last_card_in_category_must_be_in_envelope() {
 			var iPlayer = 0;
 			// dish out all the places except one among the players
-			foreach (Location place in game.Locations) {
-				if (place == game.Locations.Last()) continue;
+			foreach (Place place in game.Places) {
+				if (place == game.Places.Last()) continue;
 				game.Clues.Add(new SpyCard(game.Players[iPlayer], place));
 				iPlayer = (iPlayer + 1) % game.Players.Count;
 			}
 			// the last place should be automatically identified as the one
 			// in the case_file
-			Assert.IsTrue(game.IsCardHeld(game.CaseFile, game.Locations.Last()).Value);
+			Assert.IsTrue(game.IsCardHeld(game.CaseFile, game.Places.Last()).Value);
 		}
 
 		/// <summary>

@@ -65,7 +65,7 @@ namespace ClueBuddyTest {
 			Game g = StartPresetGame();
 			Player player = players[0];
 			Assert.AreEqual(0, g.Clues.Count);
-			var clue = new CannotDisprove(player, new Suspicion(g.Suspects.First(), g.Weapons.First(), g.Locations.First()));
+			var clue = new CannotDisprove(player, new Suspicion(g.Suspects.First(), g.Weapons.First(), g.Places.First()));
 			g.Clues.Add(clue);
 			CollectionAssert.AreEquivalent(new Clue[] { clue }, g.Clues.ToArray());
 			// So the clue is added to the list of clues.  Now see that the appropriate nodes were affected.
@@ -84,15 +84,15 @@ namespace ClueBuddyTest {
 		[TestMethod]
 		public void AddSeveralCluesTest() {
 			Game g = StartPresetGame();
-			Suspicion s = new Suspicion(g.Suspects.First(), g.Weapons.First(), g.Locations.First());
-			Debug.WriteLine("Adding that no one has these cards: " + s.Suspect.ToString() + ", " + s.Weapon.ToString() + ", " + s.Location.ToString());
+			Suspicion s = new Suspicion(g.Suspects.First(), g.Weapons.First(), g.Places.First());
+			Debug.WriteLine("Adding that no one has these cards: " + s.Suspect.ToString() + ", " + s.Weapon.ToString() + ", " + s.Place.ToString());
 			foreach (Player p in g.Players) {
 				Clue clue = new CannotDisprove(p, s);
 				g.Clues.Add(clue);
 			}
 			Assert.AreSame(s.Suspect, g.CaseFile.Suspect);
 			Assert.AreSame(s.Weapon, g.CaseFile.Weapon);
-			Assert.AreSame(s.Location, g.CaseFile.Location);
+			Assert.AreSame(s.Place, g.CaseFile.Place);
 		}
 
 		[TestMethod]

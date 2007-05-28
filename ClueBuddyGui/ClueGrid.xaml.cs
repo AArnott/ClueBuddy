@@ -83,7 +83,7 @@ namespace ClueBuddyGui {
 			weaponsLabel.SetValue(Grid.ColumnProperty, game.Suspects.Count());
 			weaponsLabel.SetValue(Grid.ColumnSpanProperty, game.Weapons.Count());
 			placesLabel.SetValue(Grid.ColumnProperty, game.Suspects.Count() + game.Weapons.Count());
-			placesLabel.SetValue(Grid.ColumnSpanProperty, game.Locations.Count());
+			placesLabel.SetValue(Grid.ColumnSpanProperty, game.Places.Count());
 
 			// fill in the envelope row
 			matrix.RowDefinitions.Add(new RowDefinition());

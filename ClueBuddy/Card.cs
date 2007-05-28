@@ -10,15 +10,15 @@ namespace ClueBuddy {
 			this.Name = name;
 		}
 
-		public static IEnumerable<Card> Generate(IEnumerable<Suspect> suspects, IEnumerable<Weapon> weapons, IEnumerable<Location> locations) {
+		public static IEnumerable<Card> Generate(IEnumerable<Suspect> suspects, IEnumerable<Weapon> weapons, IEnumerable<Place> places) {
 			foreach (Card c in suspects) yield return c;
 			foreach (Card c in weapons) yield return c;
-			foreach (Card c in locations) yield return c;
+			foreach (Card c in places) yield return c;
 		}
 
 		private string name;
 		/// <summary>
-		/// The name of the weapon, location or suspect.
+		/// The name of the weapon, place or suspect.
 		/// </summary>
 		public string Name {
 			get { return name; }
@@ -36,11 +36,11 @@ namespace ClueBuddy {
 			return from name in names select new Weapon(name);
 		}
 	}
-	public class Location : Card {
-		public Location(string name) : base(name) { }
+	public class Place : Card {
+		public Place(string name) : base(name) { }
 
-		public static IEnumerable<Location> Generate(params string[] names) {
-			return from name in names select new Location(name);
+		public static IEnumerable<Place> Generate(params string[] names) {
+			return from name in names select new Place(name);
 		}
 	}
 	public class Suspect : Card {
