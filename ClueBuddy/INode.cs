@@ -1,10 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace ClueBuddy {
-	interface INode {
+	interface INode : INotifyPropertyChanged {
 		bool? IsSelected { get; set; }
 		bool IsSimulating { get; }
 		/// <summary>
@@ -21,6 +22,5 @@ namespace ClueBuddy {
 		/// Thrown when no simulation is on the stack.
 		/// </exception>
 		bool PopSimulation();
-		event EventHandler<ValueChangedEventArgs<bool?>> IsSelectedChanged;
 	}
 }

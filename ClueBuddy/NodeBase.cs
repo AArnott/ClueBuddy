@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,18 +27,10 @@ namespace ClueBuddy {
 				bool? oldValue = IsSelected;
 				isSelected.Pop(); // dispose of previous value
 				isSelected.Push(value); // push in new value.
-				OnIsSelectedChanged(oldValue);
+				// Only notify that a property is changed if not in simulation mode.
+				if (!IsSimulating)
+					OnPropertyChanged();
 			}
-		}
-
-		/// <summary>
-		/// Fires when the <see cref="IsSelected"/> property changes.
-		/// </summary>
-		public event EventHandler<ValueChangedEventArgs<bool?>> IsSelectedChanged;
-		protected virtual void OnIsSelectedChanged(bool? oldValue) {
-			EventHandler<ValueChangedEventArgs<bool?>> handlers = IsSelectedChanged;
-			if (handlers != null)
-				handlers(this, new ValueChangedEventArgs<bool?>(oldValue, IsSelected));
 		}
 
 		public bool IsSimulating {
@@ -52,5 +45,20 @@ namespace ClueBuddy {
 			isSelected.Pop();
 			return isSelected.Count == 1;
 		}
+
+		#region INotifyPropertyChanged Members
+
+		/// <summary>
+		/// Fires when the <see cref="IsSelected"/> property changes.
+		/// </summary>
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected virtual void OnPropertyChanged() {
+			PropertyChangedEventHandler propertyChanged = PropertyChanged;
+			if (propertyChanged != null) {
+				propertyChanged(this, new PropertyChangedEventArgs("IsSelected"));
+			}
+		}
+
+		#endregion
 	}
 }

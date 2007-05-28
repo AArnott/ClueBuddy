@@ -61,13 +61,32 @@ namespace ClueBuddyTest {
 		}
 
 		[TestMethod]
-		public void IsSelectedChangedTest() {
+		public void PropertyChangedTest() {
 			Node n = new Node(new Player("test"), new Suspect("test"));
 			bool changed = false;
-			n.IsSelectedChanged += new EventHandler<ValueChangedEventArgs<bool?>>
-									   ((sender, args) => { changed = true; });
+			n.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler
+									   ((sender, args) => {
+											Assert.AreEqual("IsSelected", args.PropertyName);
+											changed = true;
+										});
 			n.IsSelected = false;
 			Assert.IsTrue(changed);
+		}
+
+		[TestMethod]
+		public void PropertyChangedDuringSimulationTest() {
+			Node n = new Node(new Player("test"), new Suspect("test"));
+			n.PushSimulation();
+			bool changed = false;
+			n.PropertyChanged += new System.ComponentModel.PropertyChangedEventHandler
+									   ((sender, args) => {
+											Assert.AreEqual("IsSelected", args.PropertyName);
+											changed = true;
+										});
+			n.IsSelected = false;
+			Assert.IsFalse(changed);
+			n.PopSimulation();
+			Assert.IsFalse(changed);
 		}
 
 		[TestMethod]
