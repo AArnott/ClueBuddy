@@ -23,5 +23,9 @@ namespace ClueBuddy {
 				yield return Location;
 			}
 		}
+
+		public override string ToString() {
+			return string.Format("[{0}, {1}, {2}]", Suspect, Weapon, Location);
+		}
 	}
 }

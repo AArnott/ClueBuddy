@@ -43,6 +43,13 @@ namespace ClueBuddy {
 			private set { suspicion = value; }
 		}
 
+		public override string ToString() {
+			if (CardShown != null)
+				return string.Format("{0} disproved {1} by showing {2}.", Player, Suspicion, CardShown);
+			else
+				return string.Format("{0} disproved {1}.", Player, Suspicion);
+		}
+
 		private Card cardShown;
 		/// <summary>
 		/// The card shown to disprove the suspicion, if applicable.
