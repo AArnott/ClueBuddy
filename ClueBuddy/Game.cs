@@ -239,25 +239,27 @@ namespace ClueBuddy {
 					refigureAllClues();
 					break;
 			}
-			deepAnalysis();
+			Analyze();
 		}
 
 		void clue_PropertyChanged(object sender, PropertyChangedEventArgs e) {
 			refigureAllClues(); // any internal clue change is potentially devastating to current state, so recalculate everything.
 		}
 
-		void deepAnalysis() {
+		public void Analyze() {
 			// Settle any nodes that can be
 			new CompositeConstraint(constraints).ResolvePartially();
-			// Perform some deep analysis for new opportunities to resolve nodes.
-			var deducedConstraints = ConstraintGenerator.AnalyzeConstraints(constraints, AnalysisDepth).ToArray();
-			if (deducedConstraints.Length > 0) {
-				foreach (var c in deducedConstraints) {
-					Debug.WriteLine("Adding deduced constraint: " + c.ToString());
+			if (AnalysisDepth > 0) {
+				// Perform some deep analysis for new opportunities to resolve nodes.
+				var deducedConstraints = ConstraintGenerator.AnalyzeConstraints(constraints, AnalysisDepth - 1).ToArray();
+				if (deducedConstraints.Length > 0) {
+					foreach (var c in deducedConstraints) {
+						Debug.WriteLine("Adding deduced constraint: " + c.ToString());
+					}
+					constraints.AddRange(deducedConstraints);
+					// Once again, settle any that can be.
+					new CompositeConstraint(constraints).ResolvePartially();
 				}
-				constraints.AddRange(deducedConstraints);
-				// Once again, settle any that can be.
-				new CompositeConstraint(constraints).ResolvePartially();
 			}
 		}
 
@@ -270,7 +272,7 @@ namespace ClueBuddy {
 				if (clue == null) continue; // skip over any null clues.
 				constraints.AddRange(clue.GetConstraints(Nodes));
 			}
-			deepAnalysis();
+			Analyze();
 		}
 
 		public bool? IsCardHeld(ICardHolder playerOrCaseFile, Card card) {

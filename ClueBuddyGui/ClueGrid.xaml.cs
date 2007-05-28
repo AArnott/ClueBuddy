@@ -39,15 +39,17 @@ namespace ClueBuddyGui {
 		private void initializeGame() {
 			clearControls();
 			// set game title
-			title.Text = game.VarietyName;
+			title.DataContext = game;
+			title.SetBinding(TextBlock.TextProperty, "VarietyName");
 			// fill in the players
 			matrix.RowDefinitions.RemoveRange(2, matrix.RowDefinitions.Count - 2);
 			foreach (Player player in game.Players) {
 				matrix.RowDefinitions.Add(new RowDefinition());
 				Label playerLabel = new Label() {
-										Content = player.Name,
 										Style = (Style)Resources["PlayerName"],
 									};
+				playerLabel.DataContext = player;
+				playerLabel.SetBinding(Label.ContentProperty, new Binding("Name"));
 				playerLabel.SetValue(Grid.ColumnProperty, 0);
 				playerLabel.SetValue(Grid.RowProperty, matrix.RowDefinitions.Count - 1);
 				matrix.Children.Add(playerLabel);
@@ -58,9 +60,10 @@ namespace ClueBuddyGui {
 			foreach (Card c in game.Cards) {
 				matrix.ColumnDefinitions.Add(new ColumnDefinition() { Width = columnWidth });
 				TextBlock cardBlock = new TextBlock() {
-										  Text = c.Name,
 										  Style = (Style)Resources["VerticalText"]
 									  };
+				cardBlock.DataContext = c;
+				cardBlock.SetBinding(TextBlock.TextProperty, new Binding("Name"));
 				cardBlock.SetValue(Grid.ColumnProperty, matrix.ColumnDefinitions.Count - 1);
 				cardBlock.SetValue(Grid.RowProperty, 1);
 				matrix.Children.Add(cardBlock);
@@ -69,11 +72,10 @@ namespace ClueBuddyGui {
 				foreach (Player player in game.Players) {
 					Node node = game.Nodes.Where(n => n.CardHolder == player && n.Card == c).First();
 					Label nodeLabel = new Label();
-					nodeLabel.Content = "?";
 					nodeLabel.SetValue(Grid.ColumnProperty, matrix.ColumnDefinitions.Count - 1);
 					nodeLabel.SetValue(Grid.RowProperty, game.Players.IndexOf(player) + 2);
 					nodeLabel.DataContext = node;
-					nodeLabel.Content = new Binding("Selected");
+					nodeLabel.SetBinding(Label.ContentProperty, new Binding("IsSelected"));
 					matrix.Children.Add(nodeLabel);
 				}
 			}
@@ -94,7 +96,7 @@ namespace ClueBuddyGui {
 				nodeLabel.SetValue(Grid.ColumnProperty, 1 + cardIndex);
 				nodeLabel.SetValue(Grid.RowProperty, game.Players.Count + 2);
 				nodeLabel.DataContext = node;
-				nodeLabel.Content = new Binding("Selected");
+				nodeLabel.SetBinding(Label.ContentProperty, new Binding("IsSelected"));
 				matrix.Children.Add(nodeLabel);
 				cardIndex++;
 			}

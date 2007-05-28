@@ -50,12 +50,16 @@ namespace ClueBuddyGui {
 
 		void applyButton_Click(object sender, EventArgs e) {
 			Suspicion s = new Suspicion((Suspect)chooseSuspect.SelectedItem, (Weapon)chooseWeapon.SelectedItem, (Location)choosePlace.SelectedItem);
+			int depth = game.AnalysisDepth;
+			game.AnalysisDepth = 0;
 			foreach (Player p in game.Players) {
 				if (p == suggester.SelectedItem) continue;
 				Clue c = disprovingPlayers.SelectedItems.Contains(p) ? (Clue)new Disproved(p, s) : (Clue)new CannotDisprove(p, s);
 				MessageBox.Show(c.ToString());
 				game.Clues.Add(c);
 			}
+			game.AnalysisDepth = depth;
+			game.Analyze();
 		}
 	}
 }
