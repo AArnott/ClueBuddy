@@ -99,7 +99,7 @@ namespace ClueBuddy {
 			get { return from n in Nodes where !n.IsSelected.HasValue select n; }
 		}
 
-		public override int PossibleSolutions {
+		public override int PossibleSolutionsCount {
 			get {
 				int possibilities = 0;
 				int countedNodes = countedNodesCount;

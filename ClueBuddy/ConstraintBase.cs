@@ -24,7 +24,8 @@ namespace ClueBuddy {
 		/// Calculates how many possible ending combinations of the selection
 		/// of nodes that yet exist, given the already known nodes.
 		/// </summary>
-		public abstract int PossibleSolutions { get; }
+		public abstract int PossibleSolutionsCount { get; }
+		//public abstract IEnumerable<IList<INode>> PossibleSolutionsCount
 
 		#region IConstraint Members
 		public bool IsResolved {

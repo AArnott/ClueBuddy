@@ -297,53 +297,53 @@ namespace ClueBuddyTest {
 			// For any help confirming these numbers, refer to Pascal's triangle
 
 			// The first several sets test the possibility calculations when no selections have been made.
-			Assert.AreEqual(1, SelectionCountConstraint.ExactSelected(0, nodes).PossibleSolutions);
-			Assert.AreEqual(4, SelectionCountConstraint.ExactSelected(1, nodes).PossibleSolutions);
-			Assert.AreEqual(6, SelectionCountConstraint.ExactSelected(2, nodes).PossibleSolutions);
-			Assert.AreEqual(4, SelectionCountConstraint.ExactSelected(3, nodes).PossibleSolutions);
-			Assert.AreEqual(1, SelectionCountConstraint.ExactSelected(4, nodes).PossibleSolutions);
+			Assert.AreEqual(1, SelectionCountConstraint.ExactSelected(0, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(4, SelectionCountConstraint.ExactSelected(1, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(6, SelectionCountConstraint.ExactSelected(2, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(4, SelectionCountConstraint.ExactSelected(3, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(1, SelectionCountConstraint.ExactSelected(4, nodes).PossibleSolutionsCount);
 
-			Assert.AreEqual(1 + 4 + 6 + 4 + 1, SelectionCountConstraint.MinSelected(0, nodes).PossibleSolutions);
-			Assert.AreEqual(1 + 4 + 6 + 4, SelectionCountConstraint.MinSelected(1, nodes).PossibleSolutions);
-			Assert.AreEqual(1 + 4 + 6, SelectionCountConstraint.MinSelected(2, nodes).PossibleSolutions);
-			Assert.AreEqual(1 + 4, SelectionCountConstraint.MinSelected(3, nodes).PossibleSolutions);
-			Assert.AreEqual(1, SelectionCountConstraint.MinSelected(4, nodes).PossibleSolutions);
+			Assert.AreEqual(1 + 4 + 6 + 4 + 1, SelectionCountConstraint.MinSelected(0, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(1 + 4 + 6 + 4, SelectionCountConstraint.MinSelected(1, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(1 + 4 + 6, SelectionCountConstraint.MinSelected(2, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(1 + 4, SelectionCountConstraint.MinSelected(3, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(1, SelectionCountConstraint.MinSelected(4, nodes).PossibleSolutionsCount);
 
-			Assert.AreEqual(1, SelectionCountConstraint.MaxSelected(0, nodes).PossibleSolutions);
-			Assert.AreEqual(1 + 4, SelectionCountConstraint.MaxSelected(1, nodes).PossibleSolutions);
-			Assert.AreEqual(1 + 4 + 6, SelectionCountConstraint.MaxSelected(2, nodes).PossibleSolutions);
-			Assert.AreEqual(1 + 4 + 6 + 4, SelectionCountConstraint.MaxSelected(3, nodes).PossibleSolutions);
-			Assert.AreEqual(1 + 4 + 6 + 4 + 1, SelectionCountConstraint.MaxSelected(4, nodes).PossibleSolutions);
+			Assert.AreEqual(1, SelectionCountConstraint.MaxSelected(0, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(1 + 4, SelectionCountConstraint.MaxSelected(1, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(1 + 4 + 6, SelectionCountConstraint.MaxSelected(2, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(1 + 4 + 6 + 4, SelectionCountConstraint.MaxSelected(3, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(1 + 4 + 6 + 4 + 1, SelectionCountConstraint.MaxSelected(4, nodes).PossibleSolutionsCount);
 
-			Assert.AreEqual(4 + 6, SelectionCountConstraint.RangeSelected(1, 2, nodes).PossibleSolutions);
-			Assert.AreEqual(6 + 4, SelectionCountConstraint.RangeSelected(2, 3, nodes).PossibleSolutions);
-			Assert.AreEqual(4 + 1, SelectionCountConstraint.RangeSelected(3, 4, nodes).PossibleSolutions);
-			Assert.AreEqual(4 + 6 + 4, SelectionCountConstraint.RangeSelected(1, 3, nodes).PossibleSolutions);
-			Assert.AreEqual(4 + 6 + 4 + 1, SelectionCountConstraint.RangeSelected(1, 4, nodes).PossibleSolutions);
+			Assert.AreEqual(4 + 6, SelectionCountConstraint.RangeSelected(1, 2, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(6 + 4, SelectionCountConstraint.RangeSelected(2, 3, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(4 + 1, SelectionCountConstraint.RangeSelected(3, 4, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(4 + 6 + 4, SelectionCountConstraint.RangeSelected(1, 3, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(4 + 6 + 4 + 1, SelectionCountConstraint.RangeSelected(1, 4, nodes).PossibleSolutionsCount);
 
 			// These next sets of tests preset some of the nodes to limit the future possibilities.
 			nodes[2].IsSelected = true;
 
-			Assert.AreEqual(1, SelectionCountConstraint.ExactSelected(1, nodes).PossibleSolutions);
-			Assert.AreEqual(3, SelectionCountConstraint.ExactSelected(2, nodes).PossibleSolutions);
-			Assert.AreEqual(3, SelectionCountConstraint.ExactSelected(3, nodes).PossibleSolutions);
-			Assert.AreEqual(1, SelectionCountConstraint.ExactSelected(4, nodes).PossibleSolutions);
+			Assert.AreEqual(1, SelectionCountConstraint.ExactSelected(1, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(3, SelectionCountConstraint.ExactSelected(2, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(3, SelectionCountConstraint.ExactSelected(3, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(1, SelectionCountConstraint.ExactSelected(4, nodes).PossibleSolutionsCount);
 
-			Assert.AreEqual(1 + 3 + 3 + 1, SelectionCountConstraint.MinSelected(1, nodes).PossibleSolutions);
-			Assert.AreEqual(1 + 3 + 3, SelectionCountConstraint.MinSelected(2, nodes).PossibleSolutions);
-			Assert.AreEqual(1 + 3, SelectionCountConstraint.MinSelected(3, nodes).PossibleSolutions);
-			Assert.AreEqual(1, SelectionCountConstraint.MinSelected(4, nodes).PossibleSolutions);
+			Assert.AreEqual(1 + 3 + 3 + 1, SelectionCountConstraint.MinSelected(1, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(1 + 3 + 3, SelectionCountConstraint.MinSelected(2, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(1 + 3, SelectionCountConstraint.MinSelected(3, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(1, SelectionCountConstraint.MinSelected(4, nodes).PossibleSolutionsCount);
 
-			Assert.AreEqual(1, SelectionCountConstraint.MaxSelected(1, nodes).PossibleSolutions);
-			Assert.AreEqual(1 + 3, SelectionCountConstraint.MaxSelected(2, nodes).PossibleSolutions);
-			Assert.AreEqual(1 + 3 + 3, SelectionCountConstraint.MaxSelected(3, nodes).PossibleSolutions);
-			Assert.AreEqual(1 + 3 + 3 + 1, SelectionCountConstraint.MaxSelected(4, nodes).PossibleSolutions);
+			Assert.AreEqual(1, SelectionCountConstraint.MaxSelected(1, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(1 + 3, SelectionCountConstraint.MaxSelected(2, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(1 + 3 + 3, SelectionCountConstraint.MaxSelected(3, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(1 + 3 + 3 + 1, SelectionCountConstraint.MaxSelected(4, nodes).PossibleSolutionsCount);
 
-			Assert.AreEqual(1 + 3, SelectionCountConstraint.RangeSelected(1, 2, nodes).PossibleSolutions);
-			Assert.AreEqual(3 + 3, SelectionCountConstraint.RangeSelected(2, 3, nodes).PossibleSolutions);
-			Assert.AreEqual(3 + 1, SelectionCountConstraint.RangeSelected(3, 4, nodes).PossibleSolutions);
-			Assert.AreEqual(1 + 3 + 3, SelectionCountConstraint.RangeSelected(1, 3, nodes).PossibleSolutions);
-			Assert.AreEqual(1 + 3 + 3 + 1, SelectionCountConstraint.RangeSelected(1, 4, nodes).PossibleSolutions);
+			Assert.AreEqual(1 + 3, SelectionCountConstraint.RangeSelected(1, 2, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(3 + 3, SelectionCountConstraint.RangeSelected(2, 3, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(3 + 1, SelectionCountConstraint.RangeSelected(3, 4, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(1 + 3 + 3, SelectionCountConstraint.RangeSelected(1, 3, nodes).PossibleSolutionsCount);
+			Assert.AreEqual(1 + 3 + 3 + 1, SelectionCountConstraint.RangeSelected(1, 4, nodes).PossibleSolutionsCount);
 		}
 	}
 }
