@@ -46,10 +46,15 @@ namespace ClueBuddyTest {
 		public override void Setup() {
 			base.Setup();
 			game = StartPresetGame();
-			cards = game.Cards.ToArray();
-			suspects = game.Suspects.ToArray();
-			weapons = game.Weapons.ToArray();
-			places = game.Locations.ToArray();
+		}
+
+		protected override Game PreparePresetGame() {
+			Game g = base.PreparePresetGame();
+			cards = g.Cards.ToArray();
+			suspects = g.Suspects.ToArray();
+			weapons = g.Weapons.ToArray();
+			places = g.Locations.ToArray();
+			return g;
 		}
 
 		/// <summary>
@@ -206,7 +211,6 @@ namespace ClueBuddyTest {
 			player.disproved(cards[2], cards[8], cards[10]);
 			player.disproved(cards[5], cards[8], cards[12]);
 			Assert.IsTrue(player.has(cards[8]).Value);
-			Assert.IsFalse(player.has(cards[8]).Value);
 			Assert.IsFalse(player.has(cards[2]).Value);
 			Assert.IsFalse(player.has(cards[5]).Value);
 			Assert.IsFalse(player.has(cards[10]).Value);
@@ -334,7 +338,6 @@ namespace ClueBuddyTest {
 			}
 
 			foreach (Card card in suggestion) {
-				Assert.IsTrue(game.CaseFile.has_not(card).HasValue);
 				Assert.IsTrue(game.CaseFile.has_not(card).Value);
 			}
 		}

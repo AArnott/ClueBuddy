@@ -127,8 +127,8 @@ namespace ClueBuddy {
 			get { return clues; }
 		}
 
-		internal const int AnalysisDepthDefault = 3;
-		private int analysisDepth;
+		internal const int AnalysisDepthDefault = 1;
+		private int analysisDepth = AnalysisDepthDefault;
 		/// <summary>
 		/// How deep to analyze possible solutions in search of more nodes to resolve.
 		/// </summary>
