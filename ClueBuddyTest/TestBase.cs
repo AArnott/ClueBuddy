@@ -8,14 +8,14 @@ using ClueBuddy;
 namespace ClueBuddyTest {
 	static class Extensions {
 		public static void disproved(this Player player, params Card[] cards) {
-			player.Game.AddClue(new DisprovedAnyCards(player, cards));
+			player.Game.Clues.Add(new DisprovedAnyCards(player, cards));
 		}
 		public static void see_card(this Player player, params Card[] cards) {
 			foreach (Card card in cards)
-				player.Game.AddClue(new SpyCard(player, card));
+				player.Game.Clues.Add(new SpyCard(player, card));
 		}
 		public static void cannot_disprove(this Player player, params Card[] cards) {
-			player.Game.AddClue(new CannotDisproveAnyCards(player, cards));
+			player.Game.Clues.Add(new CannotDisproveAnyCards(player, cards));
 		}
 		public static bool? has(this ICardHolder player, Card card) {
 			return player.Game.IsCardHeld(player, card);

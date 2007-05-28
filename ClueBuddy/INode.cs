@@ -6,7 +6,21 @@ using System.Text;
 
 namespace ClueBuddy {
 	interface INode : INotifyPropertyChanged {
+		/// <summary>
+		/// Gets/sets the selection state of a node.
+		/// </summary>
+		/// <remarks>
+		/// Once a node's state is determined (changes from null to either true or false),
+		/// it cannot be changed again.  Call <see cref="Reset"/> to revert back to the null state.
+		/// </remarks>
 		bool? IsSelected { get; set; }
+		/// <summary>
+		/// Forces the node back into its indeterminate state.
+		/// </summary>
+		void Reset();
+		/// <summary>
+		/// Gets whether the node is currently in a simulation mode.
+		/// </summary>
 		bool IsSimulating { get; }
 		/// <summary>
 		/// Pushes one level deeper in the simulation.

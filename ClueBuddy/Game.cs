@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
+using System.ComponentModel;
+using System.Collections.Specialized;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
 namespace ClueBuddy {
-	public partial class Game {
+	public partial class Game : INotifyPropertyChanged {
 		/// <summary>
 		/// Builds up a game based on a given set of cards.
 		/// </summary>
@@ -27,7 +30,6 @@ namespace ClueBuddy {
 		/// </summary>
 		public string VarietyName {
 			get { return varietyName; }
-			set { varietyName = value; }
 		}
 
 		private GameRules rules;
@@ -112,10 +114,16 @@ namespace ClueBuddy {
 		}
 
 		List<IConstraint> constraints;
+		/// <summary>
+		/// The list of internal constraints derived from the list of <see cref="Clues"/>.
+		/// </summary>
 		internal List<IConstraint> Constraints { get { return constraints; } }
 
-		List<Clue> clues;
-		public IEnumerable<Clue> Clues {
+		ObservableCollection<Clue> clues;
+		/// <summary>
+		/// The list of clues.
+		/// </summary>
+		public ObservableCollection<Clue> Clues {
 			get { return clues; }
 		}
 
@@ -136,7 +144,9 @@ namespace ClueBuddy {
 			set {
 				if (value < 0)
 					throw new ArgumentOutOfRangeException("AnalysisDepth", value, Strings.NonNegativeRequired);
+				if (analysisDepth == value) return;
 				analysisDepth = value;
+				OnPropertyChanged("AnalysisDepth");
 			}
 		}
 
@@ -172,6 +182,14 @@ namespace ClueBuddy {
 
 			// Create the initial set of constraints...
 			constraints = new List<IConstraint>();
+			addPredefinedConstraints();
+
+			clues = new ObservableCollection<Clue>();
+			clues.CollectionChanged += new NotifyCollectionChangedEventHandler(clues_CollectionChanged);
+		}
+
+		void addPredefinedConstraints() {
+			Debug.Assert(constraints != null && constraints.Count == 0);
 			// Each card can only be held once.
 			constraints.AddRange((from n in Nodes
 								  group n by n.Card into cardGroup
@@ -190,9 +208,8 @@ namespace ClueBuddy {
 								  OfType<IConstraint>().ToArray();
 			constraints.AddRange(tc);
 			Debug.Assert(constraints.All(c => c.IsSatisfiable), "Initial constraints are already failing.");
-
-			clues = new List<Clue>();
 		}
+
 		public void Reset() {
 			foreach (Player player in players) {
 				player.Game = null;
@@ -204,15 +221,34 @@ namespace ClueBuddy {
 			clues = null;
 		}
 
-		public void AddClue(Clue clue) {
-			if (clue == null) throw new ArgumentNullException("clue");
-			clues.Add(clue);
-			// Generate and add the simple constraints from the new clue.
-			IConstraint[] newConstraints = clue.GetConstraints(Nodes).ToArray();
-			constraints.AddRange(newConstraints);
+		void clues_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
+			if (e.NewItems != null)
+				foreach (Clue clue in e.NewItems)
+					clue.PropertyChanged += new PropertyChangedEventHandler(clue_PropertyChanged);
+			if (e.OldItems != null)
+				foreach (Clue clue in e.OldItems)
+					clue.PropertyChanged -= new PropertyChangedEventHandler(clue_PropertyChanged);
+			switch (e.Action) {
+				case NotifyCollectionChangedAction.Add:
+					foreach (Clue clue in e.NewItems) {
+						if (clue == null) continue; // skip over any null clues.
+						constraints.AddRange(clue.GetConstraints(Nodes));
+					}
+					break;
+				default: // any other change is potentially devastating to current state, so recalculate everything.
+					refigureAllClues();
+					break;
+			}
+			deepAnalysis();
+		}
+
+		void clue_PropertyChanged(object sender, PropertyChangedEventArgs e) {
+			refigureAllClues(); // any internal clue change is potentially devastating to current state, so recalculate everything.
+		}
+
+		void deepAnalysis() {
 			// Settle any nodes that can be
-			CompositeConstraint cc = new CompositeConstraint(constraints);
-			cc.ResolvePartially();
+			new CompositeConstraint(constraints).ResolvePartially();
 			// Perform some deep analysis for new opportunities to resolve nodes.
 			var deducedConstraints = ConstraintGenerator.AnalyzeConstraints(constraints, AnalysisDepth).ToArray();
 			if (deducedConstraints.Length > 0) {
@@ -221,12 +257,36 @@ namespace ClueBuddy {
 				}
 				constraints.AddRange(deducedConstraints);
 				// Once again, settle any that can be.
-				cc = new CompositeConstraint(constraints);
-				cc.ResolvePartially();
+				new CompositeConstraint(constraints).ResolvePartially();
 			}
 		}
+
+		void refigureAllClues() {
+			constraints.Clear();
+			foreach (Node n in Nodes)
+				n.Reset();
+			addPredefinedConstraints();
+			foreach (Clue clue in Clues) {
+				if (clue == null) continue; // skip over any null clues.
+				constraints.AddRange(clue.GetConstraints(Nodes));
+			}
+			deepAnalysis();
+		}
+
 		public bool? IsCardHeld(ICardHolder playerOrCaseFile, Card card) {
 			return Nodes.Where(n => n.CardHolder == playerOrCaseFile && n.Card == card).First().IsSelected;
 		}
+
+		#region INotifyPropertyChanged Members
+
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected virtual void OnPropertyChanged(string propertyName) {
+			PropertyChangedEventHandler propertyChanged = PropertyChanged;
+			if (propertyChanged != null) {
+				propertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+
+		#endregion
 	}
 }

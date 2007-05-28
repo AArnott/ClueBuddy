@@ -85,10 +85,10 @@ namespace ClueBuddyTest {
 			Debug.Assert(thirdSet.Count() == hand);
 
 			// eliminate all cards except a handful plus one
-			game.AddClue(new CannotDisproveAnyCards(player, firstSet.ToArray()));
+			game.Clues.Add(new CannotDisproveAnyCards(player, firstSet.ToArray()));
 			Assert.AreEqual(hand + 1, game.Nodes.Where(n => n.CardHolder == player && !n.IsSelected.HasValue).Count());
 			// eliminate just one more card (leaving just enough cards that must be held)
-			game.AddClue(new CannotDisproveAnyCards(player, secondSet.ToArray()));
+			game.Clues.Add(new CannotDisproveAnyCards(player, secondSet.ToArray()));
 			Assert.AreEqual(0, game.Nodes.Where(n => n.CardHolder == player && !n.IsSelected.HasValue).Count());
 			foreach (Card card in thirdSet)
 				Assert.IsTrue(game.IsCardHeld(player, card).Value);
@@ -103,7 +103,7 @@ namespace ClueBuddyTest {
 			var weapon = weapons[0];
 			foreach (Player p in game.Players) {
 				Debug.WriteLine("Adding clue to player " + p.Name);
-				game.AddClue(new CannotDisproveAnyCards(p, weapon));
+				game.Clues.Add(new CannotDisproveAnyCards(p, weapon));
 			}
 			Assert.IsTrue(game.CaseFile.has(weapon).Value);
 		}
@@ -120,7 +120,7 @@ namespace ClueBuddyTest {
 			var player = players[0];
 			foreach (Player p in game.Players) {
 				if (p != player)
-					game.AddClue(new CannotDisproveAnyCards(p, place));
+					game.Clues.Add(new CannotDisproveAnyCards(p, place));
 			}
 			Assert.IsFalse(game.IsCardHeld(player, place).HasValue);
 			game.CaseFile.set(otherPlace); // some other place card was somehow ascertained, excluding 'place'
@@ -142,7 +142,7 @@ namespace ClueBuddyTest {
 			Assert.IsFalse(game.IsCardHeld(player, weapon).HasValue);
 			foreach (Player p in game.Players)
 				if (p != player)
-					game.AddClue(new CannotDisproveAnyCards(p, weapon));
+					game.Clues.Add(new CannotDisproveAnyCards(p, weapon));
 			Assert.IsTrue(game.IsCardHeld(player, weapon).Value);
 		}
 
@@ -157,7 +157,7 @@ namespace ClueBuddyTest {
 			// dish out all the places except one among the players
 			foreach (Location place in game.Locations) {
 				if (place == game.Locations.Last()) continue;
-				game.AddClue(new SpyCard(game.Players[iPlayer], place));
+				game.Clues.Add(new SpyCard(game.Players[iPlayer], place));
 				iPlayer = (iPlayer + 1) % game.Players.Count;
 			}
 			// the last place should be automatically identified as the one

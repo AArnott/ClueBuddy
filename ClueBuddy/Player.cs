@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
@@ -8,7 +9,7 @@ namespace ClueBuddy {
 	/// <summary>
 	/// A human player in the game.  Not a suspect.
 	/// </summary>
-	public class Player : ICardHolder {
+	public class Player : ICardHolder, INotifyPropertyChanged {
 		public Player(string name) {
 			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
 			this.name = name;
@@ -20,7 +21,11 @@ namespace ClueBuddy {
 		/// </summary>
 		public string Name {
 			get { return name; }
-			set { name = value; }
+			set {
+				if (name == value) return;
+				name = value;
+				OnPropertyChanged("Name");
+			}
 		}
 
 		public override string ToString() {
@@ -35,7 +40,9 @@ namespace ClueBuddy {
 			get { return cardsHeldCount; }
 			set {
 				if (Game != null) throw new InvalidOperationException(Strings.IllegalAfterGameIsStarted);
+				if (cardsHeldCount == value) return;
 				cardsHeldCount = value;
+				OnPropertyChanged("CardsHeldCount");
 			}
 		}
 
@@ -47,5 +54,17 @@ namespace ClueBuddy {
 			get { return game; }
 			internal set { game = value; }
 		}
+
+		#region INotifyPropertyChanged Members
+
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected virtual void OnPropertyChanged(string propertyName) {
+			PropertyChangedEventHandler propertyChanged = PropertyChanged;
+			if (propertyChanged != null) {
+				propertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+
+		#endregion
 	}
 }

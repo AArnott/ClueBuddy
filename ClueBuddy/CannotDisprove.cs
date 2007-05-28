@@ -9,14 +9,20 @@ namespace ClueBuddy {
 		public CannotDisprove(Player unablePlayer, Suspicion suspicion)
 			: base(unablePlayer) {
 			if (suspicion == null) throw new ArgumentNullException("suspicion");
-			this.Suspicion = suspicion;
+			this.suspicion = suspicion;
 		}
 
 		private Suspicion suspicion;
-
+		/// <summary>
+		/// The suggestion that cannot be disproven.
+		/// </summary>
 		public Suspicion Suspicion {
 			get { return suspicion; }
-			private set { suspicion = value; }
+			set {
+				if (suspicion == value) return; // nothing to change
+				suspicion = value;
+				OnPropertyChanged("Suspicion");
+			}
 		}
 
 		public override string ToString() {

@@ -15,7 +15,7 @@ namespace ClueBuddy {
 		public Disproved(Player disprovingPlayer, Suspicion suggestion)
 			: base(disprovingPlayer) {
 			if (suggestion == null) throw new ArgumentNullException("suggestion");
-			this.Suspicion = suggestion;
+			this.suspicion = suggestion;
 		}
 		/// <summary>
 		/// Creates a clue from when an opponent disproves the <see cref="Suspicion"/>
@@ -30,7 +30,7 @@ namespace ClueBuddy {
 				throw new ArgumentNullException("cardShown");
 			if (!suggestion.Cards.Contains(cardShown))
 				throw new ArgumentException(string.Format(Strings.DisprovingCardNotInSuspicion, "cardShown", "suggestion"));
-			this.CardShown = cardShown;
+			this.cardShown = cardShown;
 		}
 
 
@@ -40,7 +40,11 @@ namespace ClueBuddy {
 		/// </summary>
 		public Suspicion Suspicion {
 			get { return suspicion; }
-			private set { suspicion = value; }
+			set {
+				if (suspicion == value) return; // nothing to change
+				suspicion = value;
+				OnPropertyChanged("Suspicion");
+			}
 		}
 
 		public override string ToString() {
@@ -56,7 +60,11 @@ namespace ClueBuddy {
 		/// </summary>
 		public Card CardShown {
 			get { return cardShown; }
-			private set { cardShown = value; }
+			private set {
+				if (cardShown == value) return; // nothing to change
+				cardShown = value;
+				OnPropertyChanged("CardShown");
+			}
 		}
 
 		internal override IEnumerable<IConstraint> GetConstraints(IEnumerable<Node> nodes) {

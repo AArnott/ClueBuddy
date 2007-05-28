@@ -29,8 +29,15 @@ namespace ClueBuddy {
 				isSelected.Push(value); // push in new value.
 				// Only notify that a property is changed if not in simulation mode.
 				if (!IsSimulating)
-					OnPropertyChanged();
+					OnPropertyChanged("IsSelected");
 			}
+		}
+
+		public void Reset() {
+			if (IsSimulating) throw new InvalidOperationException("Cannot reset node during simulation.");
+			isSelected.Pop();
+			isSelected.Push(null);
+			OnPropertyChanged("IsSelected");
 		}
 
 		public bool IsSimulating {
@@ -52,10 +59,10 @@ namespace ClueBuddy {
 		/// Fires when the <see cref="IsSelected"/> property changes.
 		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
-		protected virtual void OnPropertyChanged() {
+		protected virtual void OnPropertyChanged(string propertyName) {
 			PropertyChangedEventHandler propertyChanged = PropertyChanged;
 			if (propertyChanged != null) {
-				propertyChanged(this, new PropertyChangedEventArgs("IsSelected"));
+				propertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
 		}
 

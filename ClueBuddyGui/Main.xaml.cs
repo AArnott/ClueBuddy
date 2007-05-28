@@ -54,7 +54,7 @@ namespace ClueBuddyGui {
 				if (p == suggester.SelectedItem) continue;
 				Clue c = disprovingPlayers.SelectedItems.Contains(p) ? (Clue)new Disproved(p, s) : (Clue)new CannotDisprove(p, s);
 				MessageBox.Show(c.ToString());
-				game.AddClue(c);
+				game.Clues.Add(c);
 			}
 		}
 	}

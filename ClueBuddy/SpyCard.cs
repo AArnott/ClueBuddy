@@ -9,13 +9,21 @@ namespace ClueBuddy {
 		public SpyCard(Player playerShowingCard, Card cardSeen)
 			: base(playerShowingCard) {
 			if (cardSeen == null) throw new ArgumentNullException("cardSeen");
-			this.Card = cardSeen;
+			this.card = cardSeen;
 		}
 
+		Card card;
 		/// <summary>
 		/// The card shown.
 		/// </summary>
-		public readonly Card Card;
+		public Card Card {
+			get { return card; }
+			set {
+				if (card == value) return; // nothing to change
+				card = value;
+				OnPropertyChanged("Card");
+			}
+		}
 
 		internal override IEnumerable<IConstraint> GetConstraints(IEnumerable<Node> nodes) {
 			if (nodes == null) throw new ArgumentNullException("nodes");
