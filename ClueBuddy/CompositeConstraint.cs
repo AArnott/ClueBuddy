@@ -80,8 +80,8 @@ namespace ClueBuddy {
 			//var constraintsContainingTestNode = new CompositeConstraint(Constraints.Where(c => c.Nodes.Contains(testNode)));
 			//IEnumerable<INode> testNodeAndCousins = constraintsContainingTestNode.Nodes;
 
+			Debug.Assert(indeterminateNodes.Contains(testNode));
 			try {
-				Debug.Assert(indeterminateNodes.Contains(testNode));
 				beginSimulation(indeterminateNodes);
 				testNode.IsSelected = testState;
 				ResolvePartially();
