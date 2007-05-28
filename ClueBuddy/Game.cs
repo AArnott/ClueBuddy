@@ -11,12 +11,23 @@ namespace ClueBuddy {
 		/// </summary>
 		/// <param name="rules">The set of rules the game will play by.</param>
 		/// <param name="cards">The cards in this game.</param>
-		Game(GameRules rules, IEnumerable<Card> cards) {
+		Game(string varietyName, GameRules rules, IEnumerable<Card> cards) {
+			if (string.IsNullOrEmpty(varietyName)) throw new ArgumentNullException("varietyName");
 			if (cards == null) throw new ArgumentNullException("cards");
 			if (cards.Count() == 0)
 				throw new ArgumentException(Strings.ListCannotBeEmpty, "cards");
+			this.varietyName = varietyName;
 			this.rules = rules;
 			this.cards = cards.ToList(); // Cache the enumeration to a list to avoid recreating cards each time we enumerate
+		}
+
+		private string varietyName;
+		/// <summary>
+		/// The variety of the game.
+		/// </summary>
+		public string VarietyName {
+			get { return varietyName; }
+			set { varietyName = value; }
 		}
 
 		private GameRules rules;

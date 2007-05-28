@@ -7,7 +7,7 @@ namespace ClueBuddy {
 	public partial class Game {
 		public static Game GreatDetective {
 			get {
-				return new Game(new GameRules() {
+				return new Game("Great Detective", new GameRules() {
 									DisprovalEndsTurn = false
 								}, Card.Generate(
 									Suspect.Generate("Brunette", "Gray", "Green", "Mustard", "Peach", "Peacock", "Plum", "Rose", "Scarlet", "White"),
@@ -19,7 +19,7 @@ namespace ClueBuddy {
 		}
 		public static Game Simpsons {
 			get {
-				return new Game(new GameRules() {
+				return new Game("Simpsons", new GameRules() {
 									DisprovalEndsTurn = true
 								}, Card.Generate(
 									Suspect.Generate("Green", "Mustard", "Peacock", "Plum", "Scarlet", "White"),
