@@ -1,36 +1,18 @@
 ﻿<Window x:Class="ClueBuddyGui.Main"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:clue="clr-namespace:ClueBuddy;assembly=ClueBuddy"
-    Title="ClueBuddy" Height="338" Width="824">
-    <Window.Resources>
-		<Style TargetType="{x:Type TextBlock}" x:Key="CardType">
-			<Setter Property="HorizontalAlignment" Value="Center"/>
-			<Setter Property="VerticalAlignment" Value="Bottom"/>
-			<Setter Property="FontWeight" Value="Bold"/>
-		</Style>
-		<Style TargetType="{x:Type TextBlock}" x:Key="VerticalText">
-			<Setter Property="HorizontalAlignment" Value="Center"/>
-			<Setter Property="Padding" Value="5,0,5,0"/>
-			<Setter Property="LayoutTransform">
-				<Setter.Value>
-					<RotateTransform Angle="-90" />
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<Style TargetType="{x:Type Label}" x:Key="PlayerName">
-			<Setter Property="Padding" Value="5,0,5,0"/>
-			<Setter Property="VerticalAlignment" Value="Center"/>
-			<Setter Property="HorizontalAlignment" Value="Right"/>
-		</Style>
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:clue="clr-namespace:ClueBuddy;assembly=ClueBuddy"
+	xmlns:clueGui="clr-namespace:ClueBuddyGui"
+	Title="ClueBuddy" Height="338" Width="824">
+	<Window.Resources>
 		<DataTemplate x:Key="DisproveListItem">
-			<StackPanel Orientation="Horizontal">
-				<CheckBox VerticalAlignment="Center" />
-				<Label VerticalAlignment="Center" Content="{Binding}"/>
+			<StackPanel Orientation="Horizontal" >
+				<CheckBox VerticalAlignment="Center" Margin="0,0,0,0" Padding="0,0,0,0"/>
+				<Label VerticalAlignment="Center" Content="{Binding}" Margin="0,0,0,0" Padding="0,0,0,0"/>
 			</StackPanel>
 		</DataTemplate>
-    </Window.Resources>
-    <Grid >
+	</Window.Resources>
+	<Grid >
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition />
 			<ColumnDefinition Width="Auto"/>
@@ -45,78 +27,20 @@
 			<Button x:Name="openGameButton">Open</Button>
 			<Button x:Name="saveGameButton">Save</Button>
 		</ToolBar>
-    
-		<Grid Name="matrix" Grid.Row="1" Grid.Column="0">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto" />
-				<ColumnDefinition Width="0.0384615384615385*" />
-				<ColumnDefinition Width="0.0384615384615384*" />
-				<ColumnDefinition Width="0.0384615384615385*" />
-				<ColumnDefinition Width="0.0384615384615385*" />
-				<ColumnDefinition Width="0.0384615384615385*" />
-				<ColumnDefinition Width="0.0384615384615385*" />
-				<ColumnDefinition Width="0.0384615384615385*" />
-				<ColumnDefinition Width="0.0384615384615385*" />
-				<ColumnDefinition Width="0.0384615384615384*" />
-				<ColumnDefinition Width="0.0384615384615384*" />
-				<ColumnDefinition Width="0.0384615384615384*" />
-				<ColumnDefinition Width="0.0384615384615385*" />
-				<ColumnDefinition Width="0.0384615384615385*" />
-				<ColumnDefinition Width="0.0384615384615384*" />
-				<ColumnDefinition Width="0.0384615384615385*" />
-				<ColumnDefinition Width="0.0384615384615385*" />
-				<ColumnDefinition Width="0.0384615384615384*" />
-				<ColumnDefinition Width="0.0384615384615384*" />
-				<ColumnDefinition Width="0.0384615384615384*" />
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-			</Grid.RowDefinitions>
-			<TextBlock Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="13" Padding="5,5,5,5"> 
-				<TextBlock.LayoutTransform>
-					<RotateTransform Angle="-30" CenterY="15" CenterX="45" />
-				</TextBlock.LayoutTransform>
-				Great Detective
-			</TextBlock>
-			
-			
-			<TextBlock Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="0" Style="{StaticResource CardType}">Weapons</TextBlock>
-			
-			<TextBlock Grid.Column="1" Grid.Row="1" Style="{StaticResource VerticalText}">Knife</TextBlock>
-			<TextBlock Grid.Column="2" Grid.Row="1" Style="{StaticResource VerticalText}">Rifle</TextBlock>
-			<TextBlock Grid.Column="3" Grid.Row="1" Style="{StaticResource VerticalText}">Rope</TextBlock>
-			<TextBlock Grid.Column="4" Grid.Row="1" Style="{StaticResource VerticalText}">Wrench</TextBlock>
-
-			
-			
-			<Label Grid.Row="2" Grid.Column="0" Style="{StaticResource PlayerName}">Andrew</Label>
-			<Label Grid.Row="3" Grid.Column="0" Style="{StaticResource PlayerName}">Cheryl</Label>
-			<Label Grid.Row="4" Grid.Column="0" Style="{StaticResource PlayerName}">Ric</Label>
-			<Label Grid.Row="5" Grid.Column="0" Style="{StaticResource PlayerName}">Lisa</Label>
-			<Label Grid.Row="6" Grid.Column="0" Style="{StaticResource PlayerName}">Anthony</Label>
-			<Label Grid.Row="7" Grid.Column="0" Style="{StaticResource PlayerName}">Brandy</Label>
-			
-		</Grid>
-		<StackPanel Grid.Row="1" x:Name="sidePanel" Orientation="Vertical" Grid.Column="1">
+		<clueGui:ClueGrid Grid.Row="1" Grid.Column="0" x:Name="clueMatrix" Margin="0,0,5,0"/>
+		<StackPanel Grid.Row="1" x:Name="sidePanel" Orientation="Vertical" Grid.Column="1" Margin="5,5,5,5">
 			<TextBlock TextWrapping="Wrap">What is happening in the game?</TextBlock>
-		    <ComboBox Height="26" Name="suggester" ItemsSource="{Binding Path=Players}" />
-		    <TextBlock TextWrapping="Wrap">suggested that</TextBlock>
-		    <ComboBox Height="26" Name="chooseSuspect" ItemsSource="{Binding Path=Suspects}" />
-		    <TextBlock TextWrapping="Wrap">did it in the</TextBlock>
-		    <ComboBox Height="26" Name="choosePlace" ItemsSource="{Binding Path=Locations}" />
-		    <TextBlock TextWrapping="Wrap">with the</TextBlock>
-		    <ComboBox Height="26" Name="chooseWeapon" ItemsSource="{Binding Path=Weapons}" />
-		    <TextBlock TextWrapping="Wrap">And who can disprove this suggestion?</TextBlock>
-		    <ListBox ItemsSource="{Binding Path=Players}" ItemTemplate="{StaticResource DisproveListItem}"/>
-		    <Button x:Name="applyButton" IsDefault="True">Apply</Button>
+			<ComboBox Height="26" x:Name="suggester" ItemsSource="{Binding Path=Players}" />
+			<TextBlock TextWrapping="Wrap">suggested that</TextBlock>
+			<ComboBox Height="26" x:Name="chooseSuspect" ItemsSource="{Binding Path=Suspects}" />
+			<TextBlock TextWrapping="Wrap">did it in the</TextBlock>
+			<ComboBox Height="26" x:Name="choosePlace" ItemsSource="{Binding Path=Locations}" />
+			<TextBlock TextWrapping="Wrap">with the</TextBlock>
+			<ComboBox Height="26" x:Name="chooseWeapon" ItemsSource="{Binding Path=Weapons}" />
+			<TextBlock TextWrapping="Wrap">And who can disprove this suggestion?</TextBlock>
+			<ListBox x:Name="disprovingPlayers" ItemsSource="{Binding Path=Players}" ItemTemplate="{StaticResource DisproveListItem}"/>
+			<Button x:Name="applyButton" IsDefault="True" Margin="0,5,0,0" Click="applyButton_Click">Apply</Button>
 		</StackPanel>
-    <GridSplitter Grid.Column="0" Grid.Row="1" Name="gridSplitter1" Width="5"  />
-  </Grid>
+		<GridSplitter Grid.Column="0" Grid.Row="1" Name="gridSplitter1" Width="5"  />
+	</Grid>
 </Window>

@@ -20,19 +20,23 @@ namespace ClueBuddyGui {
 	/// </summary>
 
 	public partial class Main : Window {
+		Game game;
+
 		public Main() {
 			InitializeComponent();
 
-			Game game = Game.GreatDetective;
-			game.Players.Add(new Player("DB1"));
-			game.Players.Add(new Player("DB2"));
-			this.matrix.DataContext = game.Players;
+			game = Game.GreatDetective;
+			game.Players.Add(new Player("Andrew"));
+			game.Players.Add(new Player("Cheryl"));
+			game.Players.Add(new Player("Jeff"));
+			game.Players.Add(new Player("Julia"));
+			game.Players.Add(new Player("Anthony"));
+			game.Players.Add(new Player("Brandee"));
+			this.clueMatrix.DataContext = game.Players;
 			this.sidePanel.DataContext = game;
-
-			//foreach (var p in game.Players) {
-			//    Label lbl = new Label() { Content = p.Name };
-			//    matrix.Children.Add(lbl);
-			//}
+			game.AssignApproximatePlayerHandSizes();
+			game.Start();
+			this.clueMatrix.Game = game;
 		}
 
 		void newGameButton_Click(object sender, EventArgs e) {
@@ -41,6 +45,16 @@ namespace ClueBuddyGui {
 			if (result.HasValue && result.Value) {
 
 				MessageBox.Show("TODO: Start new game.");
+			}
+		}
+
+		void applyButton_Click(object sender, EventArgs e) {
+			Suspicion s = new Suspicion((Suspect)chooseSuspect.SelectedItem, (Weapon)chooseWeapon.SelectedItem, (Location)choosePlace.SelectedItem);
+			foreach (Player p in game.Players) {
+				if (p == suggester.SelectedItem) continue;
+				Clue c = disprovingPlayers.SelectedItems.Contains(p) ? (Clue)new Disproved(p, s) : (Clue)new CannotDisprove(p, s);
+				MessageBox.Show(c.ToString());
+				game.AddClue(c);
 			}
 		}
 	}
