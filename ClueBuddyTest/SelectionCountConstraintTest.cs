@@ -273,30 +273,6 @@ namespace ClueBuddyTest {
 		}
 
 		[TestMethod]
-		public void FactorialTest() {
-			Assert.AreEqual(1, SelectionCountConstraint.Factorial(1));
-			Assert.AreEqual(2 * 1, SelectionCountConstraint.Factorial(2));
-			Assert.AreEqual(3 * 2 * 1, SelectionCountConstraint.Factorial(3));
-			Assert.AreEqual(4 * 3 * 2 * 1, SelectionCountConstraint.Factorial(4));
-		}
-
-		[TestMethod]
-		public void ChooseNegativeTest() {
-			Assert.AreEqual(0, SelectionCountConstraint.Choose(3, -1));
-		}
-
-		[TestMethod]
-		public void ChooseTest() {
-			Assert.AreEqual(3, SelectionCountConstraint.Choose(3, 2));
-
-			Assert.AreEqual(1, SelectionCountConstraint.Choose(4, 0));
-			Assert.AreEqual(4, SelectionCountConstraint.Choose(4, 1));
-			Assert.AreEqual(6, SelectionCountConstraint.Choose(4, 2));
-			Assert.AreEqual(4, SelectionCountConstraint.Choose(4, 3));
-			Assert.AreEqual(1, SelectionCountConstraint.Choose(4, 4));
-		}
-
-		[TestMethod]
 		public void PossibleSolutionsCountTest() {
 			if (nodes.Length != 4) Assert.Inconclusive("Test depends on a list of 4 nodes.");
 

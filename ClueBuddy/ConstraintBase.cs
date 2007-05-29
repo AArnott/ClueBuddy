@@ -51,5 +51,32 @@ namespace ClueBuddy {
 		protected void ThrowIfBroken() {
 			if (IsBroken) throw new BrokenConstraintException();
 		}
+
+		protected internal static IEnumerable<T[]> ChooseResults<T>(IEnumerable<T> n, int k) {
+			return chooseResults(n, k, new T[k]);
+		}
+
+		static IEnumerable<T[]> chooseResults<T>(IEnumerable<T> n, int k, T[] l) {
+			if (k == 0) {
+				yield return (T[])l.Clone();
+			} else {
+				for (int i = 0; i < n.Count(); i++) {
+					l[l.Length - k] = n.Skip(i).First();
+					foreach (var r in chooseResults(n.Skip(i + 1), k - 1, l))
+						yield return r;
+				}
+			}
+		}
+
+		protected internal static int Choose(int n, int k) {
+			return Factorial(n) / (Factorial(k) * Factorial(n - k));
+		}
+
+		protected internal static int Factorial(int n) {
+			int result;
+			for (result = 1; n > 1; n--)
+				result *= n;
+			return result;
+		}
 	}
 }
