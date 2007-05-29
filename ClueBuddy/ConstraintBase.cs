@@ -25,7 +25,11 @@ namespace ClueBuddy {
 		/// of nodes that yet exist, given the already known nodes.
 		/// </summary>
 		public abstract int PossibleSolutionsCount { get; }
-		//public abstract IEnumerable<IList<INode>> PossibleSolutionsCount
+		/// <summary>
+		/// Generates all remaining combinations of indeterminate nodes that 
+		/// could satisfy this constraint.
+		/// </summary>
+		public abstract IEnumerable<IList<INode>> PossibleSolutions { get; }
 
 		#region IConstraint Members
 		public bool IsResolved {

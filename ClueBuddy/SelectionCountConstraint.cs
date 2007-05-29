@@ -114,6 +114,37 @@ namespace ClueBuddy {
 				return possibilities;
 			}
 		}
+		public override IEnumerable<IList<INode>> PossibleSolutions {
+			get {
+				// If the constraint is already satisfied, then indicate that no changes is a solution.
+				if (IsSatisfiable) {
+					int countedNodes = countedNodesCount;
+					var unknownNodes = indeterminateNodes.ToArray();
+					// Iterate through each allowed number of selected nodes and add up the choose possibilities
+					// for each one.
+					for (int i = Min - countedNodes; i <= Math.Min(Max - countedNodes, unknownNodes.Length); i++) {
+						foreach (var result in ChooseResults(unknownNodes, i))
+							yield return result;
+					}
+				}
+			}
+		}
+
+		protected internal static IEnumerable<T[]> ChooseResults<T>(IEnumerable<T> n, int k) {
+			return chooseResults(n, k, new T[k]);
+		}
+
+		static IEnumerable<T[]> chooseResults<T>(IEnumerable<T> n, int k, T[] l) {
+			if (k == 0) {
+				yield return (T[])l.Clone();
+			} else {
+				for (int i = 0; i < n.Count(); i++) {
+					l[l.Length - k] = n.Skip(i).First();
+					foreach (var r in chooseResults(n.Skip(i + 1), k - 1, l))
+						yield return r;
+				}
+			}
+		}
 
 		protected internal static int Choose(int n, int k) {
 			return Factorial(n) / (Factorial(k) * Factorial(n - k));

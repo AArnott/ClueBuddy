@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -28,7 +29,7 @@ namespace ClueBuddyTest {
 		[TestMethod]
 		public void ToStringTest() {
 			string nodesString = string.Join(", ", nodes.Select(n => n.ToString()).ToArray());
-			Assert.AreEqual("SelectionCountConstraint(1, 2, True, [" + nodesString + "])", 
+			Assert.AreEqual("SelectionCountConstraint(1, 2, True, [" + nodesString + "])",
 				SelectionCountConstraint.RangeSelected(1, 2, nodes).ToString());
 		}
 
@@ -280,6 +281,11 @@ namespace ClueBuddyTest {
 		}
 
 		[TestMethod]
+		public void ChooseNegativeTest() {
+			Assert.AreEqual(0, SelectionCountConstraint.Choose(3, -1));
+		}
+
+		[TestMethod]
 		public void ChooseTest() {
 			Assert.AreEqual(3, SelectionCountConstraint.Choose(3, 2));
 
@@ -291,7 +297,7 @@ namespace ClueBuddyTest {
 		}
 
 		[TestMethod]
-		public void PossibleSolutionsTest() {
+		public void PossibleSolutionsCountTest() {
 			if (nodes.Length != 4) Assert.Inconclusive("Test depends on a list of 4 nodes.");
 
 			// For any help confirming these numbers, refer to Pascal's triangle
@@ -324,26 +330,69 @@ namespace ClueBuddyTest {
 			// These next sets of tests preset some of the nodes to limit the future possibilities.
 			nodes[2].IsSelected = true;
 
+			Assert.AreEqual(0, SelectionCountConstraint.ExactSelected(0, nodes).PossibleSolutionsCount);
 			Assert.AreEqual(1, SelectionCountConstraint.ExactSelected(1, nodes).PossibleSolutionsCount);
 			Assert.AreEqual(3, SelectionCountConstraint.ExactSelected(2, nodes).PossibleSolutionsCount);
 			Assert.AreEqual(3, SelectionCountConstraint.ExactSelected(3, nodes).PossibleSolutionsCount);
 			Assert.AreEqual(1, SelectionCountConstraint.ExactSelected(4, nodes).PossibleSolutionsCount);
 
+			Assert.AreEqual(1 + 3 + 3 + 1, SelectionCountConstraint.MinSelected(0, nodes).PossibleSolutionsCount);
 			Assert.AreEqual(1 + 3 + 3 + 1, SelectionCountConstraint.MinSelected(1, nodes).PossibleSolutionsCount);
 			Assert.AreEqual(1 + 3 + 3, SelectionCountConstraint.MinSelected(2, nodes).PossibleSolutionsCount);
 			Assert.AreEqual(1 + 3, SelectionCountConstraint.MinSelected(3, nodes).PossibleSolutionsCount);
 			Assert.AreEqual(1, SelectionCountConstraint.MinSelected(4, nodes).PossibleSolutionsCount);
 
+			Assert.AreEqual(0, SelectionCountConstraint.MaxSelected(0, nodes).PossibleSolutionsCount);
 			Assert.AreEqual(1, SelectionCountConstraint.MaxSelected(1, nodes).PossibleSolutionsCount);
 			Assert.AreEqual(1 + 3, SelectionCountConstraint.MaxSelected(2, nodes).PossibleSolutionsCount);
 			Assert.AreEqual(1 + 3 + 3, SelectionCountConstraint.MaxSelected(3, nodes).PossibleSolutionsCount);
 			Assert.AreEqual(1 + 3 + 3 + 1, SelectionCountConstraint.MaxSelected(4, nodes).PossibleSolutionsCount);
 
+			Assert.AreEqual(1 + 3, SelectionCountConstraint.RangeSelected(0, 2, nodes).PossibleSolutionsCount);
 			Assert.AreEqual(1 + 3, SelectionCountConstraint.RangeSelected(1, 2, nodes).PossibleSolutionsCount);
 			Assert.AreEqual(3 + 3, SelectionCountConstraint.RangeSelected(2, 3, nodes).PossibleSolutionsCount);
 			Assert.AreEqual(3 + 1, SelectionCountConstraint.RangeSelected(3, 4, nodes).PossibleSolutionsCount);
 			Assert.AreEqual(1 + 3 + 3, SelectionCountConstraint.RangeSelected(1, 3, nodes).PossibleSolutionsCount);
 			Assert.AreEqual(1 + 3 + 3 + 1, SelectionCountConstraint.RangeSelected(1, 4, nodes).PossibleSolutionsCount);
+		}
+
+		[TestMethod]
+		public void PossibleSolutionsTest() {
+			nodes = nodes.Take(3).ToArray();
+
+			IList<INode>[] expected = new IList<INode>[] { 
+											   new List<INode>(new INode[] {nodes[0]}), 
+											   new List<INode>(new INode[] {nodes[1]}), 
+											   new List<INode>(new INode[] {nodes[2]}),
+										   };
+			IList<INode>[] actual = SelectionCountConstraint.ExactSelected(1, nodes).PossibleSolutions.ToArray();
+			Assert.AreEqual(expected.Length, actual.Length);
+			for (int i = 0; i < expected.Length; i++)
+				CollectionAssert.AreEquivalent(expected[i].ToArray(), actual[i].ToArray());
+
+			expected = new IList<INode>[] { 
+											   new List<INode>(new INode[] {nodes[0], nodes[1]}), 
+											   new List<INode>(new INode[] {nodes[0], nodes[2]}), 
+											   new List<INode>(new INode[] {nodes[1], nodes[2]}), 
+										   };
+			actual = SelectionCountConstraint.ExactSelected(2, nodes).PossibleSolutions.ToArray();
+			Assert.AreEqual(expected.Length, actual.Length);
+			for (int i = 0; i < expected.Length; i++)
+				CollectionAssert.AreEquivalent(expected[i].ToArray(), actual[i].ToArray());
+
+			expected = new IList<INode>[] { 
+											   new List<INode>(new INode[] {}), 
+											   new List<INode>(new INode[] {nodes[0]}), 
+											   new List<INode>(new INode[] {nodes[1]}), 
+											   new List<INode>(new INode[] {nodes[2]}),
+											   new List<INode>(new INode[] {nodes[0], nodes[1]}), 
+											   new List<INode>(new INode[] {nodes[0], nodes[2]}), 
+											   new List<INode>(new INode[] {nodes[1], nodes[2]}), 
+										   };
+			actual = SelectionCountConstraint.RangeSelected(0, 2, nodes).PossibleSolutions.ToArray();
+			Assert.AreEqual(expected.Length, actual.Length);
+			for (int i = 0; i < expected.Length; i++)
+				CollectionAssert.AreEquivalent(expected[i].ToArray(), actual[i].ToArray());
 		}
 	}
 }
