@@ -41,6 +41,7 @@ namespace ClueBuddyGui {
 
 		void newGameButton_Click(object sender, EventArgs e) {
 			StartGameWindow startGameWindow = new StartGameWindow();
+			startGameWindow.Owner = this;
 			bool? result = startGameWindow.ShowDialog();
 			if (result.HasValue && result.Value) {
 
