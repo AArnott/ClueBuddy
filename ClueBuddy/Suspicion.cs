@@ -2,20 +2,48 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 
 namespace ClueBuddy {
-	public class Suspicion {
+	public class Suspicion : INotifyPropertyChanged {
+		public Suspicion() { }
 		public Suspicion(Suspect suspect, Weapon weapon, Place place) {
 			if (suspect == null) throw new ArgumentNullException("suspect");
 			if (weapon == null) throw new ArgumentNullException("weapon");
 			if (place == null) throw new ArgumentNullException("place");
-			this.Suspect = suspect;
-			this.Weapon = weapon;
-			this.Place = place;
+			this.suspect = suspect;
+			this.weapon = weapon;
+			this.place = place;
 		}
-		public readonly Suspect Suspect;
-		public readonly Weapon Weapon;
-		public readonly Place Place;
+
+		Suspect suspect;
+		public Suspect Suspect {
+			get { return suspect; }
+			set {
+				if (suspect == value) return;
+				suspect = value;
+				OnPropertyChanged("Suspect");
+			}
+		}
+		Weapon weapon;
+		public Weapon Weapon {
+			get { return weapon; }
+			set {
+				if (weapon == value) return;
+				weapon = value;
+				OnPropertyChanged("Weapon");
+			}
+		}
+		Place place;
+		public Place Place {
+			get { return place; }
+			set {
+				if (place == value) return;
+				place = value;
+				OnPropertyChanged("Place");
+			}
+		}
+
 		public IEnumerable<Card> Cards {
 			get {
 				yield return Suspect;
@@ -27,5 +55,16 @@ namespace ClueBuddy {
 		public override string ToString() {
 			return string.Format("[{0}, {1}, {2}]", Suspect, Weapon, Place);
 		}
+
+		#region INotifyPropertyChanged Members
+
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected virtual void OnPropertyChanged(string propertyName) {
+			PropertyChangedEventHandler propertyChanged = PropertyChanged;
+			if (propertyChanged != null) {
+				propertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		#endregion
 	}
 }
