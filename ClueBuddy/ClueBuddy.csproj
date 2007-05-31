@@ -51,6 +51,7 @@
     <Compile Include="Card.cs" />
     <Compile Include="CaseFile.cs" />
     <Compile Include="Clue.cs" />
+    <Compile Include="CompositeClue.cs" />
     <Compile Include="CompositeConstraint.cs" />
     <Compile Include="ConstraintBase.cs" />
     <Compile Include="ConstraintGenerator.cs" />

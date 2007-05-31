@@ -6,6 +6,7 @@ using System.Text;
 
 namespace ClueBuddy {
 	public abstract class Clue : INotifyPropertyChanged {
+		protected Clue() { }
 		protected Clue(Player player) {
 			if (player == null) throw new ArgumentNullException("player");
 			this.player = player;
