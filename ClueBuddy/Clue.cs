@@ -14,6 +14,7 @@ namespace ClueBuddy {
 		Player player;
 		/// <summary>
 		/// The player the clue is regarding.
+		/// Either the player making the suggestion or the player whose card was seen.
 		/// </summary>
 		public Player Player {
 			get { return player; }

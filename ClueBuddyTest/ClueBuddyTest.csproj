@@ -53,6 +53,7 @@
     <Compile Include="CardTest.cs" />
     <Compile Include="CaseFileTest.cs" />
     <Compile Include="ClueTestBase.cs" />
+    <Compile Include="CompositeClueTest.cs" />
     <Compile Include="ConstraintBaseTest.cs" />
     <Compile Include="ConstraintGeneratorTest.cs" />
     <Compile Include="DisprovedTest.cs" />
