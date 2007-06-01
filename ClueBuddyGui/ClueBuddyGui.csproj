@@ -58,6 +58,9 @@
     <Page Include="ClueGrid.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="CompositeClueBrowser.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GameDesigner.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -80,6 +83,9 @@
   <ItemGroup>
     <Compile Include="ClueGrid.xaml.cs">
       <DependentUpon>ClueGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CompositeClueBrowser.xaml.cs">
+      <DependentUpon>CompositeClueBrowser.xaml</DependentUpon>
     </Compile>
     <Compile Include="GameDesigner.xaml.cs">
       <DependentUpon>GameDesigner.xaml</DependentUpon>

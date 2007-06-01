@@ -5,12 +5,6 @@
 	xmlns:clueGui="clr-namespace:ClueBuddyGui"
 	Title="ClueBuddy" Height="338" Width="824">
 	<Window.Resources>
-		<DataTemplate x:Key="DisproveListItem">
-			<StackPanel Orientation="Horizontal" >
-				<CheckBox VerticalAlignment="Center" Margin="0,0,0,0" Padding="0,0,0,0" x:Name="checkBox"/>
-				<Label VerticalAlignment="Center" Content="{Binding}" Margin="0,0,0,0" Padding="0,0,0,0"/>
-			</StackPanel>
-		</DataTemplate>
 	</Window.Resources>
 	<Grid >
 		<Grid.ColumnDefinitions>
@@ -28,19 +22,7 @@
 			<Button x:Name="saveGameButton">Save</Button>
 		</ToolBar>
 		<clueGui:ClueGrid Grid.Row="1" Grid.Column="0" x:Name="clueMatrix" Margin="0,0,5,0"/>
-		<StackPanel Grid.Row="1" x:Name="sidePanel" Orientation="Vertical" Grid.Column="1" Margin="5,5,5,5">
-			<TextBlock TextWrapping="Wrap">What is happening in the game?</TextBlock>
-			<ComboBox Height="26" x:Name="suggester" ItemsSource="{Binding Path=Players}" />
-			<TextBlock TextWrapping="Wrap">suggested that</TextBlock>
-			<ComboBox Height="26" x:Name="chooseSuspect" ItemsSource="{Binding Path=Suspects}" />
-			<TextBlock TextWrapping="Wrap">did it in the</TextBlock>
-			<ComboBox Height="26" x:Name="choosePlace" ItemsSource="{Binding Path=Locations}" />
-			<TextBlock TextWrapping="Wrap">with the</TextBlock>
-			<ComboBox Height="26" x:Name="chooseWeapon" ItemsSource="{Binding Path=Weapons}" />
-			<TextBlock TextWrapping="Wrap">And who can disprove this suggestion?</TextBlock>
-			<ListBox x:Name="disprovingPlayers" ItemsSource="{Binding Path=Players}" ItemTemplate="{StaticResource DisproveListItem}"/>
-			<Button x:Name="applyButton" IsDefault="True" Margin="0,5,0,0" Click="applyButton_Click">Apply</Button>
-		</StackPanel>
+		<clueGui:CompositeClueBrowser Grid.Row="1" Grid.Column="1" x:Name="sidePanel" Margin="5,5,5,5"/>
 		<GridSplitter Grid.Column="0" Grid.Row="1" Name="gridSplitter1" Width="5"  />
 	</Grid>
 </Window>
