@@ -4,6 +4,13 @@
 	xmlns:clue="clr-namespace:ClueBuddy;assembly=ClueBuddy"
 	xmlns:clueGui="clr-namespace:ClueBuddyGui">
 	<UserControl.Resources>
+		<CollectionViewSource x:Key="cluesDataView"
+			Source="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, 
+						Path=DataContext.Clues}" />
+		<CollectionViewSource x:Key="opponentsDataView"
+			Filter="filterSelectedPlayer"
+			Source="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, 
+						Path=DataContext.Players}" />
 		<DataTemplate x:Key="DisproveListItem">
 			<StackPanel Orientation="Horizontal" >
 				<CheckBox VerticalAlignment="Center" Margin="0,0,0,0" Padding="0,0,0,0" x:Name="checkBox">
@@ -14,42 +21,42 @@
 		<DataTemplate x:Key="CompositeClueTemplate">
 			<StackPanel Orientation="Vertical">
 				<TextBlock TextWrapping="Wrap">What is happening in the game?</TextBlock>
-				<ComboBox Height="26" x:Name="suggester" 
+				<ComboBox Height="26"
 					SelectedValue="{Binding Path=Player, UpdateSourceTrigger=LostFocus}"
+					SelectionChanged="suggestingPlayer_SelectionChanged"
 					ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentControl}}, 
 									Path=DataContext.Players}" />
 				<TextBlock TextWrapping="Wrap">suggested that</TextBlock>
-				<ComboBox Height="26" x:Name="chooseSuspect" 
+				<ComboBox Height="26"
 					SelectedValue="{Binding Path=Suspicion.Suspect, UpdateSourceTrigger=LostFocus}"
 					ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentControl}}, 
 									Path=DataContext.Suspects}" />
 				<TextBlock TextWrapping="Wrap">did it in the</TextBlock>
-				<ComboBox Height="26" x:Name="choosePlace" 
+				<ComboBox Height="26"
 					SelectedValue="{Binding Path=Suspicion.Place, UpdateSourceTrigger=LostFocus}"
 					ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentControl}}, 
 									Path=DataContext.Places}" />
 				<TextBlock TextWrapping="Wrap">with the</TextBlock>
-				<ComboBox Height="26" x:Name="chooseWeapon" 
+				<ComboBox Height="26"
 					SelectedValue="{Binding Path=Suspicion.Weapon, UpdateSourceTrigger=LostFocus}" 
 					ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentControl}}, 
 									Path=DataContext.Weapons}" />
 				<TextBlock TextWrapping="Wrap">And who can disprove this suggestion?</TextBlock>
-				<ListBox x:Name="disprovingPlayers" ItemTemplate="{StaticResource DisproveListItem}"
-					ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentControl}}, 
-									Path=DataContext.Players}" />
+				<ListBox ItemTemplate="{StaticResource DisproveListItem}"
+					ItemsSource="{Binding Source={StaticResource opponentsDataView}}" />
 			</StackPanel>
 		</DataTemplate>
 	</UserControl.Resources>
 	<StackPanel Orientation="Vertical">
 		<StackPanel Orientation="Horizontal">
 			<Button x:Name="previousClueButton" Click="previousClueButton_Click">Prev</Button>
-			<Button x:Name="nextClueButton">Next</Button>
-			<Button x:Name="newClueButton">New</Button>
-			<Button x:Name="deleteClueButton">Delete</Button>
+			<Button x:Name="nextClueButton" Click="nextClueButton_Click">Next</Button>
+			<Button x:Name="newClueButton" Click="newClueButton_Click">New</Button>
+			<Button x:Name="deleteClueButton" Click="deleteClueButton_Click">Delete</Button>
 		</StackPanel>
 
 		<ContentControl 
-			Content="{Binding Path=Clues}" 
+			Content="{Binding Source={StaticResource cluesDataView}}" 
 			ContentTemplate="{StaticResource CompositeClueTemplate}"
 			x:Name="cc"
 			/>
