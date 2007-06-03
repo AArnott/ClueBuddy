@@ -88,7 +88,7 @@ namespace ClueBuddy {
 		/// The cards in the game.
 		/// </summary>
 		public IEnumerable<Card> Cards {
-			get { return cards; }
+			get { return from c in cards orderby c.Name select c; }
 		}
 
 		IEnumerable<T> getCardsOfType<T>() where T : Card {

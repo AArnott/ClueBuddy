@@ -57,28 +57,11 @@ namespace ClueBuddyGui {
 			// fill in the cards
 			matrix.ColumnDefinitions.RemoveRange(1, matrix.ColumnDefinitions.Count - 1);
 			var columnWidth = new GridLength(0.75 / game.Cards.Count(), GridUnitType.Star);
-			foreach (Card c in game.Cards) {
-				matrix.ColumnDefinitions.Add(new ColumnDefinition() { Width = columnWidth });
-				TextBlock cardBlock = new TextBlock() {
-										  Style = (Style)Resources["VerticalText"]
-									  };
-				cardBlock.DataContext = c;
-				cardBlock.SetBinding(TextBlock.TextProperty, new Binding("Name"));
-				cardBlock.SetValue(Grid.ColumnProperty, matrix.ColumnDefinitions.Count - 1);
-				cardBlock.SetValue(Grid.RowProperty, 1);
-				matrix.Children.Add(cardBlock);
+			
+			addCardColumn(columnWidth, game.Suspects.OfType<Card>());
+			addCardColumn(columnWidth, game.Weapons.OfType<Card>());
+			addCardColumn(columnWidth, game.Places.OfType<Card>());
 
-				// Fill in the individual nodes for this card.
-				foreach (Player player in game.Players) {
-					Node node = game.Nodes.Where(n => n.CardHolder == player && n.Card == c).First();
-					Label nodeLabel = new Label();
-					nodeLabel.SetValue(Grid.ColumnProperty, matrix.ColumnDefinitions.Count - 1);
-					nodeLabel.SetValue(Grid.RowProperty, game.Players.IndexOf(player) + 2);
-					nodeLabel.DataContext = node;
-					nodeLabel.SetBinding(Label.ContentProperty, new Binding("IsSelected"));
-					matrix.Children.Add(nodeLabel);
-				}
-			}
 			suspectsLabel.SetValue(Grid.ColumnSpanProperty, game.Suspects.Count());
 			weaponsLabel.SetValue(Grid.ColumnProperty, game.Suspects.Count());
 			weaponsLabel.SetValue(Grid.ColumnSpanProperty, game.Weapons.Count());
@@ -99,6 +82,31 @@ namespace ClueBuddyGui {
 				nodeLabel.SetBinding(Label.ContentProperty, new Binding("IsSelected"));
 				matrix.Children.Add(nodeLabel);
 				cardIndex++;
+			}
+		}
+
+		void addCardColumn(GridLength columnWidth, IEnumerable<Card> cardGroup) {
+			foreach (Card c in cardGroup) {
+				matrix.ColumnDefinitions.Add(new ColumnDefinition() { Width = columnWidth });
+				TextBlock cardBlock = new TextBlock() {
+					Style = (Style)Resources["VerticalText"]
+				};
+				cardBlock.DataContext = c;
+				cardBlock.SetBinding(TextBlock.TextProperty, new Binding("Name"));
+				cardBlock.SetValue(Grid.ColumnProperty, matrix.ColumnDefinitions.Count - 1);
+				cardBlock.SetValue(Grid.RowProperty, 1);
+				matrix.Children.Add(cardBlock);
+
+				// Fill in the individual nodes for this card.
+				foreach (Player player in game.Players) {
+					Node node = game.Nodes.Where(n => n.CardHolder == player && n.Card == c).First();
+					Label nodeLabel = new Label();
+					nodeLabel.SetValue(Grid.ColumnProperty, matrix.ColumnDefinitions.Count - 1);
+					nodeLabel.SetValue(Grid.RowProperty, game.Players.IndexOf(player) + 2);
+					nodeLabel.DataContext = node;
+					nodeLabel.SetBinding(Label.ContentProperty, new Binding("IsSelected"));
+					matrix.Children.Add(nodeLabel);
+				}
 			}
 		}
 
