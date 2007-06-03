@@ -15,13 +15,13 @@ namespace ClueBuddyTest {
 			cc.Player = g.Players[0];
 			cc.Suspicion = new Suspicion(g.Suspects.First(), g.Weapons.First(), g.Places.First());
 			Assert.AreEqual(0, cc.GetConstraints(g.Nodes).Count());
-			cc.DisprovingPlayers[g.Players[1]] = false;
+			cc.Responses[g.Players[1]].Disproved = false;
 			var constraints = cc.GetConstraints(g.Nodes);
 			Assert.AreEqual(1, constraints.Count());
 			SelectionCountConstraint firstConstraint = (SelectionCountConstraint)constraints.First();
 			Assert.IsTrue((!firstConstraint.SelectionState && firstConstraint.Min > 0) ||
 				(firstConstraint.SelectionState && firstConstraint.Max == 0));
-			cc.DisprovingPlayers[g.Players[2]] = true;
+			cc.Responses[g.Players[2]].Disproved = true;
 			// constraints = cc.GetConstraints(g.Nodes); // this is unnecessary since it's a delayed evaluation
 			Assert.AreEqual(2, constraints.Count());
 			foreach (SelectionCountConstraint constraint in constraints) {

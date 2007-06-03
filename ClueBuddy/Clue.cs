@@ -16,7 +16,7 @@ namespace ClueBuddy {
 		/// The player the clue is regarding.
 		/// Either the player making the suggestion or the player whose card was seen.
 		/// </summary>
-		public Player Player {
+		public virtual Player Player {
 			get { return player; }
 			set {
 				if (player == value) return; // nothing to change

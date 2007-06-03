@@ -29,28 +29,15 @@ namespace ClueBuddyGui {
 		CollectionViewSource cluesDataView {
 			get { return Resources["cluesDataView"] as CollectionViewSource; }
 		}
-		CollectionViewSource opponentsDataView {
-			get { return Resources["opponentsDataView"] as CollectionViewSource; }
-		}
 		Clue currentClue {
 			get { return cluesDataView.View.CurrentItem as Clue; }
 		}
 
-		Player selectingPlayer;
-		void suggestingPlayer_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-			selectingPlayer = e.AddedItems.Count > 0 ? e.AddedItems[0] as Player : null;
-			opponentsDataView.View.Refresh();
-			selectingPlayer = null;
-		}
-
-		void filterSelectedPlayer(object sender, FilterEventArgs e) {
-			if (currentClue != null) {
-				Player p = (Player)e.Item;
-				Player suggestingPlayer = selectingPlayer ?? currentClue.Player;
-				e.Accepted = p != suggestingPlayer;
-			} else {
-				e.Accepted = true;
-			}
+		void suggestingPlayer_Changed(object sender, EventArgs e) {
+			ComboBox list = (ComboBox)sender;
+			StackPanel panel = (StackPanel)list.Parent;
+			ListBox lb = (ListBox)panel.FindName("responses");
+			lb.Items.Refresh();
 		}
 
 		void previousClueButton_Click(object sender, EventArgs e) {

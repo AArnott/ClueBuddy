@@ -13,9 +13,7 @@ namespace ClueBuddy {
 		/// <param name="disprovingPlayer">The player disproving the <see cref="Suspicion">suggestion</see>.</param>
 		/// <param name="suggestion">The weapon, suspect and place being suspected.</param>
 		public Disproved(Player disprovingPlayer, Suspicion suggestion)
-			: base(disprovingPlayer) {
-			if (suggestion == null) throw new ArgumentNullException("suggestion");
-			this.suspicion = suggestion;
+			: this(disprovingPlayer, suggestion, null) {
 		}
 		/// <summary>
 		/// Creates a clue from when an opponent disproves the <see cref="Suspicion"/>
@@ -25,14 +23,15 @@ namespace ClueBuddy {
 		/// <param name="suggestion">The weapon, suspect and place being suspected.</param>
 		/// <param name="cardShown">The card that the opponent showed to disprove the <see cref="Suspicion"/>.</param>
 		public Disproved(Player opponent, Suspicion suggestion, Card cardShown)
-			: this(opponent, suggestion) {
-			if (cardShown == null)
-				throw new ArgumentNullException("cardShown");
-			if (!suggestion.Cards.Contains(cardShown))
-				throw new ArgumentException(string.Format(Strings.DisprovingCardNotInSuspicion, "cardShown", "suggestion"));
-			this.cardShown = cardShown;
+			: base(opponent) {
+			if (suggestion == null) throw new ArgumentNullException("suggestion");
+			this.suspicion = suggestion;
+			if (cardShown != null) {
+				if (!suggestion.Cards.Contains(cardShown))
+					throw new ArgumentException(string.Format(Strings.DisprovingCardNotInSuspicion, "cardShown", "suggestion"));
+				this.cardShown = cardShown;
+			}
 		}
-
 
 		private Suspicion suspicion;
 		/// <summary>

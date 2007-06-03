@@ -7,14 +7,11 @@
 		<CollectionViewSource x:Key="cluesDataView"
 			Source="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, 
 						Path=DataContext.Clues}" />
-		<CollectionViewSource x:Key="opponentsDataView"
-			Filter="filterSelectedPlayer"
-			Source="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, 
-						Path=DataContext.Players}" />
-		<DataTemplate x:Key="DisproveListItem">
-			<StackPanel Orientation="Horizontal" >
-				<CheckBox VerticalAlignment="Center" Margin="0,0,0,0" Padding="0,0,0,0" x:Name="checkBox">
-					<Label VerticalAlignment="Center" Content="{Binding}" Margin="0,0,0,0" Padding="0,0,0,0"/>
+		<DataTemplate x:Key="suggestionResponse">
+			<StackPanel Orientation="Horizontal">
+				<CheckBox VerticalAlignment="Center" Margin="0,0,0,0" Padding="0,0,0,0"
+					IsChecked="{Binding Path=Value.Disproved}" IsThreeState="True">
+					<Label VerticalAlignment="Center" Content="{Binding Path=Key}" Margin="0,0,0,0" Padding="0,0,0,0"/>
 				</CheckBox>
 			</StackPanel>
 		</DataTemplate>
@@ -23,7 +20,7 @@
 				<TextBlock TextWrapping="Wrap">What is happening in the game?</TextBlock>
 				<ComboBox Height="26"
 					SelectedValue="{Binding Path=Player, UpdateSourceTrigger=LostFocus}"
-					SelectionChanged="suggestingPlayer_SelectionChanged"
+					LostFocus="suggestingPlayer_Changed"
 					ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentControl}}, 
 									Path=DataContext.Players}" />
 				<TextBlock TextWrapping="Wrap">suggested that</TextBlock>
@@ -42,8 +39,8 @@
 					ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentControl}}, 
 									Path=DataContext.Weapons}" />
 				<TextBlock TextWrapping="Wrap">And who can disprove this suggestion?</TextBlock>
-				<ListBox ItemTemplate="{StaticResource DisproveListItem}"
-					ItemsSource="{Binding Source={StaticResource opponentsDataView}}" />
+				<ListBox x:Name="responses" ItemTemplate="{StaticResource suggestionResponse}"
+					ItemsSource="{Binding Path=Responses}" />
 			</StackPanel>
 		</DataTemplate>
 	</UserControl.Resources>

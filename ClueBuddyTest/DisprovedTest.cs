@@ -36,12 +36,6 @@ namespace ClueBuddyTest {
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void DisprovedConstructorWithNullCardTest() {
-			new Disproved(disprovingPlayer, suggestion, null);
-		}
-
-		[TestMethod]
 		[ExpectedException(typeof(ArgumentException))]
 		public void DisprovedConstructorWithForeignCardTest() {
 			Player disprovingPlayer = new Player("opponent");

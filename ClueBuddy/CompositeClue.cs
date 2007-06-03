@@ -5,7 +5,73 @@ using System.Linq;
 using System.Text;
 
 namespace ClueBuddy {
+	public class SuggestionResponse : INotifyPropertyChanged {
+		bool? disproved;
+
+		public bool? Disproved {
+			get { return disproved; }
+			set {
+				if (disproved == value) return;
+				disproved = value;
+				OnPropertyChanged("Disproved");
+			}
+		}
+		Card alabi;
+
+		public Card Alabi {
+			get { return alabi; }
+			set {
+				if (alabi == value) return;
+				alabi = value;
+				OnPropertyChanged("Alabi");
+			}
+		}
+
+		#region INotifyPropertyChanged Members
+
+		public event PropertyChangedEventHandler PropertyChanged;
+		protected virtual void OnPropertyChanged(string propertyName) {
+			PropertyChangedEventHandler propertyChanged = PropertyChanged;
+			if (propertyChanged != null) {
+				propertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+
+		#endregion
+	}
+
 	public class CompositeClue : Clue {
+		public override Player Player {
+			get {
+				return base.Player;
+			}
+			set {
+				base.Player = value;
+				setupOpponents();
+			}
+		}
+
+		void setupOpponents() {
+			if (Player == null || Player.Game == null) {
+				Responses.Clear();
+			} else {
+				Game g = Player.Game;
+				// produce a clean dictionary of players, while preserving any hints we
+				// had before
+				var template = new Dictionary<Player, SuggestionResponse>();
+				foreach (Player p in g.Players) {
+					if (p != Player) {
+						template[p] = Responses.ContainsKey(p) ? Responses[p] : new SuggestionResponse();
+					}
+				}
+				// now clean out the actual dictionary we're using and inject the clean version.
+				Responses.Clear();
+				foreach (var pair in template) {
+					Responses.Add(pair.Key, pair.Value);
+				}
+			}
+		}
+
 		Suspicion suspicion = new Suspicion();
 		/// <summary>
 		/// Which three cards are trying to be disproven.
@@ -19,22 +85,22 @@ namespace ClueBuddy {
 			}
 		}
 
-		Dictionary<Player, bool> disprovingPlayers = new Dictionary<Player, bool>();
-		/// <summary>
-		/// Any players that either proved or disproved a suggestion,
-		/// and a bool indicating whether they disproved it.
-		/// If a player did not respond either way to <see cref="Suspicion"/>,
-		/// that player should not show up in this dictionary.
-		/// </summary>
-		public Dictionary<Player, bool> DisprovingPlayers {
-			get { return disprovingPlayers; }
+		Dictionary<Player, SuggestionResponse> responses = new Dictionary<Player, SuggestionResponse>();
+		public Dictionary<Player, SuggestionResponse> Responses {
+			get { return responses; }
 		}
 
 		IEnumerable<Clue> generateClues() {
-			foreach (KeyValuePair<Player, bool> pair in DisprovingPlayers)
-				yield return pair.Value ? 
-					(Clue)new Disproved(pair.Key, Suspicion) : 
-					(Clue)new CannotDisprove(pair.Key, Suspicion);
+			foreach (KeyValuePair<Player, SuggestionResponse> pair in Responses) {
+				SuggestionResponse response = pair.Value;
+				if (response.Disproved.HasValue) {
+					if (response.Disproved.Value) {
+						yield return new Disproved(pair.Key, Suspicion, pair.Value.Alabi);
+					} else {
+						yield return new CannotDisprove(pair.Key, Suspicion);
+					}
+				}
+			}
 		}
 
 		internal override IEnumerable<IConstraint> GetConstraints(IEnumerable<Node> nodes) {
