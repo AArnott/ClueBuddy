@@ -36,7 +36,7 @@ namespace ClueBuddyGui {
 		void suggestingPlayer_Changed(object sender, EventArgs e) {
 			ComboBox list = (ComboBox)sender;
 			StackPanel panel = (StackPanel)list.Parent;
-			ListBox lb = (ListBox)panel.FindName("responses");
+			ItemsControl lb = (ItemsControl)panel.FindName("responses");
 			lb.Items.Refresh();
 		}
 

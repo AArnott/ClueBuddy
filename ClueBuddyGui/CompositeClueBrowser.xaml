@@ -39,7 +39,7 @@
 					ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentControl}}, 
 									Path=DataContext.Weapons}" />
 				<TextBlock TextWrapping="Wrap">And who can disprove this suggestion?</TextBlock>
-				<ListBox x:Name="responses" ItemTemplate="{StaticResource suggestionResponse}"
+				<ItemsControl x:Name="responses" ItemTemplate="{StaticResource suggestionResponse}"
 					ItemsSource="{Binding Path=Responses}" />
 			</StackPanel>
 		</DataTemplate>
