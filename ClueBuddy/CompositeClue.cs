@@ -70,6 +70,7 @@ namespace ClueBuddy {
 					Responses.Add(pair.Key, pair.Value);
 				}
 			}
+			OnConstraintsChanged();
 		}
 
 		Suspicion suspicion = new Suspicion();
@@ -80,9 +81,19 @@ namespace ClueBuddy {
 			get { return suspicion; }
 			set {
 				if (suspicion == value) return;
+				if (suspicion != null) {
+					suspicion.PropertyChanged -= new PropertyChangedEventHandler(suspicion_PropertyChanged);
+				}
 				suspicion = value;
 				OnPropertyChanged("Suspicion");
+				if (suspicion != null) {
+					suspicion.PropertyChanged += new PropertyChangedEventHandler(suspicion_PropertyChanged);
+				}
 			}
+		}
+
+		void suspicion_PropertyChanged(object sender, PropertyChangedEventArgs e) {
+			OnConstraintsChanged();
 		}
 
 		Dictionary<Player, SuggestionResponse> responses = new Dictionary<Player, SuggestionResponse>();

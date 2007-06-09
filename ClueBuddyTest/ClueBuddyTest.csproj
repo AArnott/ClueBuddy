@@ -58,6 +58,7 @@
     <Compile Include="ConstraintGeneratorTest.cs" />
     <Compile Include="DisprovedTest.cs" />
     <Compile Include="DummyNode.cs" />
+    <Compile Include="FullGameTest.cs" />
     <Compile Include="GameTest.cs" />
     <Compile Include="IntuitionTest.cs" />
     <Compile Include="NodeTest.cs" />

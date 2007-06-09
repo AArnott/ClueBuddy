@@ -6,13 +6,19 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ClueBuddy;
 
 namespace ClueBuddyTest {
-	static class Extensions {
+	static partial class Extensions {
+		public static void disproved(this Player player, Suspicion suggestion) {
+			player.Game.Clues.Add(new Disproved(player, suggestion));
+		}
 		public static void disproved(this Player player, params Card[] cards) {
 			player.Game.Clues.Add(new DisprovedAnyCards(player, cards));
 		}
 		public static void see_card(this Player player, params Card[] cards) {
 			foreach (Card card in cards)
 				player.Game.Clues.Add(new SpyCard(player, card));
+		}
+		public static void cannot_disprove(this Player player, Suspicion suggestion) {
+			player.Game.Clues.Add(new CannotDisprove(player, suggestion));
 		}
 		public static void cannot_disprove(this Player player, params Card[] cards) {
 			player.Game.Clues.Add(new CannotDisproveAnyCards(player, cards));

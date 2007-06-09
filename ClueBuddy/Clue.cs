@@ -30,6 +30,14 @@ namespace ClueBuddy {
 		/// </summary>
 		internal abstract IEnumerable<IConstraint> GetConstraints(IEnumerable<Node> nodes);
 
+		public event EventHandler ConstraintsChanged;
+		protected virtual void OnConstraintsChanged() {
+			EventHandler constraintsChanged = ConstraintsChanged;
+			if (constraintsChanged != null) {
+				constraintsChanged(this, null);
+			}
+		}
+
 		#region INotifyPropertyChanged Members
 
 		public event PropertyChangedEventHandler PropertyChanged;

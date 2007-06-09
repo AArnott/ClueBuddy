@@ -223,8 +223,9 @@ namespace ClueBuddy {
 
 		void clues_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
 			if (e.NewItems != null)
-				foreach (Clue clue in e.NewItems)
+				foreach (Clue clue in e.NewItems) {
 					clue.PropertyChanged += new PropertyChangedEventHandler(clue_PropertyChanged);
+				}
 			if (e.OldItems != null)
 				foreach (Clue clue in e.OldItems)
 					clue.PropertyChanged -= new PropertyChangedEventHandler(clue_PropertyChanged);

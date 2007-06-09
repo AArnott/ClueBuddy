@@ -23,8 +23,8 @@ namespace ClueBuddy {
 									DisprovalEndsTurn = true
 								}, Card.Generate(
 									Suspect.Generate("Green", "Mustard", "Peacock", "Plum", "Scarlet", "White"),
-									Weapon.Generate("Simpson house", "Frying dutchman", "Androids dungeon", "Burns manor", "Krusty loo studios", "Barneys Bowl o rama", "Kwik e mart", "Nuclear power plant", "Springfield retirement castle"),
-									Place.Generate("Poison donut", "Plutonium rod", "Saxophone", "Slingshot", "Necklace", "Extend-o-glove")
+									Weapon.Generate("Poison donut", "Plutonium rod", "Saxophone", "Slingshot", "Necklace", "Extend-o-glove"),
+									Place.Generate("Simpson house", "Frying dutchman", "Androids dungeon", "Burns manor", "Krusty loo studios", "Barneys Bowl o rama", "Kwik e mart", "Nuclear power plant", "Springfield retirement castle")
 								)
 				);
 			}
