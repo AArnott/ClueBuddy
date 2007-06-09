@@ -32,11 +32,11 @@ namespace ClueBuddyGui {
 			game.Players.Add(new Player("Julia"));
 			game.Players.Add(new Player("Anthony"));
 			game.Players.Add(new Player("Brandee"));
-			this.clueMatrix.DataContext = game.Players;
-			this.sidePanel.DataContext = game;
 			game.AssignApproximatePlayerHandSizes();
 			game.Start();
+			this.clueMatrix.DataContext = game;
 			this.clueMatrix.Game = game;
+			this.sidePanel.DataContext = game;
 
 			game.Clues.Add(new CompositeClue());
 		}

@@ -3,17 +3,17 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:clue="clr-namespace:ClueBuddy;assembly=ClueBuddy"
 	xmlns:clueGui="clr-namespace:ClueBuddyGui"
-	Title="ClueBuddy" Height="338" Width="824">
+	Title="ClueBuddy" Height="450" Width="824">
 	<Window.Resources>
 	</Window.Resources>
 	<Grid >
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition />
-			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="29"/>
 			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 		<ToolBar Height="29" Name="toolBar1" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0">
@@ -21,8 +21,11 @@
 			<Button x:Name="openGameButton">Open</Button>
 			<Button x:Name="saveGameButton">Save</Button>
 		</ToolBar>
-		<clueGui:ClueGrid Grid.Row="1" Grid.Column="0" x:Name="clueMatrix" Margin="0,0,5,0"/>
-		<clueGui:CompositeClueBrowser Grid.Row="1" Grid.Column="1" x:Name="sidePanel" Margin="5,5,5,5"/>
-		<GridSplitter Grid.Column="0" Grid.Row="1" Name="gridSplitter1" Width="5"  />
+		<clueGui:ClueGrid Grid.Row="1" Grid.Column="0" x:Name="clueMatrix"/>
+
+		<GridSplitter Grid.Column="0" Grid.Row="2" Name="gridSplitter1" Height="5" 
+			HorizontalAlignment="Stretch" VerticalAlignment="Center" ShowsPreview="False"/>
+
+		<clueGui:CompositeClueBrowser Grid.Row="3" Grid.Column="0" x:Name="sidePanel" Margin="5,5,5,5"/>
 	</Grid>
 </Window>
