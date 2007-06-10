@@ -36,7 +36,7 @@ namespace ClueBuddyGui {
 			}
 		}
 
-		private void initializeGame() {
+		void initializeGame() {
 			clearControls();
 			// set game title
 			title.DataContext = game;
@@ -46,8 +46,8 @@ namespace ClueBuddyGui {
 			foreach (Player player in game.Players) {
 				matrix.RowDefinitions.Add(new RowDefinition());
 				Label playerLabel = new Label() {
-										Style = (Style)Resources["PlayerName"],
-									};
+					Style = (Style)Resources["PlayerName"],
+				};
 				playerLabel.DataContext = player;
 				playerLabel.SetBinding(Label.ContentProperty, new Binding("Name"));
 				playerLabel.SetValue(Grid.ColumnProperty, 0);
@@ -57,7 +57,7 @@ namespace ClueBuddyGui {
 			// fill in the cards
 			matrix.ColumnDefinitions.RemoveRange(1, matrix.ColumnDefinitions.Count - 1);
 			var columnWidth = new GridLength(0.75 / game.Cards.Count(), GridUnitType.Star);
-			
+
 			addCardColumn(columnWidth, game.Suspects.OfType<Card>());
 			addCardColumn(columnWidth, game.Weapons.OfType<Card>());
 			addCardColumn(columnWidth, game.Places.OfType<Card>());
@@ -110,8 +110,7 @@ namespace ClueBuddyGui {
 			}
 		}
 
-
-		private void clearControls() {
+		void clearControls() {
 			Control[] sampleControls = (from ui in matrix.Children.OfType<UIElement>()
 										let c = ui as Control
 										where c != null && (
@@ -121,6 +120,65 @@ namespace ClueBuddyGui {
 										select c).ToArray();
 			foreach (Control c in sampleControls)
 				matrix.Children.Remove(c);
+		}
+
+		public class PlayerClickedEventArgs : EventArgs {
+			public PlayerClickedEventArgs(Player player) {
+				this.player = player;
+			}
+			Player player;
+			public Player Player { get { return player; } }
+		}
+		public event EventHandler<PlayerClickedEventArgs> PlayerClicked;
+		protected virtual void OnPlayerClicked(Player player) {
+			if (player == null) throw new ArgumentNullException("player");
+			var playerClicked = PlayerClicked;
+			if (playerClicked != null) {
+				playerClicked(this, new PlayerClickedEventArgs(player));
+			}
+		}
+		public class CardClickedEventArgs : EventArgs {
+			public CardClickedEventArgs(Card card) {
+				this.card = card;
+			}
+			Card card;
+			public Card Card { get { return card; } }
+		}
+		public event EventHandler<CardClickedEventArgs> CardClicked;
+		protected virtual void OnCardClicked(Card card) {
+			if (card == null) throw new ArgumentNullException("card");
+			var cardClicked = CardClicked;
+			if (cardClicked != null) {
+				cardClicked(this, new CardClickedEventArgs(card));
+			}
+		}
+
+		void matrix_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			object target = getClickedObject(e.Device.Target);
+			Node targetNode = target as Node;
+			Card targetCard = target as Card;
+			Player targetPlayer = target as Player;
+			if (targetNode != null) {
+				// TODO:
+			} else if (targetCard != null) {
+				OnCardClicked(targetCard);
+			} else if (targetPlayer != null) {
+				OnPlayerClicked(targetPlayer);
+			}
+		}
+
+		object getClickedObject(IInputElement target) {
+			TextBlock tb = target as TextBlock;
+			if (tb != null) {
+				object dc = tb.DataContext;
+				if (dc is Card)
+					return dc;
+				if (dc is Node)
+					return dc;
+				if (dc is string)
+					return game.Players.Where(p => p.Name.Equals(dc)).First();
+			}
+			return null;
 		}
 	}
 }

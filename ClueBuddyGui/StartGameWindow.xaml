@@ -1,42 +1,78 @@
-﻿<Window x:Class="ClueBuddyGui.StartGameWindow"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="StartGameWindow" Height="332" Width="439">
-    <Window.Resources>
-		<Style TargetType="{x:Type Button}">
-			<Setter Property="Margin" Value="5,0,0,0"/>
-			<Setter Property="MinWidth" Value="60"/>
-			<Setter Property="MaxHeight" Value="26" />
-		</Style>
-    </Window.Resources>
-    <Grid Margin="5,5,5,5">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*" />
-			<RowDefinition Height="35" />
-		</Grid.RowDefinitions>
+﻿<Window
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2006" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+	x:Class="ClueBuddyGui.StartGameWindow"
+	x:Name="Window"
+	Title="Start new game"
+	Width="640" Height="480">
 
-		<Grid Grid.Row="0">
-			<Grid.RowDefinitions>
-				<RowDefinition/>
-				<RowDefinition/>
-				<RowDefinition/>
-			</Grid.RowDefinitions>
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="0.20*"/>
-				<ColumnDefinition Width="*"/>
-			</Grid.ColumnDefinitions>
 
-			<Label Height="25.96" Grid.Row="0" Grid.Column="0" >Variety:</Label>
-			<ComboBox Height="26" Name="varietyBox" Grid.Column="1">
-				<ComboBoxItem>Great Detective</ComboBoxItem>
-				<ComboBoxItem>Simpsons</ComboBoxItem>
-			</ComboBox>
-			<Label Height="25.96" Grid.Row="1" Grid.Column="0">Players</Label>
-			<ListBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"/>
-		</Grid>
-		<StackPanel Orientation="Horizontal"  Grid.Row="1" HorizontalAlignment="Right">
-			<Button Name="cancelButton" IsCancel="True">Cancel</Button>
-			<Button Name="startButton" IsDefault="True" Click="startButton_Click">Start</Button>
+	<Grid x:Name="LayoutRoot">
+		<Rectangle AllowDrop="True" RenderTransformOrigin="0.5,0.5" Stroke="#FF693737" StrokeThickness="2" RadiusX="17" RadiusY="17" Margin="85.006,124.817,96.019,112.817" x:Name="playingTable">
+			<Rectangle.RenderTransform>
+				<TransformGroup>
+					<ScaleTransform ScaleX="1" ScaleY="1"/>
+					<SkewTransform AngleX="-10" AngleY="-23"/>
+					<RotateTransform Angle="-142.053"/>
+					<TranslateTransform X="0" Y="0"/>
+				</TransformGroup>
+			</Rectangle.RenderTransform>
+			<Rectangle.Fill>
+				<RadialGradientBrush SpreadMethod="Pad">
+					<GradientStop Color="#AF693A3A" Offset="0"/>
+					<GradientStop Color="#FF693737" Offset="0.995"/>
+				</RadialGradientBrush>
+			</Rectangle.Fill>
+		</Rectangle>
+		<ComboBox HorizontalAlignment="Left" VerticalAlignment="Top" IsSynchronizedWithCurrentItem="True" Margin="8,8,0,0">
+			<ComboBoxItem>Great Detective</ComboBoxItem>
+		</ComboBox>
+		<Rectangle RenderTransformOrigin="0.5,0.5" Fill="#FFFFFFFF" Stroke="#FF000000" StrokeThickness="2" RadiusX="1.5" RadiusY="1.5" HorizontalAlignment="Right" Margin="0,0,78,45" x:Name="card" Width="18" VerticalAlignment="Bottom" Height="29"/>
+		<Expander d:LayoutOverrides="Height" HorizontalAlignment="Left" Margin="50,0,0,88" VerticalAlignment="Bottom" Header="Options" IsExpanded="False">
+			<StackPanel>
+				<CheckBox>Multiple disproofs of one suggestion</CheckBox>
+				<CheckBox>Even distribution of card types</CheckBox>
+			</StackPanel>
+		</Expander>
+		<StackPanel Margin="0,8,8,0" Orientation="Horizontal" HorizontalAlignment="Right" x:Name="stackPanel" VerticalAlignment="Top" Height="62">
+			<Rectangle OpacityMask="{DynamicResource FemaleFigureMask}" Fill="{DynamicResource CharacterPeachFillBrush}" StrokeThickness="0" Width="40" Height="62" x:Name="missPeach" ToolTip="Ms. Peach"/>
+			<Rectangle OpacityMask="{DynamicResource FemaleFigureMask}" Fill="{DynamicResource CharacterRoseFillBrush}" StrokeThickness="0" Width="40" Height="Auto" x:Name="madameRose" ToolTip="Madame Rose" RenderTransformOrigin="0.5,0.5">
+				<Rectangle.RenderTransform>
+					<TransformGroup>
+						<ScaleTransform ScaleX="1" ScaleY="1"/>
+						<SkewTransform AngleX="0" AngleY="0"/>
+						<RotateTransform Angle="0"/>
+						<TranslateTransform X="0" Y="0"/>
+					</TransformGroup>
+				</Rectangle.RenderTransform>
+			</Rectangle>
+			<Rectangle OpacityMask="{DynamicResource FemaleFigureMask}" Fill="{DynamicResource CharacterScarletFillBrush}" StrokeThickness="0" x:Name="missScarlet" ToolTip="Ms. Scarlet" Width="40" Height="62"/>
+			<Rectangle OpacityMask="{DynamicResource FemaleFigureMask}" Fill="{DynamicResource CharacterWhiteFillBrush}" StrokeThickness="0" Width="40" Height="62" d:LayoutOverrides="Width, Height" x:Name="missesWhite" ToolTip="Mrs. White"/>
+			<Rectangle OpacityMask="{DynamicResource FemaleFigureMask}" Fill="{DynamicResource CharacterPeacockFillBrush}" StrokeThickness="0" x:Name="missesPeacock" d:LayoutOverrides="Width, Height" ToolTip="Mrs. Peacock" Width="40" Height="62" RenderTransformOrigin="0.5,0.5">
+				<Rectangle.RenderTransform>
+					<TransformGroup>
+						<ScaleTransform ScaleX="1" ScaleY="1"/>
+						<SkewTransform AngleX="0" AngleY="0"/>
+						<RotateTransform Angle="0"/>
+						<TranslateTransform X="0" Y="0"/>
+					</TransformGroup>
+				</Rectangle.RenderTransform>
+			</Rectangle>
+			<Rectangle OpacityMask="{DynamicResource MaleFigureMask}" Fill="{DynamicResource CharacterGreenFillBrush}" StrokeThickness="0" Width="40" Height="62" d:LayoutOverrides="Width, Height" x:Name="misterGreen" ToolTip="Mr. Green"/>
+			<Rectangle OpacityMask="{DynamicResource MaleFigureMask}" Fill="{DynamicResource CharacterPlumFillBrush}" StrokeThickness="0" x:Name="professorPlum" ToolTip="Professor Plum" Width="40" Height="62"/>
+			<Rectangle OpacityMask="{DynamicResource MaleFigureMask}" Fill="{DynamicResource CharacterMustardFillBrush}" StrokeThickness="0" x:Name="colonelMustard" ToolTip="Colonel Mustard" Width="40" Height="62"/>
+			<Rectangle OpacityMask="{DynamicResource MaleFigureMask}" Fill="{DynamicResource CharacterBrunetteFillBrush}" StrokeThickness="0" x:Name="monsieurBrunette" ToolTip="Monsieur Brunette" Width="40" Height="62" RenderTransformOrigin="0.5,0.5">
+				<Rectangle.RenderTransform>
+					<TransformGroup>
+						<ScaleTransform ScaleX="1" ScaleY="1"/>
+						<SkewTransform AngleX="0" AngleY="0"/>
+						<RotateTransform Angle="0"/>
+						<TranslateTransform X="0" Y="0"/>
+					</TransformGroup>
+				</Rectangle.RenderTransform>
+			</Rectangle>
+			<Rectangle OpacityMask="{DynamicResource MaleFigureMask}" Fill="{DynamicResource CharacterGreyFillBrush}" StrokeThickness="0" x:Name="sergeantGrey" Width="40" ToolTip="Sergeant Grey" Height="62"/>
 		</StackPanel>
 	</Grid>
 </Window>

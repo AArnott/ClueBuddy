@@ -149,6 +149,12 @@ namespace ClueBuddy {
 				OnPropertyChanged("AnalysisDepth");
 			}
 		}
+		internal const bool AutoConstraintRegenerationDefault = true;
+		bool autoConstraintRegeneration = AutoConstraintRegenerationDefault;
+		public bool AutoConstraintRegeneration {
+			get { return autoConstraintRegeneration; }
+			set { autoConstraintRegeneration = value; }
+		}
 
 		/// <summary>
 		/// Estimates the number of cards each player will have in his/her hand.
@@ -235,16 +241,21 @@ namespace ClueBuddy {
 						if (clue == null) continue; // skip over any null clues.
 						constraints.AddRange(clue.GetConstraints(Nodes));
 					}
+					Analyze();
 					break;
 				default: // any other change is potentially devastating to current state, so recalculate everything.
-					refigureAllClues();
+					if (AutoConstraintRegeneration) {
+						RegenerateConstraints();
+						Analyze();
+					}
 					break;
 			}
-			Analyze();
 		}
 
 		void clue_PropertyChanged(object sender, PropertyChangedEventArgs e) {
-			refigureAllClues(); // any internal clue change is potentially devastating to current state, so recalculate everything.
+			if (AutoConstraintRegeneration) {
+				RegenerateConstraints(); // any internal clue change is potentially devastating to current state, so recalculate everything.
+			}
 		}
 
 		public void Analyze() {
@@ -264,7 +275,7 @@ namespace ClueBuddy {
 			}
 		}
 
-		void refigureAllClues() {
+		public void RegenerateConstraints() {
 			constraints.Clear();
 			foreach (Node n in Nodes)
 				n.Reset();

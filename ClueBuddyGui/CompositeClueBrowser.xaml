@@ -18,7 +18,7 @@
 				</CheckBox>
 				<ComboBox 
 					SelectedValue="{Binding Path=Value.Alabi}"
-					ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=2, AncestorType={x:Type StackPanel}}, 
+					ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorLevel=2, AncestorType={x:Type Panel}}, 
 						Path=DataContext.CurrentItem.Suspicion.Cards}" />
 			</StackPanel>
 		</DataTemplate>
@@ -58,6 +58,7 @@
 			<Button x:Name="nextClueButton" Click="nextClueButton_Click">Next</Button>
 			<Button x:Name="newClueButton" Click="newClueButton_Click">New</Button>
 			<Button x:Name="deleteClueButton" Click="deleteClueButton_Click">Delete</Button>
+			<Button x:Name="refreshConstraintsButton" Click="refreshConstraintsButton_Click">Refresh constraints</Button>
 		</StackPanel>
 
 		<ContentControl 

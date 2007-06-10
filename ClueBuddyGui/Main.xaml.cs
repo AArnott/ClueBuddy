@@ -33,9 +33,22 @@ namespace ClueBuddyGui {
 			game.Players.Add(new Player("Anthony"));
 			game.Players.Add(new Player("Brandee"));
 			game.AssignApproximatePlayerHandSizes();
+			game.AutoConstraintRegeneration = false;
 			game.Start();
 			this.clueMatrix.DataContext = game;
 			this.clueMatrix.Game = game;
+			this.clueMatrix.PlayerClicked += new EventHandler<ClueGrid.PlayerClickedEventArgs>((sender, e) => {
+				this.sidePanel.CurrentClue.Player = e.Player;
+			});
+			this.clueMatrix.CardClicked += new EventHandler<ClueGrid.CardClickedEventArgs>((sender, e) => {
+				if (e.Card is Weapon) {
+					this.sidePanel.CurrentClue.Suspicion.Weapon = e.Card as Weapon;
+				} else if (e.Card is Suspect) {
+					this.sidePanel.CurrentClue.Suspicion.Suspect = e.Card as Suspect;
+				} else if (e.Card is Place) {
+					this.sidePanel.CurrentClue.Suspicion.Place = e.Card as Place;
+				}
+			});
 			this.sidePanel.DataContext = game;
 
 			game.Clues.Add(new CompositeClue());

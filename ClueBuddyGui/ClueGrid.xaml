@@ -23,7 +23,7 @@
 		</Style>
 	</UserControl.Resources>
 	
-	<Grid Name="matrix" Grid.Row="1" Grid.Column="0" ShowGridLines="true">
+	<Grid Name="matrix" Grid.Row="1" Grid.Column="0" ShowGridLines="true" MouseLeftButtonDown="matrix_MouseLeftButtonDown">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto" />
 			<ColumnDefinition Width="0.0384615384615385*" />

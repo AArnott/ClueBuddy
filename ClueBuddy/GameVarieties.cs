@@ -5,6 +5,12 @@ using System.Text;
 
 namespace ClueBuddy {
 	public partial class Game {
+		public static IEnumerable<Game> Varieties {
+			get {
+				return new Game[] { GreatDetective, Simpsons };
+			}
+		}
+
 		public static Game GreatDetective {
 			get {
 				return new Game("Great Detective", new GameRules() {

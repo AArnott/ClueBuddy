@@ -29,13 +29,13 @@ namespace ClueBuddyGui {
 		CollectionViewSource cluesDataView {
 			get { return Resources["cluesDataView"] as CollectionViewSource; }
 		}
-		Clue currentClue {
-			get { return cluesDataView.View.CurrentItem as Clue; }
+		public CompositeClue CurrentClue {
+			get { return cluesDataView.View.CurrentItem as CompositeClue; }
 		}
 
 		void suggestingPlayer_Changed(object sender, EventArgs e) {
 			ComboBox list = (ComboBox)sender;
-			StackPanel panel = (StackPanel)list.Parent;
+			Panel panel = (Panel)list.Parent;
 			ItemsControl lb = (ItemsControl)panel.FindName("responses");
 			lb.Items.Refresh();
 		}
@@ -56,7 +56,17 @@ namespace ClueBuddyGui {
 		}
 
 		void deleteClueButton_Click(object sender, EventArgs e) {
-			game.Clues.Remove(currentClue);
+			game.Clues.Remove(CurrentClue);
+		}
+
+		void refreshConstraintsButton_Click(object sender, EventArgs e) {
+			Cursor oldCursor = Cursor;
+			Cursor = Cursors.Wait;
+			try {
+				game.RegenerateConstraints();
+			} finally {
+				Cursor = oldCursor;
+			}
 		}
 	}
 }
