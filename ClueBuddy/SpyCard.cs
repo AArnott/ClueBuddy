@@ -48,5 +48,11 @@ namespace ClueBuddy {
 				yield return SelectionCountConstraint.ExactSelected(1, constrainedNodes);
 			}
 		}
+
+		public override string ToString() {
+			return string.Format("{0} has {1}.",
+				Player != null ? Player.Name : "Someone",
+				Card != null ? Card.Name : "some card");
+		}
 	}
 }

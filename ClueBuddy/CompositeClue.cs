@@ -121,5 +121,23 @@ namespace ClueBuddy {
 				   from constraint in clue.GetConstraints(nodes)
 				   select constraint;
 		}
+
+		public override string ToString() {
+			StringBuilder responsesStringBuilder = new StringBuilder();
+			foreach (var pair in Responses) {
+				if (pair.Value.Disproved.HasValue) {
+					if (!pair.Value.Disproved.Value) {
+						responsesStringBuilder.Append("!");
+					}
+					responsesStringBuilder.Append(pair.Key.Name);
+					if (pair.Value.Alabi != null) {
+						responsesStringBuilder.AppendFormat(":{0}", pair.Value.Alabi.Name);
+					}
+					responsesStringBuilder.Append(", ");
+				}
+			}
+			responsesStringBuilder.Length -= 2;
+			return string.Format("{0} suggested {1}.  Responses: {2}", Player, Suspicion, responsesStringBuilder);
+		}
 	}
 }

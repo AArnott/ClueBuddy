@@ -103,6 +103,7 @@ namespace ClueBuddyConsole {
 						mainMenu.Add('S', "Save game");
 						mainMenu.Add('T', "Play a Turn");
 						mainMenu.Add('G', "See Grid");
+						mainMenu.Add('C', "List Clues");
 					}
 					mainMenu.Add('Q', "Quit");
 					switch (choose("Main menu:", mainMenu, s => s).Key) {
@@ -123,6 +124,9 @@ namespace ClueBuddyConsole {
 							break;
 						case 'G':
 							printGrid();
+							break;
+						case 'C':
+							listClues();
 							break;
 						case 'Q':
 							return;
@@ -242,12 +246,12 @@ namespace ClueBuddyConsole {
 			if (cc.Suspicion.Suspect == null) return;
 			cc.Suspicion.Weapon = choose("How?", true, w => w.Name, game.Weapons.ToArray());
 			if (cc.Suspicion.Weapon == null) return;
+			List<Card> revealedCards = new List<Card>(3);
 			foreach (Player opponent in game.PlayersInOrderAfter(suggestingPlayer)) {
 				// Do we already know whether this player could disprove it?
-				bool? opponentCanDisprove = canPlayerDisprove(opponent, cc.Suspicion);
-				if (opponentCanDisprove.HasValue) {
+				if ((cc.Responses[opponent].Disproved = canPlayerDisprove(opponent, cc.Suspicion)).HasValue) {
 					writeColor(questionColor, "{0} {1} disprove {2}.", opponent.Name,
-						opponentCanDisprove.Value ? "CAN" : "CANNOT", cc.Suspicion);
+						cc.Responses[opponent].Disproved.Value ? "CAN" : "CANNOT", cc.Suspicion);
 				} else {
 					// Ask the gamer if the opponent did.
 					switch (choose(string.Format("Could {0} disprove {1}?", opponent.Name, cc.Suspicion), false, new string[] { "Yes", "No", "Abort suggestion" })) {
@@ -260,6 +264,22 @@ namespace ClueBuddyConsole {
 						case 2:
 							return;
 					}
+				}
+				if (suggestingPlayer == interactivePlayer && cc.Responses[opponent].Disproved.HasValue && cc.Responses[opponent].Disproved.Value) {
+					IEnumerable<Card> possiblyShownCards = from n in game.Nodes
+														   where n.CardHolder == opponent && 
+														   cc.Suspicion.Cards.Contains(n.Card) && !revealedCards.Contains(n.Card) &&
+														   (!n.IsSelected.HasValue || n.IsSelected.Value)
+														   select n.Card;
+					if (possiblyShownCards.Count() == 1) {
+						writeColor(questionColor, "{0} must have shown you {1}.", opponent,
+							cc.Responses[opponent].Alabi = possiblyShownCards.First());
+					} else {
+						cc.Responses[opponent].Alabi = choose(string.Format("Which card did {0} show you?", opponent),
+							true, c => c.Name, possiblyShownCards.ToArray());
+					}
+					if (cc.Responses[opponent].Alabi != null)
+						revealedCards.Add(cc.Responses[opponent].Alabi);
 				}
 			}
 			game.Clues.Add(cc);
@@ -349,6 +369,12 @@ namespace ClueBuddyConsole {
 			result.Append(value, 0, actualCharactersFromValueToDisplay);
 			result.Append(' ', suffixCharacters);
 			return result.ToString();
+		}
+
+		void listClues() {
+			foreach (Clue c in game.Clues) {
+				Console.WriteLine(c);
+			}
 		}
 	}
 }
