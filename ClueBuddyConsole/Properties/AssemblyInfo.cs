@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ClueBuddy")]
+[assembly: AssemblyTitle("ClueBuddyConsole")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("ClueBuddy")]
+[assembly: AssemblyProduct("ClueBuddyConsole")]
 [assembly: AssemblyCopyright("Copyright ©  2007")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("38cc04b9-3980-406f-bd53-a5877aebb6d6")]
+[assembly: Guid("23353307-3129-456b-ac73-7da1abc05510")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -34,7 +34,3 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("ClueBuddyTest")]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("ClueBuddyGui")]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("ClueBuddyConsole")]

@@ -167,5 +167,14 @@ namespace ClueBuddy {
                 return ResourceManager.GetString("PropertyChangeFromToError", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} property must be set first..
+        /// </summary>
+        internal static string PropertyMustBeSetFirst {
+            get {
+                return ResourceManager.GetString("PropertyMustBeSetFirst", resourceCulture);
+            }
+        }
     }
 }

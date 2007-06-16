@@ -9,10 +9,10 @@ namespace ClueBuddy {
 			if (nodes == null) throw new ArgumentNullException("nodes");
 			if (nodes.Count() == 0)
 				throw new ArgumentException(Strings.ListCannotBeEmpty, "nodes");
-			this.nodes = nodes;
+			this.nodes = nodes.ToList();
 		}
 
-		private IEnumerable<INode> nodes;
+		private List<INode> nodes;
 		/// <summary>
 		/// The nodes involved in the constraint.
 		/// </summary>

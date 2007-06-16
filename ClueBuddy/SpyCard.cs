@@ -6,6 +6,7 @@ using System.Text;
 
 namespace ClueBuddy {
 	public class SpyCard : Clue {
+		public SpyCard() { }
 		public SpyCard(Player playerShowingCard, Card cardSeen)
 			: base(playerShowingCard) {
 			if (cardSeen == null) throw new ArgumentNullException("cardSeen");
@@ -25,12 +26,26 @@ namespace ClueBuddy {
 			}
 		}
 
+		public IEnumerable<Card> PossiblySeenCards {
+			get {
+				if (Player != null && Player.Game != null) {
+					return from n in Player.Game.Nodes
+						   where n.CardHolder == Player && (!n.IsSelected.HasValue || n.IsSelected.Value)
+						   select n.Card;
+				} else {
+					throw new InvalidOperationException(string.Format(Strings.PropertyMustBeSetFirst, "Player.Game"));
+				}
+			}
+		}
+
 		internal override IEnumerable<IConstraint> GetConstraints(IEnumerable<Node> nodes) {
 			if (nodes == null) throw new ArgumentNullException("nodes");
-			var constrainedNodes = nodes.Where(n => n.Card == Card && n.CardHolder == Player).OfType<INode>();
-			if (constrainedNodes.Count() != 1)
-				throw new ArgumentException(Strings.IncompleteNodesList, "nodes");
-			yield return SelectionCountConstraint.ExactSelected(1, constrainedNodes);
+			if (Card != null && Player != null) {
+				var constrainedNodes = nodes.Where(n => n.Card == Card && n.CardHolder == Player).OfType<INode>();
+				if (constrainedNodes.Count() != 1)
+					throw new ArgumentException(Strings.IncompleteNodesList, "nodes");
+				yield return SelectionCountConstraint.ExactSelected(1, constrainedNodes);
+			}
 		}
 	}
 }

@@ -56,6 +56,12 @@ namespace ClueBuddy {
 		public IList<Player> Players {
 			get { return IsStarted ? (IList<Player>)players.AsReadOnly() : players; }
 		}
+		public IEnumerable<Player> PlayersInOrderAfter(Player player) {
+			int initialPlayerIndex = Players.IndexOf(player);
+			for (int i = (initialPlayerIndex + 1) % Players.Count; i != initialPlayerIndex; i = (i + 1) % Players.Count) {
+				yield return Players[i];
+			}
+		}
 
 		/// <summary>
 		/// Whether the game is in a playing state.
@@ -169,11 +175,14 @@ namespace ClueBuddy {
 				Players[i].CardsHeldCount = handSize;
 			}
 		}
+		public bool CardAssignmentsAcceptable {
+			get { return Players.Sum(p => p.CardsHeldCount) == Cards.Count() - 3; }
+		}
 		public void Start() {
 			if (Players.Count == 0)
 				throw new InvalidOperationException(Strings.PlayersRequired);
 			// Verify that the right number of cards are distributed.
-			if (Players.Sum(p => p.CardsHeldCount) != Cards.Count() - 3)
+			if (!CardAssignmentsAcceptable)
 				throw new InvalidOperationException(Strings.CardsToPlayersDistributionError);
 			foreach (Player p in Players)
 				p.Game = this;

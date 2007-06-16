@@ -153,4 +153,7 @@
   <data name="PropertyChangeFromToError" xml:space="preserve">
     <value>This property cannot be changed from {0} to {1}.</value>
   </data>
+  <data name="PropertyMustBeSetFirst" xml:space="preserve">
+    <value>{0} property must be set first.</value>
+  </data>
 </root>

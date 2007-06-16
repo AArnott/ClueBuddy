@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ClueBuddy;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace ClueBuddyTest {
 	[TestClass]
@@ -134,6 +137,37 @@ namespace ClueBuddyTest {
 		[ExpectedException(typeof(ArgumentOutOfRangeException))]
 		public void AnalysisDepthNegativeTest() {
 			Game.GreatDetective.AnalysisDepth = -1;
+		}
+
+		[TestMethod]
+		public void PlayersInOrderAfterTest() {
+			Game g = StartPresetGame();
+			CollectionAssert.AreEquivalent(new Player[] { players[1], players[2], players[3] }, g.PlayersInOrderAfter(players[0]).ToArray());
+			CollectionAssert.AreEquivalent(new Player[] { players[2], players[3], players[0] }, g.PlayersInOrderAfter(players[1]).ToArray());
+			CollectionAssert.AreEquivalent(new Player[] { players[3], players[0], players[1] }, g.PlayersInOrderAfter(players[2]).ToArray());
+			CollectionAssert.AreEquivalent(new Player[] { players[0], players[1], players[2] }, g.PlayersInOrderAfter(players[3]).ToArray());
+		}
+
+		[TestMethod]
+		public void SerializableTest() {
+			Game game = StartPresetGame();
+			game.Clues.Add(new CompositeClue() {
+				Player = game.Players[0],
+				Suspicion = new Suspicion(game.Suspects.First(), game.Weapons.First(), game.Places.First())
+			});
+			game.Clues.Add(new SpyCard(game.Players[1], game.Weapons.First()));
+			string fileName = Path.Combine(TestContext.TestDeploymentDir, TestContext.TestName + ".ClueBuddy");
+			IFormatter formatter = new BinaryFormatter();
+			using (Stream stream = new FileStream(fileName, FileMode.Create)) {
+				formatter.Serialize(stream, game);
+			}
+			Game restoredGame;
+			using (Stream stream = new FileStream(fileName, FileMode.Open)) {
+				restoredGame = (Game)formatter.Deserialize(stream);
+			}
+			Assert.AreEqual(game.Players.Count, restoredGame.Players.Count);
+			Assert.AreEqual(game.Clues.Count, restoredGame.Clues.Count);
+			Assert.AreEqual(game.Constraints.Count, restoredGame.Constraints.Count);
 		}
 	}
 }
