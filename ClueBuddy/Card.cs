@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace ClueBuddy {
+	[Serializable]
 	public class Card {
 		protected Card(string name) {
 			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
@@ -29,6 +30,7 @@ namespace ClueBuddy {
 			return Name;
 		}
 	}
+	[Serializable]
 	public class Weapon : Card {
 		public Weapon(string name) : base(name) { }
 
@@ -36,6 +38,7 @@ namespace ClueBuddy {
 			return from name in names select new Weapon(name);
 		}
 	}
+	[Serializable]
 	public class Place : Card {
 		public Place(string name) : base(name) { }
 
@@ -43,6 +46,7 @@ namespace ClueBuddy {
 			return from name in names select new Place(name);
 		}
 	}
+	[Serializable]
 	public class Suspect : Card {
 		public Suspect(string name) : base(name) { }
 

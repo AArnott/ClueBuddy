@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 
 namespace ClueBuddy {
+	[Serializable]
 	public abstract class Clue : INotifyPropertyChanged {
 		protected Clue() { }
 		protected Clue(Player player) {

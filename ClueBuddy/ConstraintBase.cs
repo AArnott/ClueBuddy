@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace ClueBuddy {
+	[Serializable]
 	abstract class ConstraintBase : IConstraint {
 		protected ConstraintBase(IEnumerable<INode> nodes) {
 			if (nodes == null) throw new ArgumentNullException("nodes");

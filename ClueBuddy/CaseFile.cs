@@ -8,6 +8,7 @@ namespace ClueBuddy {
 	/// The "Case File" envelope in which the murderer, murder weapon, and location
 	/// are all kept.
 	/// </summary>
+	[Serializable]
 	public class CaseFile : ICardHolder {
 		public CaseFile(Game game) {
 			this.game = game;

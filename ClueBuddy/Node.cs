@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace ClueBuddy {
+	[Serializable]
 	class Node : NodeBase {
 		public Node(ICardHolder cardHolder, Card card) {
 			if (cardHolder == null) throw new ArgumentNullException("cardHolder");

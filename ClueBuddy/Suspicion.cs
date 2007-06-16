@@ -5,6 +5,7 @@ using System.Text;
 using System.ComponentModel;
 
 namespace ClueBuddy {
+	[Serializable]
 	public class Suspicion : INotifyPropertyChanged {
 		public Suspicion() { }
 		public Suspicion(Suspect suspect, Weapon weapon, Place place) {

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 
 namespace ClueBuddy {
+	[Serializable]
 	public partial class Game : INotifyPropertyChanged {
 		/// <summary>
 		/// Builds up a game based on a given set of cards.

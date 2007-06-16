@@ -9,6 +9,7 @@ namespace ClueBuddy {
 	/// <summary>
 	/// A human player in the game.  Not a suspect.
 	/// </summary>
+	[Serializable]
 	public class Player : ICardHolder, INotifyPropertyChanged {
 		public Player(string name) {
 			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");

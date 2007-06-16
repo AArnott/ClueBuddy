@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 
 namespace ClueBuddy {
+	[Serializable]
 	class SelectionCountConstraint : ConstraintBase {
 		/// <summary>
 		/// Builds a new constraint that verifies that a given set of nodes

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 
 namespace ClueBuddy {
+	[Serializable]
 	public class SuggestionResponse : INotifyPropertyChanged {
 		bool? disproved;
 
@@ -40,6 +41,7 @@ namespace ClueBuddy {
 		#endregion
 	}
 
+	[Serializable]
 	public class CompositeClue : Clue {
 		public override Player Player {
 			get {

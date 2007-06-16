@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 
 namespace ClueBuddy {
+	[Serializable]
 	public class SpyCard : Clue {
 		public SpyCard() { }
 		public SpyCard(Player playerShowingCard, Card cardSeen)

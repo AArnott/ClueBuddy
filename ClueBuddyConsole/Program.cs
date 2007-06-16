@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Win32;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 using ClueBuddy;
 using System.Diagnostics;
 
@@ -10,6 +14,8 @@ namespace ClueBuddyConsole {
 		int cardColumnWidth = 10;
 		int playerColumnWidth = 10;
 		static ConsoleColor questionColor = ConsoleColor.Yellow;
+		OpenFileDialog openDialog = new OpenFileDialog();
+		SaveFileDialog saveDialog = new SaveFileDialog();
 
 		Game game;
 		/// <summary>
@@ -20,6 +26,11 @@ namespace ClueBuddyConsole {
 		/// The player whose turn it is.
 		/// </summary>
 		Player suggestingPlayer;
+
+		public Program() {
+			setupFileDialog(openDialog);
+			setupFileDialog(saveDialog);
+		}
 
 		static void Main(string[] args) {
 			new Program().main();
@@ -96,6 +107,7 @@ namespace ClueBuddyConsole {
 					mainMenu.Add('Q', "Quit");
 					switch (choose("Main menu:", mainMenu, s => s).Key) {
 						case 'L':
+							loadGame();
 							break;
 						case 'N':
 							chooseGame();
@@ -104,6 +116,7 @@ namespace ClueBuddyConsole {
 							learnOwnHand();
 							break;
 						case 'S':
+							saveGame();
 							break;
 						case 'T':
 							takeTurn();
@@ -121,6 +134,34 @@ namespace ClueBuddyConsole {
 						throw;
 				}
 			}
+		}
+
+		bool? saveGame() {
+			bool? result = saveDialog.ShowDialog();
+			if (result.HasValue && result.Value) {
+				IFormatter formatter = new BinaryFormatter();
+				using (Stream s = saveDialog.OpenFile()) {
+					formatter.Serialize(s, game);
+				}
+			}
+			return result;
+		}
+
+		bool? loadGame() {
+			bool? result = openDialog.ShowDialog();
+			if (result.HasValue && result.Value) {
+				IFormatter formatter = new BinaryFormatter();
+				using (Stream s = openDialog.OpenFile()) {
+					game = (Game)formatter.Deserialize(s);
+				}
+			}
+			return result;
+		}
+
+		void setupFileDialog(FileDialog dlg) {
+			dlg.DefaultExt = "clueBuddy";
+			dlg.Filter = "ClueBuddy games (*.clueBuddy)|*.clueBuddy|All Files|*.*";
+			dlg.FilterIndex = 0;
 		}
 
 		void chooseGame() {

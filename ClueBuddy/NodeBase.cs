@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 
 namespace ClueBuddy {
+	[Serializable]
 	abstract class NodeBase : INode {
 		public NodeBase() {
 			isSelected.Push(null); // push the actual selection status onto the stack.
