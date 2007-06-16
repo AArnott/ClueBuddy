@@ -146,6 +146,7 @@ namespace ClueBuddyConsole {
 				IFormatter formatter = new BinaryFormatter();
 				using (Stream s = saveDialog.OpenFile()) {
 					formatter.Serialize(s, game);
+					formatter.Serialize(s, interactivePlayer.Name);
 				}
 			}
 			return result;
@@ -157,7 +158,9 @@ namespace ClueBuddyConsole {
 				IFormatter formatter = new BinaryFormatter();
 				using (Stream s = openDialog.OpenFile()) {
 					game = (Game)formatter.Deserialize(s);
+					interactivePlayer = game.Players.First(p => p.Name.Equals(formatter.Deserialize(s)));
 				}
+				saveDialog.FileName = openDialog.FileName;
 			}
 			return result;
 		}
