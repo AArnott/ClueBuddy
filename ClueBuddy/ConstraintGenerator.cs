@@ -27,14 +27,16 @@ namespace ClueBuddy {
 			// Query for those nodes we'll be playing with this round.
 			var indeterminateNodes = cc.Nodes.Where(n => !n.IsSelected.HasValue).ToArray();
 			foreach (INode n in indeterminateNodes) {
-				bool selectedValid = cc.SimulateSelection(indeterminateNodes, n, true, depth);
-				bool unselectedValid = cc.SimulateSelection(indeterminateNodes, n, false, depth);
-				Debug.Assert(selectedValid || unselectedValid, "Since the constraints were not already broken, SOMETHING should solve the game!");
-				if (!selectedValid)
+				bool selectedValid = cc.SimulateSelection(indeterminateNodes, n, true, depth, false);
+				if (!selectedValid) {
 					deducedUnselectedNodes.Add(n);
-				else if (!unselectedValid)
-					deducedSelectedNodes.Add(n);
-				// else both are valid, and there is nothing we can deduce here.
+				} 
+				//else {
+				//    bool unselectedValid = cc.SimulateSelection(indeterminateNodes, n, false, depth, false);
+				//    if (!unselectedValid)
+				//        deducedSelectedNodes.Add(n);
+				//}
+				//// else both are valid, and there is nothing we can deduce here.
 			}
 
 			// Build up new constraints that force the nodes to behave as needed.

@@ -9,5 +9,17 @@ namespace ClueBuddyTest {
 	/// A minimal Node class for us with testing constraints.
 	/// </summary>
 	class DummyNode : NodeBase {
+		public DummyNode() { }
+		public DummyNode(object designation) {
+			this.designation = designation;
+		}
+		object designation;
+
+		public override string ToString() {
+			if (designation != null)
+				return designation.ToString();
+			else
+				return base.ToString();
+		}
 	}
 }

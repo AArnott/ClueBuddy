@@ -16,6 +16,16 @@ namespace ClueBuddy {
 		public IEnumerable<IConstraint> Constraints {
 			get { return constraints; }
 		}
+		INode[] sortedNodes;
+		INode[] SortedNodes {
+			get {
+				if (sortedNodes == null) {
+					sortedNodes = Nodes.ToArray();
+					Array.Sort(sortedNodes);
+				}
+				return sortedNodes;
+			}
+		}
 
 		/// <summary>
 		/// Whether any contained constraints can resolve.
@@ -47,27 +57,52 @@ namespace ClueBuddy {
 		/// can individually be satisfied, which leaves error where the constraints may be mutually exclusive.
 		/// </summary>
 		public bool IsSatisfiableDeep(int depth) {
-			if (IsSatisfied) return true;
-			if (IsBroken) return false;
-			if (depth <= 0) return IsSatisfiable; // if we've run out of analysis depth, just take a shallow guess.
-			IEnumerable<INode> indeterminateNodes = Nodes.Where(n => !n.IsSelected.HasValue);
-			// Consider each indeterminate node's selection states, deeply.
-			// When we find one that can satisfy every single constraint, return true.
-			foreach (INode n in indeterminateNodes) {
-				INode[] indeterminateNodesArray = indeterminateNodes.ToArray();
-				if (SimulateSelection(indeterminateNodesArray, n, true, depth - 1) ||
-					SimulateSelection(indeterminateNodesArray, n, false, depth - 1)) {
-					return true;
+			return IsSatisfiableDeep(depth, null);
+		}
+
+		internal bool IsSatisfiableDeep(int depth, INode onlyNodesAfter) {
+			if (IsSatisfied) {
+				Debug.Write("(");
+				foreach (INode node in Nodes.Where(n => n.IsSelected.HasValue && n.IsSelected.Value)) {
+					Debug.Write(node.ToString());
 				}
+				Debug.Write(") ~(");
+				foreach (INode node in Nodes.Where(n => n.IsSelected.HasValue && !n.IsSelected.Value)) {
+					Debug.Write(node.ToString());
+				}
+				Debug.WriteLine(") satisfied");
+				return true;
 			}
-			return false;
+			if (IsBroken) {
+				Debug.Write("(");
+				foreach (INode node in Nodes.Where(n => n.IsSelected.HasValue && n.IsSelected.Value)) {
+					Debug.Write(node.ToString());
+				}
+				Debug.Write(") ~(");
+				foreach (INode node in Nodes.Where(n => n.IsSelected.HasValue && !n.IsSelected.Value)) {
+					Debug.Write(node.ToString());
+				}
+				Debug.WriteLine(") broken");
+				return false;
+			}
+			if (depth <= 0) return IsSatisfiable; // if we've run out of analysis depth, just take a shallow guess.
+
+			IEnumerable<INode> indeterminateNodes = SortedNodes.Where(n => !n.IsSelected.HasValue);
+			INode testNode = indeterminateNodes.FirstOrDefault(n => onlyNodesAfter == null || n.CompareTo(onlyNodesAfter) > 0);
+			if (testNode == null)
+				return false;
+			// Consider the next indeterminate node's selection states, deeply.
+			// If one of its states can satisfy every single constraint, return true.
+			INode[] indeterminateNodesArray = indeterminateNodes.ToArray();
+			return SimulateSelection(indeterminateNodesArray, testNode, true, depth - 1, true) ||
+				SimulateSelection(indeterminateNodesArray, testNode, false, depth - 1, true);
 		}
 
 		/// <summary>
 		/// Simulates an individual node's selection state and tests whether it could lead to a solution to the game.
 		/// </summary>
 		/// <returns>Whether the given node and selection state leads to a valid solution.</returns>
-		internal bool SimulateSelection(INode[] indeterminateNodes, INode testNode, bool testState, int depth) {
+		internal bool SimulateSelection(INode[] indeterminateNodes, INode testNode, bool testState, int depth, bool testOnlyLaterNodes) {
 			// Future optimization: Only recurse into testing further nodes that share a constraint with the testNode.
 			// Reasoning:  I'm interested in whether setting testNode can invalidate a future solution.
 			//             The only constraints that testNode could possibly invalidate are the ones that contain testNode.
@@ -85,17 +120,16 @@ namespace ClueBuddy {
 				beginSimulation(indeterminateNodes);
 				testNode.IsSelected = testState;
 				ResolvePartially();
-				INode[] indeterminateNodesNow = Nodes.Where(n => !n.IsSelected.HasValue).ToArray();
-				INode[] resolvedNodes = indeterminateNodes.Where(n => !indeterminateNodesNow.Contains(n)).ToArray();
+				//INode[] indeterminateNodesNow = Nodes.Where(n => !n.IsSelected.HasValue).ToArray();
+				//INode[] resolvedNodes = indeterminateNodes.Where(n => !indeterminateNodesNow.Contains(n)).ToArray();
 				//Debug.WriteLine("Simulated resolved nodes: " + string.Join(", ", resolvedNodes.Select(n => n.ToString()).ToArray()));
-				bool result = IsSatisfiableDeep(depth);
-				//Debug.WriteLine((result ? "SUCCESSFUL" : "FAILED") + " simulation " + testNode.ToString());
+				bool result = IsSatisfiableDeep(depth, testOnlyLaterNodes ? testNode : null);
+				Debug.WriteLine(string.Format("Node {0} simulated to be {1} and {2}", testNode, testState, (result ? "SUCCESSFUL" : "FAILED")));
 				return result;
 			} finally {
 				endSimulation(indeterminateNodes);
 			}
 		}
-
 
 		static void beginSimulation(IEnumerable<INode> nodes) {
 			foreach (var n in nodes)
@@ -114,14 +148,9 @@ namespace ClueBuddy {
 		/// </summary>
 		public IEnumerable<INode> Nodes {
 			get {
-				var uniqueNodes = new List<INode>();
-				foreach (var node in from c in constraints
-									 from n in c.Nodes
-									 select n) {
-					if (!uniqueNodes.Contains(node))
-						uniqueNodes.Add(node);
-				}
-				return uniqueNodes;
+				return (from c in constraints
+						from n in c.Nodes
+						select n).Distinct();
 			}
 		}
 

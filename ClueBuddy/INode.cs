@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 
 namespace ClueBuddy {
-	interface INode : INotifyPropertyChanged {
+	interface INode : IComparable, INotifyPropertyChanged {
 		/// <summary>
 		/// Gets/sets the selection state of a node.
 		/// </summary>

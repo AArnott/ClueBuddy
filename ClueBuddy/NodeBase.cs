@@ -68,5 +68,25 @@ namespace ClueBuddy {
 		}
 
 		#endregion
+
+		#region IComparable Members
+
+		static object syncLastAssignedUniqueId = new object();
+		static int lastAssignedUniqueNodeId = -1;
+		static int acquireUniqueNodeId() {
+			lock (syncLastAssignedUniqueId) {
+				return ++lastAssignedUniqueNodeId;
+			}
+		}
+		readonly int uniqueId = acquireUniqueNodeId();
+
+		public int CompareTo(object other) {
+			if (other == null) throw new ArgumentNullException("other");
+			NodeBase otherNode = other as NodeBase;
+			if (otherNode == null) throw new ArgumentException();
+			return uniqueId.CompareTo(otherNode.uniqueId);
+		}
+
+		#endregion
 	}
 }

@@ -347,13 +347,13 @@ namespace ClueBuddyTest {
 		/// can be held by other players.
 		/// </summary>
 		[TestMethod]
-		public void test_disproven_three_times_then_not_held_by_other_players() {
+		public void test_disproven_three_times_reserves_cards() {
 			//    Verify that this    		   Becomes this        (underscores are not set or checked, allowing for additional behavior)
 			// P1: A _ _ A _ _ A _ _		A _ _ A _ _ A _ _
 			// P2: A _ _ A _ _ A _ _		A _ _ A _ _ A _ _
 			// P3: A _ _ A _ _ A _ _		A _ _ A _ _ A _ _
 			// P4: _ _ _ _ _ _ _ _ _		0 _ _ 0 _ _ 0 _ _
-			// CF: _ _ _ _ _ _ _ _ _		_ _ _ _ _ _ _ _ _
+			// CF: _ _ _ _ _ _ _ _ _		0 _ _ 0 _ _ 0 _ _
 			var suggestion = new Card[] { suspects[0], weapons[0], places[0] };
 			foreach (Player p in players.Take(suggestion.Length)) {
 				p.disproved(suggestion);
@@ -363,6 +363,7 @@ namespace ClueBuddyTest {
 				foreach (Player p in players.Skip(suggestion.Length)) {
 					Assert.IsTrue(p.has_not(card).Value);
 				}
+				Assert.IsTrue(game.CaseFile.has_not(card).Value);
 			}
 		}
 
@@ -415,6 +416,7 @@ namespace ClueBuddyTest {
 
 			foreach (Player p in players.Skip(1).Take(2)) {
 				foreach (Card card in suggestion) {
+					Assert.IsTrue(p.has_not(card).HasValue);
 					Assert.IsTrue(p.has_not(card).Value);
 				}
 				Assert.IsTrue((from c in game.Constraints
