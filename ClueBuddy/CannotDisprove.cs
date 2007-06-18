@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 
 namespace ClueBuddy {
+	[Serializable]
 	public class CannotDisprove : Clue {
 		public CannotDisprove(Player unablePlayer, Suspicion suspicion)
 			: base(unablePlayer) {

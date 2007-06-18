@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 
 namespace ClueBuddy {
+	[Serializable]
 	public class Disproved : Clue {
 		/// <summary>
 		/// Creates a clue from when an opponent disproves the <see cref="Suspicion"/>

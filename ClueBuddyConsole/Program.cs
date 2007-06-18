@@ -242,51 +242,54 @@ namespace ClueBuddyConsole {
 		}
 
 		void suggestion() {
-			CompositeClue cc = new CompositeClue();
-			cc.Player = suggestingPlayer;
-			cc.Suspicion.Place = choose("Where?", true, p => p.Name, game.Places.ToArray());
-			if (cc.Suspicion.Place == null) return;
-			cc.Suspicion.Suspect = choose("Who?", true, s => s.Name, game.Suspects.ToArray());
-			if (cc.Suspicion.Suspect == null) return;
-			cc.Suspicion.Weapon = choose("How?", true, w => w.Name, game.Weapons.ToArray());
-			if (cc.Suspicion.Weapon == null) return;
-			List<Card> revealedCards = new List<Card>(3);
+			Suspicion suggestion = new Suspicion();
+			suggestion.Place = choose("Where?", true, p => p.Name, game.Places.ToArray());
+			if (suggestion.Place == null) return;
+			suggestion.Suspect = choose("Who?", true, s => s.Name, game.Suspects.ToArray());
+			if (suggestion.Suspect == null) return;
+			suggestion.Weapon = choose("How?", true, w => w.Name, game.Weapons.ToArray());
+			if (suggestion.Weapon == null) return;
 			foreach (Player opponent in game.PlayersInOrderAfter(suggestingPlayer)) {
+				bool? disproved;
 				// Do we already know whether this player could disprove it?
-				if ((cc.Responses[opponent].Disproved = canPlayerDisprove(opponent, cc.Suspicion)).HasValue) {
-					writeColor(questionColor, "{0} {1} disprove {2}.", opponent.Name,
-						cc.Responses[opponent].Disproved.Value ? "CAN" : "CANNOT", cc.Suspicion);
+				if ((disproved = canPlayerDisprove(opponent, suggestion)).HasValue) {
+					writeColor(questionColor, "{0} {1} disprove {2}.", opponent.Name, disproved.Value ? "CAN" : "CANNOT", suggestion);
 				} else {
 					// Ask the gamer if the opponent did.
-					switch (choose(string.Format("Could {0} disprove {1}?", opponent.Name, cc.Suspicion), false, new string[] { "Yes", "No", "Abort suggestion" })) {
+					switch (choose(string.Format("Could {0} disprove {1}?", opponent.Name, suggestion), false, new string[] { "Yes", "No", "Abort suggestion" })) {
 						case 0:
-							cc.Responses[opponent].Disproved = true;
+							disproved = true;
 							break;
 						case 1:
-							cc.Responses[opponent].Disproved = false;
+							disproved = false;
 							break;
 						case 2:
 							return;
 					}
 				}
-				if (suggestingPlayer == interactivePlayer && cc.Responses[opponent].Disproved.HasValue && cc.Responses[opponent].Disproved.Value) {
+				Card alabi = null;
+				if (suggestingPlayer == interactivePlayer && disproved.HasValue && disproved.Value) {
 					IEnumerable<Card> possiblyShownCards = from n in game.Nodes
-														   where n.CardHolder == opponent && 
-														   cc.Suspicion.Cards.Contains(n.Card) && !revealedCards.Contains(n.Card) &&
+														   where n.CardHolder == opponent &&
+														   suggestion.Cards.Contains(n.Card) &&
 														   (!n.IsSelected.HasValue || n.IsSelected.Value)
 														   select n.Card;
 					if (possiblyShownCards.Count() == 1) {
 						writeColor(questionColor, "{0} must have shown you {1}.", opponent,
-							cc.Responses[opponent].Alabi = possiblyShownCards.First());
+							alabi = possiblyShownCards.First());
 					} else {
-						cc.Responses[opponent].Alabi = choose(string.Format("Which card did {0} show you?", opponent),
+						alabi = choose(string.Format("Which card did {0} show you?", opponent),
 							true, c => c.Name, possiblyShownCards.ToArray());
 					}
-					if (cc.Responses[opponent].Alabi != null)
-						revealedCards.Add(cc.Responses[opponent].Alabi);
+				}
+				if (disproved.HasValue) {
+					if (disproved.Value) {
+						game.Clues.Add(new Disproved(opponent, suggestion, alabi));
+					} else {
+						game.Clues.Add(new CannotDisprove(opponent, suggestion));
+					}
 				}
 			}
-			game.Clues.Add(cc);
 		}
 
 		bool? canPlayerDisprove(Player opponent, Suspicion suspicion) {
