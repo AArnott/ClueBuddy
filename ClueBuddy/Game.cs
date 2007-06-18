@@ -134,28 +134,6 @@ namespace ClueBuddy {
 			get { return clues; }
 		}
 
-		internal const int AnalysisDepthDefault = 1;
-		private int analysisDepth = AnalysisDepthDefault;
-		/// <summary>
-		/// How deep to analyze possible solutions in search of more nodes to resolve.
-		/// </summary>
-		/// <remarks>
-		/// Infinity would be the ideal answer, but the possibilities to explore are 
-		/// 2^Nodes.Count, which is on the order of 1x10^39.  
-		/// The best realistic number is probably the maximum number of cards in any 
-		/// player's hand, since the most obvious deductions can take up to that deep
-		/// of an analysis to discover.  The time for 6-8 levels deep is very acceptable too.
-		/// </remarks>
-		public int AnalysisDepth {
-			get { return analysisDepth; }
-			set {
-				if (value < 0)
-					throw new ArgumentOutOfRangeException("AnalysisDepth", value, Strings.NonNegativeRequired);
-				if (analysisDepth == value) return;
-				analysisDepth = value;
-				OnPropertyChanged("AnalysisDepth");
-			}
-		}
 		internal const bool AutoConstraintRegenerationDefault = true;
 		bool autoConstraintRegeneration = AutoConstraintRegenerationDefault;
 		public bool AutoConstraintRegeneration {
@@ -271,17 +249,15 @@ namespace ClueBuddy {
 		public void Analyze() {
 			// Settle any nodes that can be
 			new CompositeConstraint(constraints).ResolvePartially();
-			if (AnalysisDepth > 0) {
-				// Perform some deep analysis for new opportunities to resolve nodes.
-				var deducedConstraints = ConstraintGenerator.AnalyzeConstraints(constraints, AnalysisDepth - 1).ToArray();
-				if (deducedConstraints.Length > 0) {
-					foreach (var c in deducedConstraints) {
-						Debug.WriteLine("Adding deduced constraint: " + c.ToString());
-					}
-					constraints.AddRange(deducedConstraints);
-					// Once again, settle any that can be.
-					new CompositeConstraint(constraints).ResolvePartially();
+			// Perform some deep analysis for new opportunities to resolve nodes.
+			var deducedConstraints = ConstraintGenerator.GenerateDeducedConstraints(constraints, true, true).ToArray();
+			if (deducedConstraints.Length > 0) {
+				foreach (var c in deducedConstraints) {
+					Debug.WriteLine("Adding deduced constraint: " + c.ToString());
 				}
+				constraints.AddRange(deducedConstraints);
+				// Once again, settle any that can be.
+				new CompositeConstraint(constraints).ResolvePartially();
 			}
 		}
 

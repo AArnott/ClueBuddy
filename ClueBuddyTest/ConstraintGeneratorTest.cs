@@ -8,8 +8,6 @@ using ClueBuddy;
 namespace ClueBuddyTest {
 	[TestClass]
 	public class ConstraintGeneratorTest {
-		const int analysisDepth = Game.AnalysisDepthDefault;
-
 		[TestMethod]
 		[Ignore]
 		public void TwoExactlyOneConstraintsOverlappingByOneTest() {
@@ -35,7 +33,7 @@ namespace ClueBuddyTest {
 			INode[] nodes = new INode[] { new DummyNode(), new DummyNode(), new DummyNode(), new DummyNode(), new DummyNode() };
 			ConstraintBase a = SelectionCountConstraint.ExactSelected(1, nodes);
 			ConstraintBase b = SelectionCountConstraint.ExactSelected(1, nodes.Where((n, i) => i > 0 && i < 4));
-			IConstraint[] deduced = ConstraintGenerator.AnalyzeConstraints(new ConstraintBase[] { a, b }, analysisDepth).ToArray();
+			IConstraint[] deduced = ConstraintGenerator.GenerateDeducedConstraints(new ConstraintBase[] { a, b }, true, false).ToArray();
 			Assert.AreEqual(1, deduced.Length);
 			SelectionCountConstraint c = deduced[0] as SelectionCountConstraint;
 			Assert.IsNotNull(c);
@@ -58,7 +56,7 @@ namespace ClueBuddyTest {
 			ConstraintBase a = SelectionCountConstraint.MinSelected(1, new INode[] { nodes[0], nodes[1] });
 			ConstraintBase b = SelectionCountConstraint.MinSelected(1, new INode[] { nodes[3], nodes[4] });
 			ConstraintBase c = SelectionCountConstraint.ExactSelected(2, nodes);
-			IConstraint[] deduced = ConstraintGenerator.AnalyzeConstraints(new IConstraint[] { a, b, c }, analysisDepth).ToArray();
+			IConstraint[] deduced = ConstraintGenerator.GenerateDeducedConstraints(new IConstraint[] { a, b, c }, true, false).ToArray();
 			Assert.AreEqual(1, deduced.Length);
 			SelectionCountConstraint e = deduced[0] as SelectionCountConstraint;
 			Assert.IsNotNull(e);
@@ -89,7 +87,7 @@ namespace ClueBuddyTest {
 			ConstraintBase b = SelectionCountConstraint.ExactSelected(1, new INode[] { nodes[1], nodes[3] });
 			ConstraintBase c = SelectionCountConstraint.MinSelected(1, new INode[] { nodes[0], nodes[1] });
 			ConstraintBase d = SelectionCountConstraint.MinSelected(1, new INode[] { nodes[2], nodes[3] });
-			IConstraint[] deduced = ConstraintGenerator.AnalyzeConstraints(new IConstraint[] { a, b, c, d }, analysisDepth).ToArray();
+			IConstraint[] deduced = ConstraintGenerator.GenerateDeducedConstraints(new IConstraint[] { a, b, c, d }, true, false).ToArray();
 			Assert.AreEqual(1, deduced.Length);
 			SelectionCountConstraint e = deduced[0] as SelectionCountConstraint;
 			Assert.IsNotNull(e);

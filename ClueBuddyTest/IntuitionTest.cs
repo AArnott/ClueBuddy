@@ -410,25 +410,20 @@ namespace ClueBuddyTest {
 			players[1].disproved(suggestion.Skip(1).ToArray());
 			players[2].disproved(suggestion.Skip(1).ToArray());
 
+			// Verify P1, all cards
 			Assert.IsTrue(players[0].has(suggestion[0]).Value);
 			Assert.IsTrue(players[0].has_not(suggestion[1]).Value);
 			Assert.IsTrue(players[0].has_not(suggestion[2]).Value);
 
+			// Verify P2, P3
 			foreach (Player p in players.Skip(1).Take(2)) {
-				foreach (Card card in suggestion) {
-					Assert.IsTrue(p.has_not(card).HasValue);
-					Assert.IsTrue(p.has_not(card).Value);
-				}
-				Assert.IsTrue((from c in game.Constraints
-							   where c.Nodes.Count() == 2 &&
-							   c.Nodes.All(n => ((Node)n).CardHolder == p) &&
-							   c.Nodes.Any(n => ((Node)n).Card == suggestion[1]) &&
-							   c.Nodes.Any(n => ((Node)n).Card == suggestion[2])
-							   select c).Count() == 1);
+				Assert.IsTrue(p.has_not(suggestion[0]).Value);
+				Assert.IsFalse(p.has(suggestion[1]).HasValue);
+				Assert.IsFalse(p.has(suggestion[2]).HasValue);
 			}
 
 			foreach (Card card in suggestion) {
-				foreach (Player p in players.Skip(suggestion.Length)) {
+				foreach (Player p in players.Skip(3)) {
 					Assert.IsTrue(p.has_not(card).Value);
 				}
 				Assert.IsTrue(game.CaseFile.has_not(card).Value);

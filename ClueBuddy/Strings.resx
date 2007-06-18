@@ -123,6 +123,9 @@
   <data name="Arg1NoGreaterThanElementsInArg2Required" xml:space="preserve">
     <value>{0} cannot be greater than the number of elements in {1}.</value>
   </data>
+  <data name="AtLeastOneOfTwoArgumentsMustBeSet" xml:space="preserve">
+    <value>At least one of the arguments {0}, {1} must be set to {2}.</value>
+  </data>
   <data name="BrokenConstraint" xml:space="preserve">
     <value>This constraint is broken.</value>
   </data>

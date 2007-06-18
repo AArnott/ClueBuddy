@@ -123,23 +123,6 @@ namespace ClueBuddyTest {
 		}
 
 		[TestMethod]
-		public void AnalysisDepthTest() {
-			Game g = Game.GreatDetective;
-			Assert.IsTrue(g.AnalysisDepth >= 0);
-			int originalDepth = g.AnalysisDepth;
-			g.AnalysisDepth++;
-			Assert.AreEqual(originalDepth + 1, g.AnalysisDepth);
-			g.AnalysisDepth = 0;
-			Assert.AreEqual(0, g.AnalysisDepth);
-		}
-
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentOutOfRangeException))]
-		public void AnalysisDepthNegativeTest() {
-			Game.GreatDetective.AnalysisDepth = -1;
-		}
-
-		[TestMethod]
 		public void PlayersInOrderAfterTest() {
 			Game g = StartPresetGame();
 			CollectionAssert.AreEquivalent(new Player[] { players[1], players[2], players[3] }, g.PlayersInOrderAfter(players[0]).ToArray());

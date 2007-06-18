@@ -79,6 +79,15 @@ namespace ClueBuddy {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to At least one of the arguments {0}, {1} must be set to {2}..
+        /// </summary>
+        internal static string AtLeastOneOfTwoArgumentsMustBeSet {
+            get {
+                return ResourceManager.GetString("AtLeastOneOfTwoArgumentsMustBeSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This constraint is broken..
         /// </summary>
         internal static string BrokenConstraint {

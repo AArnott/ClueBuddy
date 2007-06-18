@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 
 namespace ClueBuddy {
+	using NodeSolution = Dictionary<INode, bool>;
+
 	class CompositeConstraint : IConstraint {
 		public CompositeConstraint(IEnumerable<IConstraint> constraints) {
 			if (constraints == null) throw new ArgumentNullException("constraints");
@@ -12,6 +14,20 @@ namespace ClueBuddy {
 			this.constraints = constraints;
 		}
 
+		Func<INode, bool> nodeAffinity;
+		/// <summary>
+		/// While searching for solutions, if the caller prefers solutions with certain nodes set to certain
+		/// states, this function can provide the desired state.
+		/// Note that this does not guarantee the solution found will have the node in the preferred state.
+		/// </summary>
+		public Func<INode, bool> NodeAffinity {
+			get {
+				return nodeAffinity ?? (n => true); // default to trying to select nodes first.
+			}
+			set {
+				nodeAffinity = value;
+			}
+		}
 		readonly IEnumerable<IConstraint> constraints;
 		public IEnumerable<IConstraint> Constraints {
 			get { return constraints; }
@@ -52,16 +68,32 @@ namespace ClueBuddy {
 		}
 
 		/// <summary>
+		/// Whether any contained constraint is broken, not taking into account mutually exclusive constraint interactions.
+		/// </summary>
+		bool isBrokenShallow {
+			get {
+				return constraints.Any(c => c.IsBroken);
+			}
+		}
+
+		/// <summary>
+		/// Searches for just one possible solution to the current state.
+		/// </summary>
+		/// <returns>
+		/// A dictionary of nodes and the state they were in for the solution found,
+		/// or null if no solution exists given the current state of nodes.
+		/// </returns>
+		internal NodeSolution FindOnePossibleSolution() {
+			return findOnePossibleSolution(null);
+		}
+
+		/// <summary>
 		/// Finds whether there is actually a solution given the current state of nodes (which may
 		/// already be in simulation mode), rather than just test whether the contained constraints 
 		/// can individually be satisfied, which leaves error where the constraints may be mutually exclusive.
 		/// </summary>
-		public bool IsSatisfiableDeep(int depth) {
-			return IsSatisfiableDeep(depth, null);
-		}
-
-		internal bool IsSatisfiableDeep(int depth, INode onlyNodesAfter) {
-			if (IsSatisfied) {
+		NodeSolution findOnePossibleSolution(INode onlyNodesAfter) {
+			if (IsSatisfied && IsResolved) {
 				Debug.Write("(");
 				foreach (INode node in Nodes.Where(n => n.IsSelected.HasValue && n.IsSelected.Value)) {
 					Debug.Write(node.ToString());
@@ -71,9 +103,15 @@ namespace ClueBuddy {
 					Debug.Write(node.ToString());
 				}
 				Debug.WriteLine(") satisfied");
-				return true;
+
+				// Construct a dictionary with the solution.
+				NodeSolution solution = new NodeSolution(Nodes.Count());
+				foreach (INode node in Nodes) {
+					solution[node] = node.IsSelected.Value;
+				}
+				return solution;
 			}
-			if (IsBroken) {
+			if (isBrokenShallow) {
 				Debug.Write("(");
 				foreach (INode node in Nodes.Where(n => n.IsSelected.HasValue && n.IsSelected.Value)) {
 					Debug.Write(node.ToString());
@@ -83,26 +121,25 @@ namespace ClueBuddy {
 					Debug.Write(node.ToString());
 				}
 				Debug.WriteLine(") broken");
-				return false;
+				return null;
 			}
-			if (depth <= 0) return IsSatisfiable; // if we've run out of analysis depth, just take a shallow guess.
-
 			IEnumerable<INode> indeterminateNodes = SortedNodes.Where(n => !n.IsSelected.HasValue);
-			INode testNode = indeterminateNodes.FirstOrDefault(n => onlyNodesAfter == null || n.CompareTo(onlyNodesAfter) > 0);
-			if (testNode == null)
-				return false;
-			// Consider the next indeterminate node's selection states, deeply.
-			// If one of its states can satisfy every single constraint, return true.
 			INode[] indeterminateNodesArray = indeterminateNodes.ToArray();
-			return SimulateSelection(indeterminateNodesArray, testNode, true, depth - 1, true) ||
-				SimulateSelection(indeterminateNodesArray, testNode, false, depth - 1, true);
+			INode testNode = indeterminateNodesArray.FirstOrDefault(n => onlyNodesAfter == null || n.CompareTo(onlyNodesAfter) > 0);
+			if (testNode == null)
+				return null;
+
+			// Consider the next indeterminate node's selection states, deeply.
+			bool firstTestNodeState = NodeAffinity(testNode);
+			return findOnePossibleSolution(testNode, indeterminateNodesArray, firstTestNodeState) ??
+				findOnePossibleSolution(testNode, indeterminateNodesArray, !firstTestNodeState);
 		}
 
 		/// <summary>
 		/// Simulates an individual node's selection state and tests whether it could lead to a solution to the game.
 		/// </summary>
 		/// <returns>Whether the given node and selection state leads to a valid solution.</returns>
-		internal bool SimulateSelection(INode[] indeterminateNodes, INode testNode, bool testState, int depth, bool testOnlyLaterNodes) {
+		NodeSolution findOnePossibleSolution(INode testNode, INode[] indeterminateNodes, bool testState) {
 			// Future optimization: Only recurse into testing further nodes that share a constraint with the testNode.
 			// Reasoning:  I'm interested in whether setting testNode can invalidate a future solution.
 			//             The only constraints that testNode could possibly invalidate are the ones that contain testNode.
@@ -116,29 +153,16 @@ namespace ClueBuddy {
 			//IEnumerable<INode> testNodeAndCousins = constraintsContainingTestNode.Nodes;
 
 			Debug.Assert(indeterminateNodes.Contains(testNode));
-			try {
-				beginSimulation(indeterminateNodes);
+			using (NodeSimulation sim = new NodeSimulation(indeterminateNodes)) {
 				testNode.IsSelected = testState;
 				ResolvePartially();
 				//INode[] indeterminateNodesNow = Nodes.Where(n => !n.IsSelected.HasValue).ToArray();
 				//INode[] resolvedNodes = indeterminateNodes.Where(n => !indeterminateNodesNow.Contains(n)).ToArray();
 				//Debug.WriteLine("Simulated resolved nodes: " + string.Join(", ", resolvedNodes.Select(n => n.ToString()).ToArray()));
-				bool result = IsSatisfiableDeep(depth, testOnlyLaterNodes ? testNode : null);
-				Debug.WriteLine(string.Format("Node {0} simulated to be {1} and {2}", testNode, testState, (result ? "SUCCESSFUL" : "FAILED")));
+				var result = findOnePossibleSolution(testNode);
+				Debug.WriteLine(string.Format("Node {0} simulated to be {1} and {2}", testNode, testState, (result != null ? "SUCCESSFUL" : "FAILED")));
 				return result;
-			} finally {
-				endSimulation(indeterminateNodes);
 			}
-		}
-
-		static void beginSimulation(IEnumerable<INode> nodes) {
-			foreach (var n in nodes)
-				n.PushSimulation();
-		}
-
-		static void endSimulation(IEnumerable<INode> nodes) {
-			foreach (var n in nodes)
-				n.PopSimulation();
 		}
 
 		#region IConstraint Members
@@ -177,11 +201,11 @@ namespace ClueBuddy {
 		}
 
 		public bool IsSatisfiable {
-			get { return constraints.All(c => c.IsSatisfiable); }
+			get { return FindOnePossibleSolution() != null; }
 		}
 
 		public bool IsBroken {
-			get { return constraints.Any(c => c.IsBroken); }
+			get { return !IsSatisfiable; }
 		}
 
 		public bool IsBreakable {

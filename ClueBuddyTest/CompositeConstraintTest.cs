@@ -9,7 +9,7 @@ namespace ClueBuddyTest {
 	[TestClass]
 	public class CompositeConstraintTest : TestBase {
 		[TestMethod]
-		public void IsSatisfiableDeepTest() {
+		public void IsSatisfiableTest() {
 			// Design a set of five nodes: A B C D E, and constraints:
 			//  * exactly one of A B C
 			//  * exactly one of D E
@@ -24,10 +24,10 @@ namespace ClueBuddyTest {
 			constraints.Add(SelectionCountConstraint.MinSelected(1, new INode[] { b, e }));
 			CompositeConstraint cc = new CompositeConstraint(constraints);
 			Debug.WriteLine("Testing with all nodes indeterminate");
-			Assert.IsTrue(cc.IsSatisfiableDeep(5));
+			Assert.IsTrue(cc.IsSatisfiable);
 			c.IsSelected = true;
 			Debug.WriteLine("Testing with node C selected.");
-			Assert.IsFalse(cc.IsSatisfiableDeep(5));
+			Assert.IsFalse(cc.IsSatisfiable);
 		}
 	}
 }
