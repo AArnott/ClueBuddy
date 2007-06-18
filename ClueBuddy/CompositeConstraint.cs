@@ -94,15 +94,15 @@ namespace ClueBuddy {
 		/// </summary>
 		NodeSolution findOnePossibleSolution(INode onlyNodesAfter) {
 			if (IsSatisfied && IsResolved) {
-				Debug.Write("(");
-				foreach (INode node in Nodes.Where(n => n.IsSelected.HasValue && n.IsSelected.Value)) {
-					Debug.Write(node.ToString());
-				}
-				Debug.Write(") ~(");
-				foreach (INode node in Nodes.Where(n => n.IsSelected.HasValue && !n.IsSelected.Value)) {
-					Debug.Write(node.ToString());
-				}
-				Debug.WriteLine(") satisfied");
+				//Debug.Write("(");
+				//foreach (INode node in Nodes.Where(n => n.IsSelected.HasValue && n.IsSelected.Value)) {
+				//    Debug.Write(node.ToString());
+				//}
+				//Debug.Write(") ~(");
+				//foreach (INode node in Nodes.Where(n => n.IsSelected.HasValue && !n.IsSelected.Value)) {
+				//    Debug.Write(node.ToString());
+				//}
+				//Debug.WriteLine(") satisfied");
 
 				// Construct a dictionary with the solution.
 				NodeSolution solution = new NodeSolution(Nodes.Count());
@@ -112,15 +112,15 @@ namespace ClueBuddy {
 				return solution;
 			}
 			if (isBrokenShallow) {
-				Debug.Write("(");
-				foreach (INode node in Nodes.Where(n => n.IsSelected.HasValue && n.IsSelected.Value)) {
-					Debug.Write(node.ToString());
-				}
-				Debug.Write(") ~(");
-				foreach (INode node in Nodes.Where(n => n.IsSelected.HasValue && !n.IsSelected.Value)) {
-					Debug.Write(node.ToString());
-				}
-				Debug.WriteLine(") broken");
+				//Debug.Write("(");
+				//foreach (INode node in Nodes.Where(n => n.IsSelected.HasValue && n.IsSelected.Value)) {
+				//    Debug.Write(node.ToString());
+				//}
+				//Debug.Write(") ~(");
+				//foreach (INode node in Nodes.Where(n => n.IsSelected.HasValue && !n.IsSelected.Value)) {
+				//    Debug.Write(node.ToString());
+				//}
+				//Debug.WriteLine(") broken");
 				return null;
 			}
 			IEnumerable<INode> indeterminateNodes = SortedNodes.Where(n => !n.IsSelected.HasValue);
@@ -160,7 +160,7 @@ namespace ClueBuddy {
 				//INode[] resolvedNodes = indeterminateNodes.Where(n => !indeterminateNodesNow.Contains(n)).ToArray();
 				//Debug.WriteLine("Simulated resolved nodes: " + string.Join(", ", resolvedNodes.Select(n => n.ToString()).ToArray()));
 				var result = findOnePossibleSolution(testNode);
-				Debug.WriteLine(string.Format("Node {0} simulated to be {1} and {2}", testNode, testState, (result != null ? "SUCCESSFUL" : "FAILED")));
+				//Debug.WriteLine(string.Format("Node {0} simulated to be {1} and {2}", testNode, testState, (result != null ? "SUCCESSFUL" : "FAILED")));
 				return result;
 			}
 		}

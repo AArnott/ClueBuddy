@@ -88,7 +88,7 @@ namespace ClueBuddyTest {
 		public void AddSeveralCluesTest() {
 			Game g = StartPresetGame();
 			Suspicion s = new Suspicion(g.Suspects.First(), g.Weapons.First(), g.Places.First());
-			Debug.WriteLine("Adding that no one has these cards: " + s.Suspect.ToString() + ", " + s.Weapon.ToString() + ", " + s.Place.ToString());
+			//Debug.WriteLine("Adding that no one has these cards: " + s.Suspect.ToString() + ", " + s.Weapon.ToString() + ", " + s.Place.ToString());
 			foreach (Player p in g.Players) {
 				Clue clue = new CannotDisprove(p, s);
 				g.Clues.Add(clue);

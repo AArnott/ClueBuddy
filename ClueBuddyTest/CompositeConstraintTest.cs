@@ -23,10 +23,8 @@ namespace ClueBuddyTest {
 			constraints.Add(SelectionCountConstraint.MinSelected(1, new INode[] { a, d }));
 			constraints.Add(SelectionCountConstraint.MinSelected(1, new INode[] { b, e }));
 			CompositeConstraint cc = new CompositeConstraint(constraints);
-			Debug.WriteLine("Testing with all nodes indeterminate");
 			Assert.IsTrue(cc.IsSatisfiable);
 			c.IsSelected = true;
-			Debug.WriteLine("Testing with node C selected.");
 			Assert.IsFalse(cc.IsSatisfiable);
 		}
 	}

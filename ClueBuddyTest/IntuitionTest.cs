@@ -25,11 +25,11 @@ namespace ClueBuddyTest {
 		}
 		Card[] cards;
 		internal override IEnumerable<IConstraint> GetConstraints(IEnumerable<Node> nodes) {
-			Debug.WriteLine("Generating constraint for " + cards.Length + " cards.");
+			//Debug.WriteLine("Generating constraint for " + cards.Length + " cards.");
 			IEnumerable<INode> constrainedNodes = from n in nodes
 												  where cards.Contains(n.Card) && n.CardHolder == Player
 												  select (INode)n;
-			Debug.WriteLine("Constraining nodes: " + string.Join(", ", constrainedNodes.Select(n => n.ToString()).ToArray()));
+			//Debug.WriteLine("Constraining nodes: " + string.Join(", ", constrainedNodes.Select(n => n.ToString()).ToArray()));
 			yield return SelectionCountConstraint.ExactSelected(0, constrainedNodes);
 		}
 	}
@@ -66,7 +66,7 @@ namespace ClueBuddyTest {
 			var card = game.Weapons.First();
 			var player = game.Players.First();
 			player.see_card(card);
-			Debug.WriteLine("Nodes with set values: " + game.Nodes.Where(n => n.IsSelected.HasValue).Count().ToString());
+			//Debug.WriteLine("Nodes with set values: " + game.Nodes.Where(n => n.IsSelected.HasValue).Count().ToString());
 			foreach (Player p in game.Players) {
 				bool? cardHeld = game.IsCardHeld(p, card);
 				Assert.IsTrue(cardHeld.HasValue);
@@ -107,7 +107,7 @@ namespace ClueBuddyTest {
 			// Test where no player has a card, the case_file must have it.
 			var weapon = weapons[0];
 			foreach (Player p in game.Players) {
-				Debug.WriteLine("Adding clue to player " + p.Name);
+				//Debug.WriteLine("Adding clue to player " + p.Name);
 				game.Clues.Add(new CannotDisproveAnyCards(p, weapon));
 			}
 			Assert.IsTrue(game.CaseFile.has(weapon).Value);
@@ -333,7 +333,7 @@ namespace ClueBuddyTest {
 			// CF: _ _ _ _ _ _ _ _ _		0 _ _ 0 _ _ 0 _ _
 			var suggestion = new Card[] { suspects[0], weapons[0], places[0] };
 			foreach (Player p in players.Take(suggestion.Length)) {
-				Debug.WriteLine(p.Name + " disproving suggestion");
+				//Debug.WriteLine(p.Name + " disproving suggestion");
 				p.disproved(suggestion);
 			}
 

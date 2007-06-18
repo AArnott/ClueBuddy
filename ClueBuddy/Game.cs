@@ -252,9 +252,9 @@ namespace ClueBuddy {
 			// Perform some deep analysis for new opportunities to resolve nodes.
 			var deducedConstraints = ConstraintGenerator.GenerateDeducedConstraints(constraints, true, true).ToArray();
 			if (deducedConstraints.Length > 0) {
-				foreach (var c in deducedConstraints) {
-					Debug.WriteLine("Adding deduced constraint: " + c.ToString());
-				}
+				//foreach (var c in deducedConstraints) {
+				//    Debug.WriteLine("Adding deduced constraint: " + c.ToString());
+				//}
 				constraints.AddRange(deducedConstraints);
 				// Once again, settle any that can be.
 				new CompositeConstraint(constraints).ResolvePartially();
