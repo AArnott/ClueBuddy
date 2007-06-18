@@ -136,10 +136,35 @@ namespace ClueBuddy {
 
 		internal const bool AutoConstraintRegenerationDefault = true;
 		bool autoConstraintRegeneration = AutoConstraintRegenerationDefault;
+		/// <summary>
+		/// Whether the game will automatically regenerate all constraints when an invasive
+		/// change occurs to an existing clue.
+		/// </summary>
 		public bool AutoConstraintRegeneration {
 			get { return autoConstraintRegeneration; }
 			set { autoConstraintRegeneration = value; }
 		}
+
+		internal const bool AutoAnalysisDefault = true;
+		bool autoAnalysis = AutoAnalysisDefault;
+		/// <summary>
+		/// Whether the game will automatically perform analysis on the game state
+		/// with each change in the set of clues.
+		/// </summary>
+		public bool AutoAnalysis {
+			get { return autoAnalysis; }
+			set {
+				autoAnalysis = value;
+				if (AutoAnalysis && analysisPending) {
+					Analyze();
+				}
+			}
+		}
+		/// <summary>
+		/// Whether an analysis needs to be performed.  
+		/// Only applies when <see cref="AutoAnalysis"/> is false.
+		/// </summary>
+		bool analysisPending;
 
 		/// <summary>
 		/// Estimates the number of cards each player will have in his/her hand.
@@ -229,14 +254,25 @@ namespace ClueBuddy {
 						if (clue == null) continue; // skip over any null clues.
 						constraints.AddRange(clue.GetConstraints(Nodes));
 					}
-					Analyze();
+					resolvePartially();
+					autoAnalyze();
 					break;
 				default: // any other change is potentially devastating to current state, so recalculate everything.
 					if (AutoConstraintRegeneration) {
 						RegenerateConstraints();
-						Analyze();
 					}
 					break;
+			}
+		}
+
+		/// <summary>
+		/// Either schedules or calls the Analyze method, depending on the configuration.
+		/// </summary>
+		void autoAnalyze() {
+			if (AutoAnalysis) {
+				Analyze();
+			} else {
+				analysisPending = true;
 			}
 		}
 
@@ -247,8 +283,7 @@ namespace ClueBuddy {
 		}
 
 		public void Analyze() {
-			// Settle any nodes that can be
-			new CompositeConstraint(constraints).ResolvePartially();
+			resolvePartially();
 			// Perform some deep analysis for new opportunities to resolve nodes.
 			var deducedConstraints = ConstraintGenerator.GenerateDeducedConstraints(constraints, true, true).ToArray();
 			if (deducedConstraints.Length > 0) {
@@ -259,6 +294,12 @@ namespace ClueBuddy {
 				// Once again, settle any that can be.
 				new CompositeConstraint(constraints).ResolvePartially();
 			}
+			analysisPending = false;
+		}
+
+		void resolvePartially() {
+			// Settle any nodes that can be
+			new CompositeConstraint(constraints).ResolvePartially();
 		}
 
 		public void RegenerateConstraints() {
@@ -270,7 +311,8 @@ namespace ClueBuddy {
 				if (clue == null) continue; // skip over any null clues.
 				constraints.AddRange(clue.GetConstraints(Nodes));
 			}
-			Analyze();
+			resolvePartially();
+			autoAnalyze();
 		}
 
 		public bool? IsCardHeld(ICardHolder playerOrCaseFile, Card card) {

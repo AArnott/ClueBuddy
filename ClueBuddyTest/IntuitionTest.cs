@@ -46,6 +46,7 @@ namespace ClueBuddyTest {
 		public override void Setup() {
 			base.Setup();
 			game = StartPresetGame();
+			game.AutoAnalysis = false;
 		}
 
 		protected override Game PreparePresetGame() {
@@ -66,6 +67,7 @@ namespace ClueBuddyTest {
 			var card = game.Weapons.First();
 			var player = game.Players.First();
 			player.see_card(card);
+			game.Analyze();
 			//Debug.WriteLine("Nodes with set values: " + game.Nodes.Where(n => n.IsSelected.HasValue).Count().ToString());
 			foreach (Player p in game.Players) {
 				bool? cardHeld = game.IsCardHeld(p, card);
@@ -165,6 +167,7 @@ namespace ClueBuddyTest {
 				game.Clues.Add(new SpyCard(game.Players[iPlayer], place));
 				iPlayer = (iPlayer + 1) % game.Players.Count;
 			}
+			game.Analyze();
 			// the last place should be automatically identified as the one
 			// in the case_file
 			Assert.IsTrue(game.IsCardHeld(game.CaseFile, game.Places.Last()).Value);
@@ -179,6 +182,7 @@ namespace ClueBuddyTest {
 			var player = game.Players[0];
 			for (int i = 0; i < player.CardsHeldCount; i++)
 				player.see_card(game.Cards.Where((c, j) => j == i).First());
+			game.Analyze();
 			foreach (Card card in game.Cards.Where((c, j) => j >= player.CardsHeldCount)) {
 				Assert.IsFalse(game.IsCardHeld(player, card).Value, card.Name + " should have been marked DOES_NOT_HAVE.");
 			}
@@ -196,6 +200,7 @@ namespace ClueBuddyTest {
 			// 0 1 2 3 4 5 6 7 8  9 10 11 12  <-- indexes into cards
 			game.Reset();
 			game = PreparePresetGame();
+			game.AutoAnalysis = false;
 			var player = players[0];
 			players[1].CardsHeldCount += player.CardsHeldCount - 3;
 			player.CardsHeldCount = 3;
@@ -210,6 +215,8 @@ namespace ClueBuddyTest {
 															select n.Card).Count());
 			player.disproved(cards[2], cards[8], cards[10]);
 			player.disproved(cards[5], cards[8], cards[12]);
+
+			game.Analyze();
 			Assert.IsTrue(player.has(cards[8]).Value);
 			Assert.IsFalse(player.has(cards[2]).Value);
 			Assert.IsFalse(player.has(cards[5]).Value);
@@ -232,6 +239,7 @@ namespace ClueBuddyTest {
 			// 0 1 2 3 4 5 6 7 8  9 10 11 12  <-- indexes into cards
 			game.Reset();
 			game = PreparePresetGame();
+			game.AutoAnalysis = false;
 			var player = players[0];
 			players[1].CardsHeldCount += player.CardsHeldCount - 3;
 			player.CardsHeldCount = 3;
@@ -242,6 +250,8 @@ namespace ClueBuddyTest {
 			player.disproved(cards[2], cards[8], cards[10]);
 			player.disproved(cards[5], cards[8], cards[12]);
 			player.see_card(cards[3], cards[7]);
+
+			game.Analyze();
 			Assert.IsTrue(player.has(cards[8]).Value);
 			Assert.IsTrue(player.has_not(cards[2]).Value);
 			Assert.IsTrue(player.has_not(cards[5]).Value);
@@ -337,6 +347,7 @@ namespace ClueBuddyTest {
 				p.disproved(suggestion);
 			}
 
+			game.Analyze();
 			foreach (Card card in suggestion) {
 				Assert.IsTrue(game.CaseFile.has_not(card).Value);
 			}
@@ -359,6 +370,7 @@ namespace ClueBuddyTest {
 				p.disproved(suggestion);
 			}
 
+			game.Analyze();
 			foreach (Card card in suggestion) {
 				foreach (Player p in players.Skip(suggestion.Length)) {
 					Assert.IsTrue(p.has_not(card).Value);
@@ -384,6 +396,7 @@ namespace ClueBuddyTest {
 				p.disproved(suggestion);
 			}
 
+			game.Analyze();
 			foreach (Card card in suggestion) {
 				foreach (Player p in players.Skip(suggestion.Length)) {
 					Assert.IsTrue(p.has_not(card).Value);
@@ -410,6 +423,7 @@ namespace ClueBuddyTest {
 			players[1].disproved(suggestion.Skip(1).ToArray());
 			players[2].disproved(suggestion.Skip(1).ToArray());
 
+			game.Analyze();
 			// Verify P1, all cards
 			Assert.IsTrue(players[0].has(suggestion[0]).Value);
 			Assert.IsTrue(players[0].has_not(suggestion[1]).Value);

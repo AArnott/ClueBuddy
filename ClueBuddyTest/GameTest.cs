@@ -87,12 +87,14 @@ namespace ClueBuddyTest {
 		[TestMethod]
 		public void AddSeveralCluesTest() {
 			Game g = StartPresetGame();
+			g.AutoAnalysis = false;
 			Suspicion s = new Suspicion(g.Suspects.First(), g.Weapons.First(), g.Places.First());
 			//Debug.WriteLine("Adding that no one has these cards: " + s.Suspect.ToString() + ", " + s.Weapon.ToString() + ", " + s.Place.ToString());
 			foreach (Player p in g.Players) {
 				Clue clue = new CannotDisprove(p, s);
 				g.Clues.Add(clue);
 			}
+
 			Assert.AreSame(s.Suspect, g.CaseFile.Suspect);
 			Assert.AreSame(s.Weapon, g.CaseFile.Weapon);
 			Assert.AreSame(s.Place, g.CaseFile.Place);

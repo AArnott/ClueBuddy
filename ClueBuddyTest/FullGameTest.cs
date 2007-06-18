@@ -71,6 +71,7 @@ namespace ClueBuddyTest {
 		[TestMethod]
 		public void Wrigleys() {
 			game = Game.Simpsons;
+			game.AutoAnalysis = false;
 
 			Player andrew, cheryl, jeff, julia;
 			game.Players.AddRange(new Player[] {
@@ -150,6 +151,8 @@ namespace ClueBuddyTest {
 			cannot_disprove(jeff);
 			game.Clues.Add(cc);
 
+			game.Analyze();
+
 			foreach (Card card in game.Cards) {
 				switch (card.Name) {
 					case "Barneys Bowl o rama":
@@ -167,6 +170,7 @@ namespace ClueBuddyTest {
 		[TestMethod]
 		public void Webbs() {
 			game = Game.GreatDetective;
+			game.AutoAnalysis = false; // speeds up test if we call Analyze just once.
 
 			Player andrew, cheryl, rebecca, dan, table;
 			game.Players.AddRange(new Player[] {
@@ -245,6 +249,8 @@ namespace ClueBuddyTest {
 			disproved(dan, "Gray");
 			disproved(cheryl, "Dining room");
 			game.Clues.Add(cc);
+
+			game.Analyze();
 
 			foreach (Card card in game.Cards) {
 				switch (card.Name) {
