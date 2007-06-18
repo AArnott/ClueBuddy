@@ -141,7 +141,11 @@ namespace ClueBuddyTest {
 				Suspicion = new Suspicion(game.Suspects.First(), game.Weapons.First(), game.Places.First())
 			});
 			game.Clues.Add(new SpyCard(game.Players[1], game.Weapons.First()));
-			string fileName = Path.Combine(TestContext.TestDeploymentDir, TestContext.TestName + ".ClueBuddy");
+			TestSerialize(TestContext, game);
+		}
+
+		internal static void TestSerialize(TestContext context, Game game) {
+			string fileName = Path.Combine(context.TestDeploymentDir, context.TestName + ".ClueBuddy");
 			IFormatter formatter = new BinaryFormatter();
 			using (Stream stream = new FileStream(fileName, FileMode.Create)) {
 				formatter.Serialize(stream, game);

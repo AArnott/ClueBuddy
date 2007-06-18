@@ -7,13 +7,14 @@ using ClueBuddy;
 
 namespace ClueBuddyTest {
 	[TestClass]
-	public class FullGameTest {
+	public class FullGameTest : TestBase {
 		Game game;
 		Player interactivePlayer;
 		CompositeClue cc;
 
 		[TestInitialize]
-		public void Setup() {
+		public override void Setup() {
+			base.Setup();
 			game = null;
 			interactivePlayer = null;
 		}
@@ -165,6 +166,8 @@ namespace ClueBuddyTest {
 						break;
 				}
 			}
+
+			GameTest.TestSerialize(TestContext, game);
 		}
 
 		[TestMethod]
@@ -267,6 +270,8 @@ namespace ClueBuddyTest {
 						break;
 				}
 			}
+
+			GameTest.TestSerialize(TestContext, game);
 		}
 
 	}

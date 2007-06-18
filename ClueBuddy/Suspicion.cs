@@ -54,7 +54,7 @@ namespace ClueBuddy {
 		}
 
 		public override string ToString() {
-			return string.Format("[{0}, {1}, {2}]", Suspect, Weapon, Place);
+			return string.Format("[{0}, {1}, {2}]", Place, Suspect, Weapon);
 		}
 
 		#region INotifyPropertyChanged Members
