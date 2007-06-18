@@ -32,6 +32,7 @@ namespace ClueBuddyConsole {
 			setupFileDialog(saveDialog);
 		}
 
+		[STAThread]
 		static void Main(string[] args) {
 			new Program().main();
 		}
