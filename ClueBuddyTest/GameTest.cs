@@ -145,17 +145,22 @@ namespace ClueBuddyTest {
 		}
 
 		internal static void TestSerialize(TestContext context, Game game) {
-			string fileName = Path.Combine(context.TestDeploymentDir, context.TestName + ".ClueBuddy");
 			IFormatter formatter = new BinaryFormatter();
-			using (Stream stream = new FileStream(fileName, FileMode.Create)) {
-				formatter.Serialize(stream, game);
-			}
+			Stream stream = new MemoryStream();
+			formatter.Serialize(stream, game);
+			stream.Position = 0;
 			Game restoredGame;
-			using (Stream stream = new FileStream(fileName, FileMode.Open)) {
-				restoredGame = (Game)formatter.Deserialize(stream);
-			}
+			restoredGame = (Game)formatter.Deserialize(stream);
 			Assert.AreEqual(game.Players.Count, restoredGame.Players.Count);
 			Assert.AreEqual(game.Clues.Count, restoredGame.Clues.Count);
+
+			foreach (Node n1 in game.Nodes) {
+				Node n2 = restoredGame.Nodes.First(
+					n => n.Card.Name == n1.Card.Name &&
+					((n.CardHolder is CaseFile && n1.CardHolder is CaseFile) ||
+					(n.CardHolder is Player && n1.CardHolder is Player && ((Player)n.CardHolder).Name == ((Player)n1.CardHolder).Name)));
+				Assert.AreEqual(n1.IsSelected, n2.IsSelected);
+			}
 			Assert.AreEqual(game.Constraints.Count, restoredGame.Constraints.Count);
 		}
 	}

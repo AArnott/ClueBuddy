@@ -5,7 +5,6 @@ using System.Collections.Specialized;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 
 namespace ClueBuddy {
 	[Serializable]
@@ -194,10 +193,7 @@ namespace ClueBuddy {
 			// Create the CaseFile
 			CaseFile = new CaseFile(this);
 
-			// Create all the nodes
-			nodes = (from h in cardHolders
-					 from c in Cards
-					 select new Node(h, c)).ToList();
+			createNodes();
 
 			// Create the initial set of constraints...
 			constraints = new List<IConstraint>();
@@ -205,6 +201,13 @@ namespace ClueBuddy {
 
 			clues = new ObservableCollection<Clue>();
 			clues.CollectionChanged += new NotifyCollectionChangedEventHandler(clues_CollectionChanged);
+		}
+
+		void createNodes() {
+			// Create all the nodes
+			nodes = (from h in cardHolders
+					 from c in Cards
+					 select new Node(h, c)).ToList();
 		}
 
 		void addPredefinedConstraints() {
