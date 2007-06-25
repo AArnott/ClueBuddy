@@ -242,13 +242,27 @@ namespace ClueBuddyConsole {
 			game.Clues.Add(clue);
 		}
 
+		string getCardSuggestionStrength(Card card) {
+			int strength = 0;
+			// Consider the card worthwhile if its existence in the Case File is not known.
+			if (!game.Nodes.First(n => n.Card == card && n.CardHolder == game.CaseFile).IsSelected.HasValue) {
+				// Its strength is based on how much we know about it so far, which is based
+				// on how many constraints we already have on it.
+				int constraintWithCardCount = Enumerable.Count(game.Constraints,
+					c => c is ConstraintBase && ((ConstraintBase)c).Nodes.Any(cn => ((Node)cn).Card == card));
+				strength = 50 - constraintWithCardCount;
+			}
+			return formatString(card.Name, 20, 21, Alignment.Left) +
+				formatString(strength.ToString(), 4, 5, Alignment.Right);
+		}
+
 		void suggestion() {
 			Suspicion suggestion = new Suspicion();
-			suggestion.Place = choose("Where?", true, p => p.Name, game.Places.ToArray());
+			suggestion.Place = choose("Where?", true, p => getCardSuggestionStrength(p), game.Places.ToArray());
 			if (suggestion.Place == null) return;
-			suggestion.Suspect = choose("Who?", true, s => s.Name, game.Suspects.ToArray());
+			suggestion.Suspect = choose("Who?", true, s => getCardSuggestionStrength(s), game.Suspects.ToArray());
 			if (suggestion.Suspect == null) return;
-			suggestion.Weapon = choose("How?", true, w => w.Name, game.Weapons.ToArray());
+			suggestion.Weapon = choose("How?", true, w => getCardSuggestionStrength(w), game.Weapons.ToArray());
 			if (suggestion.Weapon == null) return;
 			foreach (Player opponent in game.PlayersInOrderAfter(suggestingPlayer)) {
 				bool? disproved;
