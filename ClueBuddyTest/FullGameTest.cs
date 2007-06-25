@@ -71,7 +71,7 @@ namespace ClueBuddyTest {
 
 		[TestMethod]
 		public void Wrigleys() {
-			game = Game.Simpsons;
+			game = Simpsons;
 			game.AutoAnalysis = false;
 
 			Player andrew, cheryl, jeff, julia;
@@ -172,7 +172,7 @@ namespace ClueBuddyTest {
 
 		[TestMethod]
 		public void Webbs() {
-			game = Game.GreatDetective;
+			game = MasterDetective;
 			game.AutoAnalysis = false; // speeds up test if we call Analyze just once.
 
 			Player andrew, cheryl, rebecca, dan, table;

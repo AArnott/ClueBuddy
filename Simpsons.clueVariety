@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<GameVariety xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Simpsons" xmlns="http://www.nerdbank.net/clue/variety">
+  <Rules>
+    <DisprovalEndsTurn>true</DisprovalEndsTurn>
+    <HasSpyglass>false</HasSpyglass>
+  </Rules>
+  <Weapons>
+    <Weapon Name="Poison donut" />
+    <Weapon Name="Plutonium rod" />
+    <Weapon Name="Saxophone" />
+    <Weapon Name="Slingshot" />
+    <Weapon Name="Necklace" />
+    <Weapon Name="Extend-o-glove" />
+  </Weapons>
+  <Suspects>
+    <Suspect Name="Green" />
+    <Suspect Name="Mustard" />
+    <Suspect Name="Peacock" />
+    <Suspect Name="Plum" />
+    <Suspect Name="Scarlet" />
+    <Suspect Name="White" />
+  </Suspects>
+  <Places>
+    <Place Name="Simpson house" />
+    <Place Name="Frying dutchman" />
+    <Place Name="Androids dungeon" />
+    <Place Name="Burns manor" />
+    <Place Name="Krusty loo studios" />
+    <Place Name="Barneys Bowl o rama" />
+    <Place Name="Kwik e mart" />
+    <Place Name="Nuclear power plant" />
+    <Place Name="Springfield retirement castle" />
+  </Places>
+</GameVariety>

@@ -14,7 +14,7 @@ namespace ClueBuddy {
 		/// </summary>
 		/// <param name="rules">The set of rules the game will play by.</param>
 		/// <param name="cards">The cards in this game.</param>
-		Game(string varietyName, GameRules rules, IEnumerable<Card> cards) {
+		internal Game(string varietyName, GameRules rules, IEnumerable<Card> cards) {
 			if (string.IsNullOrEmpty(varietyName)) throw new ArgumentNullException("varietyName");
 			if (cards == null) throw new ArgumentNullException("cards");
 			if (cards.Count() == 0)

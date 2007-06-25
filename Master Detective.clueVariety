@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<GameVariety xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Master Detective" xmlns="http://www.nerdbank.net/clue/variety">
+  <Rules>
+    <DisprovalEndsTurn>false</DisprovalEndsTurn>
+    <HasSpyglass>true</HasSpyglass>
+  </Rules>
+  <Weapons>
+    <Weapon Name="Knife" />
+    <Weapon Name="Candlestick" />
+    <Weapon Name="Horseshoe" />
+    <Weapon Name="Lead pipe" />
+    <Weapon Name="Poison" />
+    <Weapon Name="Revolver" />
+    <Weapon Name="Rope" />
+    <Weapon Name="Wrench" />
+  </Weapons>
+  <Suspects>
+    <Suspect Name="Brunette" />
+    <Suspect Name="Gray" />
+    <Suspect Name="Green" />
+    <Suspect Name="Mustard" />
+    <Suspect Name="Peach" />
+    <Suspect Name="Peacock" />
+    <Suspect Name="Plum" />
+    <Suspect Name="Rose" />
+    <Suspect Name="Scarlet" />
+    <Suspect Name="White" />
+  </Suspects>
+  <Places>
+    <Place Name="Billiard room" />
+    <Place Name="Carriage House" />
+    <Place Name="Conservatory" />
+    <Place Name="Courtyard" />
+    <Place Name="Dining room" />
+    <Place Name="Drawing room" />
+    <Place Name="Fountain" />
+    <Place Name="Gazebo" />
+    <Place Name="Kitchen" />
+    <Place Name="Library" />
+    <Place Name="Studio" />
+    <Place Name="Trophy room" />
+  </Places>
+</GameVariety>

@@ -14,14 +14,14 @@ namespace ClueBuddyTest {
 		[TestMethod]
 		[ExpectedException(typeof(InvalidOperationException))]
 		public void StartWithNoPlayersTest() {
-			Game g = Game.GreatDetective;
+			Game g = MasterDetective;
 			g.Start();
 		}
 
 		[TestMethod]
 		[ExpectedException(typeof(InvalidOperationException))]
 		public void StartWithPlayersWithoutHandSizesTest() {
-			Game g = Game.GreatDetective;
+			Game g = MasterDetective;
 			g.Players.AddRange(players);
 			g.Start();
 		}
@@ -29,7 +29,7 @@ namespace ClueBuddyTest {
 		[TestMethod]
 		[ExpectedException(typeof(InvalidOperationException))]
 		public void StartWithoutHandSizesAppropriatelySized() {
-			Game g = Game.GreatDetective;
+			Game g = MasterDetective;
 			g.Players.AddRange(players);
 			g.AssignApproximatePlayerHandSizes();
 			Debug.Assert(players[0].CardsHeldCount > 1);
@@ -59,7 +59,7 @@ namespace ClueBuddyTest {
 
 		[TestMethod]
 		public void CluesTest() {
-			Game newGame = Game.GreatDetective;
+			Game newGame = MasterDetective;
 			Assert.IsNull(newGame.Clues);
 		}
 
@@ -102,19 +102,19 @@ namespace ClueBuddyTest {
 
 		[TestMethod]
 		public void CaseFileTest() {
-			Game g = Game.GreatDetective;
+			Game g = MasterDetective;
 			Assert.IsNull(g.CaseFile);
 		}
 
 		[TestMethod]
 		[ExpectedException(typeof(InvalidOperationException))]
 		public void AssignApproximatePlayerHandSizesBeforeAddingPlayersTest() {
-			Game.GreatDetective.AssignApproximatePlayerHandSizes();
+			MasterDetective.AssignApproximatePlayerHandSizes();
 		}
 
 		[TestMethod]
 		public void AssignApproximatePlayerHandSizesTest() {
-			Game g = Game.GreatDetective;
+			Game g = MasterDetective;
 			g.Players.AddRange(players);
 			g.AssignApproximatePlayerHandSizes();
 			// Make sure that all cards (except 3 for the Case File) are distributed as evenly as possible.

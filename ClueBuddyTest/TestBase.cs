@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ClueBuddy;
+using System.IO;
 
 namespace ClueBuddyTest {
 	static partial class Extensions {
@@ -61,6 +62,19 @@ namespace ClueBuddyTest {
 
 		protected Player[] players;
 
+		Game loadGameVariety(string name) {
+			string fileName = Path.Combine(TestContext.TestDeploymentDir, name + "." + GameVariety.DefaultFileExtension);
+			using (Stream s = new FileStream(fileName, FileMode.Open)) {
+				return GameVariety.LoadFrom(s).Initialize();
+			}
+		}
+		protected Game MasterDetective {
+			get { return loadGameVariety("Master Detective"); }
+		}
+		protected Game Simpsons {
+			get { return loadGameVariety("Simpsons"); }
+		}
+
 		protected virtual Game StartPresetGame() {
 			Game g = PreparePresetGame();
 			g.Start();
@@ -68,7 +82,7 @@ namespace ClueBuddyTest {
 		}
 
 		protected virtual Game PreparePresetGame() {
-			Game g = Game.GreatDetective;
+			Game g = MasterDetective;
 			g.Players.AddRange(players);
 			g.AssignApproximatePlayerHandSizes();
 			return g;

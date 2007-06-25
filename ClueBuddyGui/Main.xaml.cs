@@ -13,6 +13,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using ClueBuddy;
+using Microsoft.Win32;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace ClueBuddyGui {
 	/// <summary>
@@ -25,7 +29,9 @@ namespace ClueBuddyGui {
 		public Main() {
 			InitializeComponent();
 
-			game = Game.GreatDetective;
+			using (Stream s = new FileStream("Master Detective.clueVariety", FileMode.Open)) {
+				game = GameVariety.LoadFrom(s).Initialize();
+			}
 			game.Players.Add(new Player("Andrew"));
 			game.Players.Add(new Player("Cheryl"));
 			game.Players.Add(new Player("Jeff"));

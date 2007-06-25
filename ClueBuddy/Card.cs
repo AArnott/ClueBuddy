@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace ClueBuddy {
 	[Serializable]
 	public class Card {
+		public Card() { }
 		protected Card(string name) {
 			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
 			this.Name = name;
@@ -21,9 +23,10 @@ namespace ClueBuddy {
 		/// <summary>
 		/// The name of the weapon, place or suspect.
 		/// </summary>
+		[XmlAttribute]
 		public string Name {
 			get { return name; }
-			private set { name = value; }
+			set { name = value; }
 		}
 
 		public override string ToString() {
@@ -32,6 +35,7 @@ namespace ClueBuddy {
 	}
 	[Serializable]
 	public class Weapon : Card {
+		public Weapon() { }
 		public Weapon(string name) : base(name) { }
 
 		public static IEnumerable<Weapon> Generate(params string[] names) {
@@ -40,6 +44,7 @@ namespace ClueBuddy {
 	}
 	[Serializable]
 	public class Place : Card {
+		public Place() { }
 		public Place(string name) : base(name) { }
 
 		public static IEnumerable<Place> Generate(params string[] names) {
@@ -48,6 +53,7 @@ namespace ClueBuddy {
 	}
 	[Serializable]
 	public class Suspect : Card {
+		public Suspect() { }
 		public Suspect(string name) : base(name) { }
 
 		public static IEnumerable<Suspect> Generate(params string[] names) {

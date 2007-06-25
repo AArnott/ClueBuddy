@@ -2,38 +2,90 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace ClueBuddy {
-	public partial class Game {
-		public static IEnumerable<Game> Varieties {
+	[XmlType(Namespace = TypeNamespace)]
+	public class GameVariety {
+		public const string DefaultFileExtension = "clueVariety";
+		const string TypeNamespace = "http://www.nerdbank.net/clue/variety";
+		static XmlSerializer getSerializer() {
+			XmlSerializer serializer = new XmlSerializer(typeof(GameVariety), TypeNamespace);
+			return serializer;
+		}
+		public static GameVariety LoadFrom(Stream stream) {
+			return (GameVariety)getSerializer().Deserialize(stream);
+		}
+		public void Save(Stream stream) {
+			getSerializer().Serialize(stream, this);
+		}
+
+		/// <summary>
+		/// Constructs a <see cref="Game"/> based on the variety described by this
+		/// <see cref="GameVariety"/> instance.
+		/// </summary>
+		public Game Initialize() {
+			return new Game(Name, Rules, cards);
+		}
+
+		GameRules rules;
+		/// <summary>
+		/// The set of rules this game is playing by.
+		/// </summary>
+		public GameRules Rules {
+			get { return rules; }
+			set { rules = value; }
+		}
+
+		List<Weapon> weapons = new List<Weapon>();
+		/// <summary>
+		/// The weapon cards in the game.
+		/// </summary>
+		public List<Weapon> Weapons {
+			get { return weapons; }
+			set { weapons = value; }
+		}
+
+		List<Suspect> suspects = new List<Suspect>();
+		/// <summary>
+		/// The suspect cards in the game.
+		/// </summary>
+		public List<Suspect> Suspects {
+			get { return suspects; }
+			set { suspects = value; }
+		}
+
+		List<Place> places = new List<Place>();
+		/// <summary>
+		/// The place cards in the game.
+		/// </summary>
+		public List<Place> Places {
+			get { return places; }
+			set { places = value; }
+		}
+
+		[XmlIgnore]
+		IEnumerable<Card> cards {
 			get {
-				return new Game[] { GreatDetective, Simpsons };
+				foreach (var card in Suspects) {
+					yield return card;
+				}
+				foreach (var card in Weapons) {
+					yield return card;
+				}
+				foreach (var card in Places) {
+					yield return card;
+				}
 			}
 		}
 
-		public static Game GreatDetective {
-			get {
-				return new Game("Great Detective", new GameRules() {
-									DisprovalEndsTurn = false
-								}, Card.Generate(
-									Suspect.Generate("Brunette", "Gray", "Green", "Mustard", "Peach", "Peacock", "Plum", "Rose", "Scarlet", "White"),
-									Weapon.Generate("Knife", "Candlestick", "Horseshoe", "Lead pipe", "Poison", "Revolver", "Rope", "Wrench"),
-									Place.Generate("Billiard room", "Carriage House", "Conservatory", "Courtyard", "Dining room", "Drawing room", "Fountain", "Gazebo", "Kitchen", "Library", "Studio", "Trophy room")
-								)
-				  );
-			}
-		}
-		public static Game Simpsons {
-			get {
-				return new Game("Simpsons", new GameRules() {
-									DisprovalEndsTurn = true
-								}, Card.Generate(
-									Suspect.Generate("Green", "Mustard", "Peacock", "Plum", "Scarlet", "White"),
-									Weapon.Generate("Poison donut", "Plutonium rod", "Saxophone", "Slingshot", "Necklace", "Extend-o-glove"),
-									Place.Generate("Simpson house", "Frying dutchman", "Androids dungeon", "Burns manor", "Krusty loo studios", "Barneys Bowl o rama", "Kwik e mart", "Nuclear power plant", "Springfield retirement castle")
-								)
-				);
-			}
+		string name;
+		[XmlAttribute]
+		public string Name {
+			get { return name; }
+			set { name = value; }
 		}
 	}
 }

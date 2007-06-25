@@ -14,8 +14,9 @@ namespace ClueBuddyConsole {
 		int cardColumnWidth = 10;
 		int playerColumnWidth = 10;
 		static ConsoleColor questionColor = ConsoleColor.Yellow;
-		OpenFileDialog openDialog = new OpenFileDialog();
-		SaveFileDialog saveDialog = new SaveFileDialog();
+		OpenFileDialog openVarietyDialog = new OpenFileDialog();
+		OpenFileDialog openGameDialog = new OpenFileDialog();
+		SaveFileDialog saveGameDialog = new SaveFileDialog();
 
 		Game game;
 		/// <summary>
@@ -28,8 +29,13 @@ namespace ClueBuddyConsole {
 		Player suggestingPlayer;
 
 		public Program() {
-			setupFileDialog(openDialog);
-			setupFileDialog(saveDialog);
+			setupGameFileDialog(openGameDialog);
+			setupGameFileDialog(saveGameDialog);
+
+			openVarietyDialog.DefaultExt = GameVariety.DefaultFileExtension;
+			openVarietyDialog.Filter = string.Format("Clue Varieties (*.{0})|*.{0}|All files (*.*)|*.*", GameVariety.DefaultFileExtension);
+			openVarietyDialog.FilterIndex = 0;
+			openVarietyDialog.Title = "Choose which game variety to load";
 		}
 
 		[STAThread]
@@ -114,6 +120,7 @@ namespace ClueBuddyConsole {
 							break;
 						case 'N':
 							chooseGame();
+							if (game == null) break;
 							setupPlayers();
 							game.Start();
 							learnOwnHand();
@@ -143,10 +150,10 @@ namespace ClueBuddyConsole {
 		}
 
 		bool? saveGame() {
-			bool? result = saveDialog.ShowDialog();
+			bool? result = saveGameDialog.ShowDialog();
 			if (result.HasValue && result.Value) {
 				IFormatter formatter = new BinaryFormatter();
-				using (Stream s = saveDialog.OpenFile()) {
+				using (Stream s = saveGameDialog.OpenFile()) {
 					formatter.Serialize(s, game);
 					formatter.Serialize(s, interactivePlayer.Name);
 				}
@@ -155,26 +162,31 @@ namespace ClueBuddyConsole {
 		}
 
 		bool? loadGame() {
-			bool? result = openDialog.ShowDialog();
+			bool? result = openGameDialog.ShowDialog();
 			if (result.HasValue && result.Value) {
 				IFormatter formatter = new BinaryFormatter();
-				using (Stream s = openDialog.OpenFile()) {
+				using (Stream s = openGameDialog.OpenFile()) {
 					game = (Game)formatter.Deserialize(s);
 					interactivePlayer = game.Players.First(p => p.Name.Equals(formatter.Deserialize(s)));
 				}
-				saveDialog.FileName = openDialog.FileName;
+				saveGameDialog.FileName = openGameDialog.FileName;
 			}
 			return result;
 		}
 
-		void setupFileDialog(FileDialog dlg) {
+		void setupGameFileDialog(FileDialog dlg) {
 			dlg.DefaultExt = "clueBuddy";
 			dlg.Filter = "ClueBuddy games (*.clueBuddy)|*.clueBuddy|All Files|*.*";
 			dlg.FilterIndex = 0;
 		}
 
 		void chooseGame() {
-			game = choose("Which game variety are you starting?", false, v => v.VarietyName, Game.Varieties.ToArray());
+			bool? result = openVarietyDialog.ShowDialog();
+			if (!result.HasValue || !result.Value) return;
+			using (Stream s = openVarietyDialog.OpenFile()) {
+				game = GameVariety.LoadFrom(s).Initialize();
+				Console.WriteLine("Starting {0}...", game.VarietyName);
+			}
 		}
 
 		void setupPlayers() {
@@ -208,7 +220,7 @@ namespace ClueBuddyConsole {
 			suggestingPlayer = choosePlayer("Whose turn is it?", true, true);
 			if (suggestingPlayer == null) return;
 			try {
-				if (suggestingPlayer == interactivePlayer) {
+				if (suggestingPlayer == interactivePlayer && game.Rules.HasSpyglass) {
 					while (true) {
 						var turnMenu = new Dictionary<char, string>();
 						turnMenu.Add('S', "Make a suggestion");
