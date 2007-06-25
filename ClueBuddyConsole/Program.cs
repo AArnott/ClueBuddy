@@ -75,8 +75,9 @@ namespace ClueBuddyConsole {
 			return indexOfSelection;
 		}
 
-		Player choosePlayer(string prompt, bool includeSkip) {
-			return choose(prompt, includeSkip, p => p.Name, game.Players.ToArray());
+		Player choosePlayer(string prompt, bool includeSkip, bool includeInteractivePlayer) {
+			return choose(prompt, includeSkip, p => p.Name,
+				game.Players.Where(p => includeInteractivePlayer || p != interactivePlayer).ToArray());
 		}
 
 		static string askString(string prompt) {
@@ -189,7 +190,7 @@ namespace ClueBuddyConsole {
 					Console.Error.WriteLine("ERROR: Those cards do not add up to {0}.", game.Cards.Count() - 3);
 				}
 			}
-			interactivePlayer = choosePlayer("Which player are you?", false);
+			interactivePlayer = choosePlayer("Which player are you?", false, true);
 		}
 
 		void learnOwnHand() {
@@ -204,7 +205,7 @@ namespace ClueBuddyConsole {
 		}
 
 		void takeTurn() {
-			suggestingPlayer = choosePlayer("Whose turn is it?", true);
+			suggestingPlayer = choosePlayer("Whose turn is it?", true, true);
 			if (suggestingPlayer == null) return;
 			try {
 				if (suggestingPlayer == interactivePlayer) {
@@ -234,7 +235,7 @@ namespace ClueBuddyConsole {
 
 		void spy() {
 			SpyCard clue = new SpyCard();
-			clue.Player = choosePlayer("Spy on which player?", true);
+			clue.Player = choosePlayer("Spy on which player?", true, false);
 			if (clue.Player == null) return;
 			clue.Card = choose("Which card did you see?", true, c => c.Name, clue.PossiblySeenCards.ToArray());
 			if (clue.Card == null) return;
