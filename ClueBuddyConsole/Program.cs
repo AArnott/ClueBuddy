@@ -246,6 +246,44 @@ namespace ClueBuddyConsole {
 		}
 
 		void spy() {
+			// Display a hint to the user about which player might be the most beneficial to spy on.
+			// Factors to consider include: 
+			// * what % of cards held by a player are still unknown? (odds of benefit)
+			// * what % of the unknown cards are also unknown to the case file? (size of benefit assuming any)
+			// TODO: an enhancement would be to simulate each of the unknown nodes for this player and measure
+			// the size of any cascading effect.
+			var stats = from p in game.Players
+						where p != interactivePlayer
+						let handSize = p.CardsHeldCount
+						let knownCardsInHand = game.Nodes.Count(n => n.CardHolder == p && n.IsSelected.HasValue && n.IsSelected.Value)
+						let unknownCardsInHand = handSize - knownCardsInHand
+						let possiblyRevealingCards = game.Nodes.Count(n => n.CardHolder == p && !n.IsSelected.HasValue)
+						let possibleCardsThatMayBeInCaseFile = game.Nodes.Count(n => n.CardHolder == p && !n.IsSelected.HasValue && !game.Nodes.First(cn => cn.CardHolder == game.CaseFile && cn.Card == n.Card).IsSelected.HasValue)
+						let oddsOfAnyBenefit = (float)unknownCardsInHand / p.CardsHeldCount
+						let oddsOfBenefitBeingSubstantial = possiblyRevealingCards > 0 ? ((float)possibleCardsThatMayBeInCaseFile / possiblyRevealingCards) : 0
+						let choiceStrength = oddsOfAnyBenefit * oddsOfBenefitBeingSubstantial
+						orderby choiceStrength descending
+						select new {
+							Name = p.Name,
+							OddsOfAnyBenefit = oddsOfAnyBenefit,
+							OddsOfBenefitBeingSubstantial = oddsOfBenefitBeingSubstantial,
+							ChoiceStrength = choiceStrength
+						};
+
+			Console.Write(formatString("Player", playerColumnWidth, playerColumnWidth + 1, Alignment.Left));
+			Console.Write(formatString("Odds of any benefit", 20, 21, Alignment.Right));
+			Console.Write(formatString("Odds of an unknown card being useful", 36, 37, Alignment.Right));
+			Console.Write(formatString("Strength of choice", 20, 21, Alignment.Right));
+			Console.WriteLine();
+			foreach (var stat in stats) {
+				Console.Write(formatString(stat.Name, playerColumnWidth, playerColumnWidth + 1, Alignment.Left));
+				Console.Write(formatString(string.Format("{0:0}%", stat.OddsOfAnyBenefit * 100), 20, 21, Alignment.Right));
+				Console.Write(formatString(string.Format("{0:0}%", stat.OddsOfBenefitBeingSubstantial * 100), 36, 37, Alignment.Right));
+				Console.Write(formatString(string.Format("{0:0}%", stat.ChoiceStrength * 100), 20, 21, Alignment.Right));
+				Console.WriteLine();
+			}
+
+			// Begin spying
 			SpyCard clue = new SpyCard();
 			clue.Player = choosePlayer("Spy on which player?", true, false);
 			if (clue.Player == null) return;
