@@ -17,7 +17,7 @@ namespace ClueBuddy {
 			foreach (Card c in places) yield return c;
 		}
 
-		private string name;
+		string name;
 		/// <summary>
 		/// The name of the weapon, place or suspect.
 		/// </summary>

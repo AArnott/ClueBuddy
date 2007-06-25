@@ -21,10 +21,10 @@ namespace ClueBuddy {
 				throw new ArgumentException(Strings.ListCannotBeEmpty, "cards");
 			this.varietyName = varietyName;
 			this.rules = rules;
-			this.cards = cards.ToList(); // Cache the enumeration to a list to avoid recreating cards each time we enumerate
+			this.cards = cards.ToList();
 		}
 
-		private string varietyName;
+		string varietyName;
 		/// <summary>
 		/// The variety of the game.
 		/// </summary>
@@ -32,7 +32,7 @@ namespace ClueBuddy {
 			get { return varietyName; }
 		}
 
-		private GameRules rules;
+		GameRules rules;
 		/// <summary>
 		/// The set of rules this game is playing by.
 		/// </summary>
@@ -40,7 +40,7 @@ namespace ClueBuddy {
 			get { return rules; }
 		}
 
-		private CaseFile caseFile;
+		CaseFile caseFile;
 		/// <summary>
 		/// The orange envelope that has the three cards that solve the game.
 		/// </summary>
@@ -49,7 +49,7 @@ namespace ClueBuddy {
 			set { caseFile = value; }
 		}
 
-		private List<Player> players = new List<Player>();
+		List<Player> players = new List<Player>();
 		/// <summary>
 		/// The players in the game.
 		/// </summary>
@@ -89,7 +89,7 @@ namespace ClueBuddy {
 			get { return nodes; }
 		}
 
-		private List<Card> cards;
+		List<Card> cards;
 		/// <summary>
 		/// The cards in the game.
 		/// </summary>

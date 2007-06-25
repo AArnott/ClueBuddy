@@ -256,7 +256,7 @@ namespace ClueBuddyConsole {
 					writeColor(questionColor, "{0} {1} disprove {2}.", opponent.Name, disproved.Value ? "CAN" : "CANNOT", suggestion);
 				} else {
 					// Ask the gamer if the opponent did.
-					switch (choose(string.Format("Could {0} disprove {1}?", opponent.Name, suggestion), false, 
+					switch (choose(string.Format("Could {0} disprove {1}?", opponent.Name, suggestion), false,
 						new string[] { "Yes", "No", "Skip player", "Abort suggestion" })) {
 						case 0:
 							disproved = true;
