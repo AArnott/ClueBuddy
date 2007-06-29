@@ -11,6 +11,11 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace ClueBuddyTest {
 	[TestClass]
 	public class GameTest : TestBase {
+		[TestInitialize]
+		public override void Setup() {
+			base.Setup();
+		}
+
 		[TestMethod]
 		[ExpectedException(typeof(InvalidOperationException))]
 		public void StartWithNoPlayersTest() {

@@ -43,6 +43,7 @@ namespace ClueBuddyTest {
 		Weapon[] weapons;
 		Place[] places;
 
+		[TestInitialize]
 		public override void Setup() {
 			base.Setup();
 			game = StartPresetGame();

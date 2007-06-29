@@ -6,6 +6,11 @@ using ClueBuddy;
 namespace ClueBuddyTest {
 	[TestClass]
 	public class CaseFileTest : TestBase {
+		[TestInitialize]
+		public override void Setup() {
+			base.Setup();
+		}
+
 		[TestMethod]
 		public void ToStringTest() {
 			Game game = StartPresetGame();

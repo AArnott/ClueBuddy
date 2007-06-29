@@ -8,6 +8,11 @@ using ClueBuddy;
 namespace ClueBuddyTest {
 	[TestClass]
 	public class CompositeClueTest : TestBase {
+		[TestInitialize]
+		public override void Setup() {
+			base.Setup();
+		}
+
 		[TestMethod]
 		public void GetConstraintsTest() {
 			Game g = StartPresetGame();

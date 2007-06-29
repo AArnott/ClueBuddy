@@ -6,6 +6,11 @@ namespace ClueBuddyTest
 {
 	[TestClass]
 	public class PlayerTest :TestBase{
+		[TestInitialize]
+		public override void Setup() {
+			base.Setup();
+		}
+
 		[TestMethod]
 		public void PlayerConstructorTest() {
 			string name = "name";

@@ -7,6 +7,11 @@ using ClueBuddy;
 namespace ClueBuddyTest {
 	[TestClass]
 	public class DisprovedTest : ClueTestBase {
+		[TestInitialize]
+		public override void Setup() {
+			base.Setup();
+		}
+
 		[TestMethod]
 		public void DisprovedConstructorTest() {
 			Disproved target = new Disproved(disprovingPlayer, suggestion);

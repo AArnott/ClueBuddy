@@ -8,6 +8,11 @@ using ClueBuddy;
 namespace ClueBuddyTest {
 	[TestClass()]
 	public class ConstraintBaseTest : TestBase {
+		[TestInitialize]
+		public override void Setup() {
+			base.Setup();
+		}
+
 		[TestMethod]
 		public void FactorialTest() {
 			Assert.AreEqual(1, ConstraintBase.Factorial(1));

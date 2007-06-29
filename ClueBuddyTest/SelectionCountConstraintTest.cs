@@ -10,7 +10,9 @@ namespace ClueBuddyTest {
 	public class SelectionCountConstraintTest : TestBase {
 		INode[] nodes;
 
+		[TestInitialize]
 		public override void Setup() {
+			base.Setup();
 			nodes = new INode[] { new DummyNode(), new DummyNode(), new DummyNode(), new DummyNode() };
 		}
 

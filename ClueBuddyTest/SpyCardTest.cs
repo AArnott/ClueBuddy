@@ -8,6 +8,11 @@ using ClueBuddy;
 namespace ClueBuddyTest {
 	[TestClass]
 	public class SpyCardTest : TestBase {
+		[TestInitialize]
+		public override void Setup() {
+			base.Setup();
+		}
+
 		[TestMethod]
 		public void SpyCardConstructorTest() {
 			Player playerShowingCard = new Player("player");

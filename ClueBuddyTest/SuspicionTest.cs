@@ -7,6 +7,11 @@ using ClueBuddy;
 namespace ClueBuddyTest {
 	[TestClass]
 	public class SuspicionTest : TestBase {
+		[TestInitialize]
+		public override void Setup() {
+			base.Setup();
+		}
+
 		[TestMethod]
 		public void CardsTest() {
 			var w = new Weapon("weapon");

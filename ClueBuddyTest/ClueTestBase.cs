@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ClueBuddy;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ClueBuddyTest {
 	public class ClueTestBase : TestBase {
@@ -12,6 +13,7 @@ namespace ClueBuddyTest {
 		internal List<Node> nodes = new List<Node>(3);
 
 		public override void Setup() {
+			base.Setup();
 			cardShown = suggestion.Place;
 			nodes.Clear();
 			nodes.AddRange(from c in suggestion.Cards

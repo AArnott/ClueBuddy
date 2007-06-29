@@ -5,6 +5,11 @@ using ClueBuddy;
 namespace ClueBuddyTest {
 	[TestClass()]
 	public class CardTest : TestBase {
+		[TestInitialize]
+		public override void Setup() {
+			base.Setup();
+		}
+
 		[TestMethod]
 		[ExpectedException(typeof(ArgumentNullException))]
 		public void ConstructorNullNameTest() {

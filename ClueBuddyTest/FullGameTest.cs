@@ -127,11 +127,11 @@ namespace ClueBuddyTest {
 			cannot_disprove(cheryl);
 			disproved(jeff, "Saxophone");
 			game.Clues.Add(cc);
-			
+
 			suggest(cheryl, "Nuclear power plant", "Mustard", "Plutonium rod");
 			cannot_disprove(julia);
 			game.Clues.Add(cc);
-			
+
 			suggest(jeff, "Nuclear power plant", "Scarlet", "Plutonium rod");
 			disproved(cheryl);
 			game.Clues.Add(cc);
@@ -139,15 +139,15 @@ namespace ClueBuddyTest {
 			suggest(julia, "Springfield retirement castle", "White", "Slingshot");
 			cannot_disprove(cheryl);
 			game.Clues.Add(cc);
-			
+
 			suggest(cheryl, "Barneys Bowl o rama", "Plum", "Saxophone");
 			cannot_disprove(julia);
 			game.Clues.Add(cc);
-			
+
 			suggest(andrew, "Burns manor", "Green", "Poison donut");
 			disproved(cheryl, "Burns manor");
 			game.Clues.Add(cc);
-			
+
 			suggest(cheryl, "Barneys Bowl o rama", "Scarlet", "Plutonium rod");
 			cannot_disprove(jeff);
 			game.Clues.Add(cc);

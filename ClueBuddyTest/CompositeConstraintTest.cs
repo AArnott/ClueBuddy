@@ -8,6 +8,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace ClueBuddyTest {
 	[TestClass]
 	public class CompositeConstraintTest : TestBase {
+		[TestInitialize]
+		public override void Setup() {
+			base.Setup();
+		}
+
 		[TestMethod]
 		public void IsSatisfiableTest() {
 			// Design a set of five nodes: A B C D E, and constraints:

@@ -88,8 +88,6 @@ namespace ClueBuddyTest {
 			return g;
 		}
 
-
-		[TestInitialize]
 		public virtual void Setup() {
 			players = new Player[] { 
 							   new Player("Player 1"), 
@@ -98,7 +96,5 @@ namespace ClueBuddyTest {
 							   new Player("Player 4") 
 						   };
 		}
-		[TestCleanup]
-		public virtual void Cleanup() { }
 	}
 }
