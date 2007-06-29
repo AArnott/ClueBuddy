@@ -8,6 +8,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using ClueBuddy;
 using System.Diagnostics;
+using System.Security;
+using System.Security.Permissions;
 
 namespace ClueBuddyConsole {
 	class Program {
@@ -35,7 +37,9 @@ namespace ClueBuddyConsole {
 			openVarietyDialog.DefaultExt = GameVariety.DefaultFileExtension;
 			openVarietyDialog.Filter = string.Format("Clue Varieties (*.{0})|*.{0}|All files (*.*)|*.*", GameVariety.DefaultFileExtension);
 			openVarietyDialog.FilterIndex = 0;
-			openVarietyDialog.Title = "Choose which game variety to load";
+			try {
+				openVarietyDialog.Title = "Choose which game variety to load";
+			} catch (SecurityException) { } // a small convenience we'll leverage when we can
 		}
 
 		[STAThread]
@@ -102,6 +106,16 @@ namespace ClueBuddyConsole {
 		}
 		void main() {
 			Console.WriteLine("=======ClueBuddy=======");
+			try {
+				PermissionSet savingPermissions = new PermissionSet(null);
+				savingPermissions.AddPermission(new FileDialogPermission(FileDialogPermissionAccess.Save));
+				savingPermissions.AddPermission(new SecurityPermission(SecurityPermissionFlag.SerializationFormatter));
+				savingPermissions.AddPermission(new ReflectionPermission(ReflectionPermissionFlag.MemberAccess));
+				// briefly demand these permissions to detect whether we'll succeed later
+				savingPermissions.Demand();
+			} catch (SecurityException) {
+				writeColor(ConsoleColor.Red, "WARNING: insufficient permissions to save games.");
+			}
 			while (true) {
 				try {
 					var mainMenu = new Dictionary<char, string>();
@@ -140,6 +154,8 @@ namespace ClueBuddyConsole {
 						case 'Q':
 							return;
 					}
+				} catch (SecurityException ex) {
+					Console.Error.WriteLine("Insufficient permissions: {0}.", ex.Demanded);
 				} catch (Exception e) {
 					if (e is OutOfMemoryException || e is StackOverflowException) throw;
 					if (choose(string.Format("An {0} exception was thrown: {1}.{2}Do you want to try to continue the game?",
@@ -169,7 +185,9 @@ namespace ClueBuddyConsole {
 					game = (Game)formatter.Deserialize(s);
 					interactivePlayer = game.Players.First(p => p.Name.Equals(formatter.Deserialize(s)));
 				}
-				saveGameDialog.FileName = openGameDialog.FileName;
+				try {
+					saveGameDialog.FileName = openGameDialog.FileName;
+				} catch (SecurityException) { } // just a convenience that we'll ignore if we can't do it.
 			}
 			return result;
 		}

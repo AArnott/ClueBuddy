@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Security.Permissions;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -8,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("ClueBuddy")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("NerdBank")]
 [assembly: AssemblyProduct("ClueBuddy")]
 [assembly: AssemblyCopyright("Copyright ©  2007")]
 [assembly: AssemblyTrademark("")]
@@ -38,3 +39,9 @@ using System.Runtime.InteropServices;
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("ClueBuddyTest")]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("ClueBuddyGui")]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("ClueBuddyConsole")]
+
+[assembly: SecurityPermission(SecurityAction.RequestMinimum, Execution = true)]
+
+[assembly: FileIOPermission(SecurityAction.RequestRefuse)]
+[assembly: UIPermission(SecurityAction.RequestRefuse)]
+[assembly: RegistryPermission(SecurityAction.RequestRefuse)]
