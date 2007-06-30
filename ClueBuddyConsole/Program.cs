@@ -10,6 +10,7 @@ using ClueBuddy;
 using System.Diagnostics;
 using System.Security;
 using System.Security.Permissions;
+using System.Collections.Specialized;
 
 namespace ClueBuddyConsole {
 	class Program {
@@ -29,6 +30,7 @@ namespace ClueBuddyConsole {
 		/// The player whose turn it is.
 		/// </summary>
 		Player suggestingPlayer;
+		bool solutionFoundAlready;
 
 		public Program() {
 			setupGameFileDialog(openGameDialog);
@@ -165,6 +167,13 @@ namespace ClueBuddyConsole {
 			}
 		}
 
+		void prepareNewOrLoadedGameState() {
+			solutionFoundAlready = false;
+			// Hook into the CaseFile changed events so we are notified when the solution
+			// has been found.
+			game.Clues.CollectionChanged += new NotifyCollectionChangedEventHandler(Clues_CollectionChanged);
+		}
+
 		bool? saveGame() {
 			bool? result = saveGameDialog.ShowDialog();
 			if (result.HasValue && result.Value) {
@@ -189,6 +198,7 @@ namespace ClueBuddyConsole {
 					saveGameDialog.FileName = openGameDialog.FileName;
 				} catch (SecurityException) { } // just a convenience that we'll ignore if we can't do it.
 			}
+			prepareNewOrLoadedGameState();
 			return result;
 		}
 
@@ -203,7 +213,17 @@ namespace ClueBuddyConsole {
 			if (!result.HasValue || !result.Value) return;
 			using (Stream s = openVarietyDialog.OpenFile()) {
 				game = GameVariety.LoadFrom(s).Initialize();
-				Console.WriteLine("Starting {0}...", game.VarietyName);
+			}
+			Console.WriteLine("Starting {0}...", game.VarietyName);
+			prepareNewOrLoadedGameState();
+		}
+
+		void Clues_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
+			// Has the solution been found?
+			if (!solutionFoundAlready && game.Nodes.Count(n => n.CardHolder == game.CaseFile && n.IsSelected.HasValue && n.IsSelected.Value) == 3) {
+				// we just found the solution
+				writeColor(ConsoleColor.Red, "Solved!  {0}, {1}, {2}", game.CaseFile.Place, game.CaseFile.Suspect, game.CaseFile.Weapon);
+				solutionFoundAlready = true;
 			}
 		}
 
