@@ -56,6 +56,29 @@ namespace ClueBuddy {
 			internal set { game = value; }
 		}
 
+		public bool? HasAtLeastOneOf(IEnumerable<Card> cards) {
+			IEnumerable<INode> relevantNodes = Game.Nodes.Where(n => n.CardHolder == this
+				&& cards.Contains(n.Card)).OfType<INode>();
+			// If the player is known to not have any of the cards...
+			if (relevantNodes.All(n => n.IsSelected.HasValue && !n.IsSelected.Value))
+				return false; // ...then he cannot possibly disprove the suggestion.
+			// If the player is known to have at least one of the cards...
+			if (relevantNodes.Any(n => n.IsSelected.HasValue && n.IsSelected.Value))
+				return true; // ...then he can disprove the suggestion.
+			// Maybe they must have at least one of the cards in the list,
+			// but we just don't know which one yet.  Test by setting all 
+			// indeterminate nodes to unselected, and testing if we have a valid state.
+			using (NodeSimulation sim = new NodeSimulation(relevantNodes)) {
+				foreach (INode node in relevantNodes.Where(n => !n.IsSelected.HasValue)) {
+					node.IsSelected = false;
+				}
+				CompositeConstraint cc = new CompositeConstraint(game.Constraints);
+				if (cc.IsBroken) return true; // Something's got to be selected.
+			}
+			// Otherwise, we don't know for sure.
+			return null;
+		}
+
 		#region INotifyPropertyChanged Members
 
 		public event PropertyChangedEventHandler PropertyChanged;

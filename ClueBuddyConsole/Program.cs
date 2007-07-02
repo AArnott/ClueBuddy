@@ -377,7 +377,7 @@ namespace ClueBuddyConsole {
 			foreach (Player opponent in game.PlayersInOrderAfter(suggestingPlayer)) {
 				bool? disproved;
 				// Do we already know whether this player could disprove it?
-				if ((disproved = canPlayerDisprove(opponent, suggestion)).HasValue) {
+				if ((disproved = opponent.HasAtLeastOneOf(suggestion.Cards)).HasValue) {
 					writeColor(questionColor, "{0} {1} disprove {2}.", opponent.Name, disproved.Value ? "CAN" : "CANNOT", suggestion);
 				} else {
 					// Ask the gamer if the opponent did.
@@ -418,18 +418,6 @@ namespace ClueBuddyConsole {
 					}
 				}
 			}
-		}
-
-		bool? canPlayerDisprove(Player opponent, Suspicion suspicion) {
-			IEnumerable<Node> relevantNodes = game.Nodes.Where(n => n.CardHolder == opponent && suspicion.Cards.Contains(n.Card));
-			// If the player is known to not have any of the cards...
-			if (relevantNodes.All(n => n.IsSelected.HasValue && !n.IsSelected.Value))
-				return false; // ...then he cannot possibly disprove the suggestion.
-			// If the player is known to have at least one of the cards...
-			if (relevantNodes.Any(n => n.IsSelected.HasValue && n.IsSelected.Value))
-				return true; // ...then he can disprove the suggestion.
-			// Otherwise, we don't know for sure.
-			return null;
 		}
 
 		void accusation() {
