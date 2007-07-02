@@ -9,6 +9,7 @@ namespace ClueBuddy {
 		/// The number of cards in the player's hand or in the Case File.
 		/// </summary>
 		int CardsHeldCount { get; }
+		bool? HasCard(Card card);
 		Game Game { get; }
 	}
 }

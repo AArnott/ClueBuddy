@@ -177,7 +177,7 @@ namespace ClueBuddyConsole {
 
 		void Clues_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
 			// Has the solution been found?
-			if (!solutionFoundAlready && game.Nodes.Count(n => n.CardHolder == game.CaseFile && n.IsSelected.HasValue && n.IsSelected.Value) == 3) {
+			if (!solutionFoundAlready && game.CaseFile.IsSolved) {
 				// we just found the solution
 				ConsoleHelper.WriteColor(ConsoleColor.Red, "Solved!  {0}, {1}, {2}", game.CaseFile.Place, game.CaseFile.Suspect, game.CaseFile.Weapon);
 				solutionFoundAlready = true;
@@ -232,6 +232,8 @@ namespace ClueBuddyConsole {
 								return;
 						}
 					}
+				} else if (suggestingPlayer == interactivePlayer) {
+					suggestion();
 				} else {
 					var turnMenu = new Dictionary<char, string>();
 					turnMenu.Add('S', "Make a suggestion");
@@ -303,7 +305,7 @@ namespace ClueBuddyConsole {
 		string getCardSuggestionStrength(Card card) {
 			int strength = 0;
 			// Consider the card worthwhile if its existence in the Case File is not known.
-			if (!game.Nodes.First(n => n.Card == card && n.CardHolder == game.CaseFile).IsSelected.HasValue) {
+			if (!game.CaseFile.HasCard(card).HasValue) {
 				// Its strength is based on how much we know about it so far, which is based
 				// on how many constraints we already have on it.
 				int constraintWithCardCount = Enumerable.Count(game.Constraints,
@@ -344,11 +346,7 @@ namespace ClueBuddyConsole {
 				}
 				Card alabi = null;
 				if (suggestingPlayer == interactivePlayer && disproved.HasValue && disproved.Value) {
-					IEnumerable<Card> possiblyShownCards = from n in game.Nodes
-														   where n.CardHolder == opponent &&
-														   suggestion.Cards.Contains(n.Card) &&
-														   (!n.IsSelected.HasValue || n.IsSelected.Value)
-														   select n.Card;
+					IEnumerable<Card> possiblyShownCards = opponent.PossiblyHeldCards.Where(c => suggestion.Cards.Contains(c));
 					if (possiblyShownCards.Count() == 1) {
 						ConsoleHelper.WriteColor(ConsoleHelper.QuestionColor, "{0} must have shown you {1}.", opponent,
 							alabi = possiblyShownCards.First());
@@ -417,10 +415,10 @@ namespace ClueBuddyConsole {
 			string name = (player is Player) ? (player as Player).Name : "Case File";
 			Console.Write("{0,-" + playerColumnWidth + "} ", name);
 			foreach (Card card in cards) {
-				Node n = game.Nodes.First(node => node.CardHolder == player && node.Card == card);
+				bool? isSelected = player.HasCard(card);
 				string value = "?";
-				if (n.IsSelected.HasValue) {
-					value = n.IsSelected.Value ? "1" : "0";
+				if (isSelected.HasValue) {
+					value = isSelected.Value ? "1" : "0";
 				}
 				Console.Write(ConsoleHelper.CenterString(value, card.Name.Length, card.Name.Length + 1));
 			}

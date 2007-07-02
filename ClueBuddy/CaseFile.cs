@@ -48,8 +48,19 @@ namespace ClueBuddy {
 			get { return 3; }
 		}
 
-		public static int CardsInCaseFile {
-			get { return 3; }
+		/// <summary>
+		/// The number of cards that are in a case file at any time.  (Not just the known cards).
+		/// </summary>
+		public const int CardsInCaseFile = 3;
+
+		public bool IsSolved {
+			get {
+				return game.Nodes.Count(n => n.CardHolder == game.CaseFile && n.IsSelected.HasValue && n.IsSelected.Value) == 3;
+			}
+		}
+
+		public bool? HasCard(Card card) {
+			return Game.Nodes.First(n => n.CardHolder == this && n.Card == card).IsSelected;
 		}
 
 		public override string ToString() {

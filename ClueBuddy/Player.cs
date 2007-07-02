@@ -56,6 +56,10 @@ namespace ClueBuddy {
 			internal set { game = value; }
 		}
 
+		public bool? HasCard(Card card) {
+			return Game.Nodes.First(n => n.CardHolder == this && n.Card == card).IsSelected;
+		}
+
 		public bool? HasAtLeastOneOf(IEnumerable<Card> cards) {
 			IEnumerable<INode> relevantNodes = Game.Nodes.Where(n => n.CardHolder == this
 				&& cards.Contains(n.Card)).OfType<INode>();
@@ -77,6 +81,15 @@ namespace ClueBuddy {
 			}
 			// Otherwise, we don't know for sure.
 			return null;
+		}
+
+		public IEnumerable<Card> PossiblyHeldCards {
+			get {
+				return from n in Game.Nodes
+					   where n.CardHolder == this &&
+					   (!n.IsSelected.HasValue || n.IsSelected.Value)
+					   select n.Card;
+			}
 		}
 
 		#region INotifyPropertyChanged Members
