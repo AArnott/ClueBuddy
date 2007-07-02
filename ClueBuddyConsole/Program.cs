@@ -14,8 +14,9 @@ using System.Collections.Specialized;
 
 namespace ClueBuddyConsole {
 	class Program {
-		int cardColumnWidth = 10;
-		int playerColumnWidth = 10;
+		int playerColumnWidth {
+			get { return Math.Max(game.Players.Max(p => p.Name.Length), "Case File".Length); }
+		}
 		static ConsoleColor questionColor = ConsoleColor.Yellow;
 		OpenFileDialog openVarietyDialog = new OpenFileDialog();
 		OpenFileDialog openGameDialog = new OpenFileDialog();
@@ -321,16 +322,16 @@ namespace ClueBuddyConsole {
 							ChoiceStrength = choiceStrength
 						};
 
-			Console.Write(formatString("Player", playerColumnWidth, playerColumnWidth + 1, Alignment.Left));
-			Console.Write(formatString("Odds of any benefit", 20, 21, Alignment.Right));
-			Console.Write(formatString("Odds of an unknown card being useful", 36, 37, Alignment.Right));
-			Console.Write(formatString("Strength of choice", 20, 21, Alignment.Right));
+			Console.Write("{0,-" + playerColumnWidth + "} ", "Player");
+			Console.Write("{0,20} ", "Odds of any benefit");
+			Console.Write("{0,36} ", "Odds of an unknown card being useful");
+			Console.Write("{0,20} ", "Strength of choice");
 			Console.WriteLine();
 			foreach (var stat in stats) {
-				Console.Write(formatString(stat.Name, playerColumnWidth, playerColumnWidth + 1, Alignment.Left));
-				Console.Write(formatString(string.Format("{0:0}%", stat.OddsOfAnyBenefit * 100), 20, 21, Alignment.Right));
-				Console.Write(formatString(string.Format("{0:0}%", stat.OddsOfBenefitBeingSubstantial * 100), 36, 37, Alignment.Right));
-				Console.Write(formatString(string.Format("{0:0}%", stat.ChoiceStrength * 100), 20, 21, Alignment.Right));
+				Console.Write("{0,-" + playerColumnWidth + "} ", stat.Name);
+				Console.Write("{0,20:0}% ", stat.OddsOfAnyBenefit * 100);
+				Console.Write("{0,36:0}% ", stat.OddsOfBenefitBeingSubstantial * 100);
+				Console.Write("{0,20:0}%", stat.ChoiceStrength * 100);
 				Console.WriteLine();
 			}
 
@@ -353,8 +354,7 @@ namespace ClueBuddyConsole {
 					c => c is ConstraintBase && ((ConstraintBase)c).Nodes.Any(cn => ((Node)cn).Card == card));
 				strength = 50 - constraintWithCardCount;
 			}
-			return formatString(card.Name, 20, 21, Alignment.Left) +
-				formatString(strength.ToString(), 4, 5, Alignment.Right);
+			return string.Format("{0,-20}", card.Name) + string.Format("{0,4}", strength);
 		}
 
 		void suggestion() {
@@ -464,53 +464,33 @@ namespace ClueBuddyConsole {
 			// Print header row with card names
 			Console.Write(new string(' ', playerColumnWidth + 1));
 			foreach (Card card in cards) {
-				Console.Write(formatString(card.Name, cardColumnWidth, cardColumnWidth + 1, Alignment.Left));
+				Console.Write("{0} ", card.Name);
 			}
 			Console.WriteLine();
 		}
 
 		private void printGridRow(ICardHolder player, IEnumerable<Card> cards) {
 			string name = (player is Player) ? (player as Player).Name : "Case File";
-			Console.Write(formatString(name, playerColumnWidth, playerColumnWidth + 1, Alignment.Left));
+			Console.Write("{0,-" + playerColumnWidth + "} ", name);
 			foreach (Card card in cards) {
 				Node n = game.Nodes.First(node => node.CardHolder == player && node.Card == card);
 				string value = "?";
 				if (n.IsSelected.HasValue) {
 					value = n.IsSelected.Value ? "1" : "0";
 				}
-				Console.Write(formatString(value, cardColumnWidth, cardColumnWidth + 1, Alignment.Center));
+				Console.Write(centerString(value, card.Name.Length, card.Name.Length + 1));
 			}
 			Console.WriteLine();
 		}
 
-		enum Alignment {
-			Left,
-			Center,
-			Right
-		}
-
-		string formatString(string value, int maxLength, int spacing, Alignment alignment) {
+		string centerString(string value, int maxLength, int spacing) {
 			Debug.Assert(maxLength <= spacing);
 			int actualCharactersFromValueToDisplay = Math.Min(maxLength, value.Length);
 			StringBuilder result = new StringBuilder(spacing);
 
 			int prefixCharacters, suffixCharacters;
-			switch (alignment) {
-				case Alignment.Left:
-					prefixCharacters = 0;
-					suffixCharacters = spacing - actualCharactersFromValueToDisplay;
-					break;
-				case Alignment.Center:
-					prefixCharacters = (spacing - actualCharactersFromValueToDisplay) / 2;
-					suffixCharacters = (spacing - actualCharactersFromValueToDisplay) - prefixCharacters;
-					break;
-				case Alignment.Right:
-					prefixCharacters = spacing - actualCharactersFromValueToDisplay;
-					suffixCharacters = 0;
-					break;
-				default:
-					throw new ApplicationException();
-			}
+			prefixCharacters = (spacing - actualCharactersFromValueToDisplay) / 2;
+			suffixCharacters = (spacing - actualCharactersFromValueToDisplay) - prefixCharacters;
 
 			result.Append(' ', prefixCharacters);
 			result.Append(value, 0, actualCharactersFromValueToDisplay);
