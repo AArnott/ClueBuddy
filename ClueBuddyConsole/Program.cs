@@ -140,6 +140,7 @@ namespace ClueBuddyConsole {
 							if (game == null) break;
 							setupPlayers();
 							game.Start();
+							prepareNewOrLoadedGameState();
 							learnOwnHand();
 							break;
 						case 'S':
@@ -178,10 +179,19 @@ namespace ClueBuddyConsole {
 		bool? saveGame() {
 			bool? result = saveGameDialog.ShowDialog();
 			if (result.HasValue && result.Value) {
-				IFormatter formatter = new BinaryFormatter();
-				using (Stream s = saveGameDialog.OpenFile()) {
-					formatter.Serialize(s, game);
-					formatter.Serialize(s, interactivePlayer.Name);
+				try {
+					// We remove the event handlers hooking to this console app so that
+					// we don't serialize an extra instance of it.
+					game.Clues.CollectionChanged -= new NotifyCollectionChangedEventHandler(Clues_CollectionChanged);
+					// Serialize the game state.
+					IFormatter formatter = new BinaryFormatter();
+					using (Stream s = saveGameDialog.OpenFile()) {
+						formatter.Serialize(s, game);
+						formatter.Serialize(s, interactivePlayer.Name);
+					}
+				} finally {
+					// Restore the event handlers.
+					game.Clues.CollectionChanged += new NotifyCollectionChangedEventHandler(Clues_CollectionChanged);
 				}
 			}
 			return result;
@@ -216,7 +226,6 @@ namespace ClueBuddyConsole {
 				game = GameVariety.LoadFrom(s).Initialize();
 			}
 			Console.WriteLine("Starting {0}...", game.VarietyName);
-			prepareNewOrLoadedGameState();
 		}
 
 		void Clues_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
