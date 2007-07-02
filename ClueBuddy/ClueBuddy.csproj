@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BadAccusation.cs" />
     <Compile Include="BrokenConstraintException.cs" />
     <Compile Include="CannotDisprove.cs" />
     <Compile Include="Card.cs" />

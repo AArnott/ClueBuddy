@@ -276,7 +276,20 @@ namespace ClueBuddyConsole {
 						}
 					}
 				} else {
-					suggestion();
+					var turnMenu = new Dictionary<char, string>();
+					turnMenu.Add('S', "Make a suggestion");
+					turnMenu.Add('A', "Make an accusation");
+					turnMenu.Add('E', "End turn");
+					switch (choose("What do you want to do?", turnMenu, s => s).Key) {
+						case 'S':
+							suggestion();
+							break;
+						case 'A':
+							accusation();
+							break;
+						case 'E':
+							return;
+					}
 				}
 			} finally {
 				suggestingPlayer = null;
@@ -408,6 +421,27 @@ namespace ClueBuddyConsole {
 				return true; // ...then he can disprove the suggestion.
 			// Otherwise, we don't know for sure.
 			return null;
+		}
+
+		void accusation() {
+			Suspicion suggestion = new Suspicion();
+			suggestion.Place = choose("Where?", true, p => getCardSuggestionStrength(p), game.Places.ToArray());
+			if (suggestion.Place == null) return;
+			suggestion.Suspect = choose("Who?", true, s => getCardSuggestionStrength(s), game.Suspects.ToArray());
+			if (suggestion.Suspect == null) return;
+			suggestion.Weapon = choose("How?", true, w => getCardSuggestionStrength(w), game.Weapons.ToArray());
+			if (suggestion.Weapon == null) return;
+			switch (choose(string.Format("Was the accusation correct ({0})?", suggestion), false,
+				new string[] { "Yes", "No", "Abort accusation" })) {
+				case 0: // Correct
+					return; // game over
+				case 1: // Incorrect
+					// Add a clue that this solution is impossible
+					game.Clues.Add(new BadAccusation(suggestion, game.CaseFile));
+					break;
+				case 2: // Abort
+					break;
+			}
 		}
 
 		void printGrid() {
