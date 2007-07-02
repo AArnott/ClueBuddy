@@ -17,7 +17,6 @@ namespace ClueBuddyConsole {
 		int playerColumnWidth {
 			get { return Math.Max(game.Players.Max(p => p.Name.Length), "Case File".Length); }
 		}
-		static ConsoleColor questionColor = ConsoleColor.Yellow;
 		OpenFileDialog openVarietyDialog = new OpenFileDialog();
 		OpenFileDialog openGameDialog = new OpenFileDialog();
 		SaveFileDialog saveGameDialog = new SaveFileDialog();
@@ -50,63 +49,11 @@ namespace ClueBuddyConsole {
 			new Program().main();
 		}
 
-		static T choose<T>(string prompt, bool includeSkip, Func<T, string> toString, params T[] options) {
-			var dict = new Dictionary<char, T>();
-			for (int i = 0; i < options.Length; i++) {
-				dict.Add((char)('A' + i), options[i]);
-			}
-			if (includeSkip) {
-				dict.Add((char)('A' + options.Length), default(T));
-			}
-			return choose(prompt, dict, c => (c == null) ? "Skip" : toString(c)).Value;
-		}
-
-		static KeyValuePair<char, T> choose<T>(string prompt, Dictionary<char, T> options, Func<T, string> toString) {
-			writeColor(questionColor, prompt);
-			foreach (KeyValuePair<char, T> pair in options) {
-				Debug.Assert(pair.Key == pair.Key.ToString().ToUpper()[0]);
-				Console.WriteLine("{0}. {1}", pair.Key.ToString().ToUpper(), toString(pair.Value));
-			}
-			Console.Write("Selection: ");
-			char keyPressed = ' ';
-			while (!options.ContainsKey(keyPressed))
-				keyPressed = Console.ReadKey(true).KeyChar.ToString().ToUpper()[0];
-			Console.WriteLine(keyPressed);
-			return new KeyValuePair<char, T>(keyPressed, options[keyPressed]);
-		}
-
-		private static void writeColor(ConsoleColor color, string prompt, params object[] args) {
-			ConsoleColor oldColor = Console.ForegroundColor;
-			Console.ForegroundColor = color;
-			Console.WriteLine(prompt, args);
-			Console.ForegroundColor = oldColor;
-		}
-
-		static int choose(string prompt, bool includeSkip, string[] options) {
-			string result = choose<string>(prompt, includeSkip, s => s, options);
-			int indexOfSelection = Array.IndexOf(options, result);
-			return indexOfSelection;
-		}
-
 		Player choosePlayer(string prompt, bool includeSkip, bool includeInteractivePlayer) {
-			return choose(prompt, includeSkip, p => p.Name,
+			return ConsoleHelper.Choose(prompt, includeSkip, p => p.Name,
 				game.Players.Where(p => includeInteractivePlayer || p != interactivePlayer).ToArray());
 		}
 
-		static string askString(string prompt) {
-			Console.Write(prompt + " ");
-			return Console.ReadLine();
-		}
-
-		static int askNumber(string prompt) {
-			Console.Write(prompt + " ");
-			int result;
-			while (!int.TryParse(Console.ReadLine(), out result)) {
-				Console.Error.WriteLine("Invalid input.");
-				Console.Write(prompt + " ");
-			}
-			return result;
-		}
 		void main() {
 			Console.WriteLine("=======ClueBuddy=======");
 			try {
@@ -117,7 +64,7 @@ namespace ClueBuddyConsole {
 				// briefly demand these permissions to detect whether we'll succeed later
 				savingPermissions.Demand();
 			} catch (SecurityException) {
-				writeColor(ConsoleColor.Red, "WARNING: insufficient permissions to save games.");
+				ConsoleHelper.WriteColor(ConsoleColor.Red, "WARNING: insufficient permissions to save games.");
 			}
 			while (true) {
 				try {
@@ -131,7 +78,7 @@ namespace ClueBuddyConsole {
 						mainMenu.Add('C', "List Clues");
 					}
 					mainMenu.Add('Q', "Quit");
-					switch (choose("Main menu:", mainMenu, s => s).Key) {
+					switch (ConsoleHelper.Choose("Main menu:", mainMenu, s => s).Key) {
 						case 'L':
 							loadGame();
 							break;
@@ -162,7 +109,7 @@ namespace ClueBuddyConsole {
 					Console.Error.WriteLine("Insufficient permissions: {0}.", ex.Demanded);
 				} catch (Exception e) {
 					if (e is OutOfMemoryException || e is StackOverflowException) throw;
-					if (choose(string.Format("An {0} exception was thrown: {1}.{2}Do you want to try to continue the game?",
+					if (ConsoleHelper.Choose(string.Format("An {0} exception was thrown: {1}.{2}Do you want to try to continue the game?",
 						e.GetType().Name, e.Message, Environment.NewLine), false, new string[] { "Yes", "No" }) == 1)
 						throw;
 				}
@@ -232,19 +179,19 @@ namespace ClueBuddyConsole {
 			// Has the solution been found?
 			if (!solutionFoundAlready && game.Nodes.Count(n => n.CardHolder == game.CaseFile && n.IsSelected.HasValue && n.IsSelected.Value) == 3) {
 				// we just found the solution
-				writeColor(ConsoleColor.Red, "Solved!  {0}, {1}, {2}", game.CaseFile.Place, game.CaseFile.Suspect, game.CaseFile.Weapon);
+				ConsoleHelper.WriteColor(ConsoleColor.Red, "Solved!  {0}, {1}, {2}", game.CaseFile.Place, game.CaseFile.Suspect, game.CaseFile.Weapon);
 				solutionFoundAlready = true;
 			}
 		}
 
 		void setupPlayers() {
-			int players = askNumber("How many players?");
+			int players = ConsoleHelper.AskNumber("How many players?");
 			for (int i = 0; i < players; i++) {
-				game.Players.Add(new Player(askString(string.Format("Player {0} name:", i + 1))));
+				game.Players.Add(new Player(ConsoleHelper.AskString(string.Format("Player {0} name:", i + 1))));
 			}
 			while (!game.CardAssignmentsAcceptable) {
 				for (int i = 0; i < players; i++) {
-					game.Players[i].CardsHeldCount = askNumber(string.Format("How many cards is {0} holding?", game.Players[i].Name));
+					game.Players[i].CardsHeldCount = ConsoleHelper.AskNumber(string.Format("How many cards is {0} holding?", game.Players[i].Name));
 				}
 				if (!game.CardAssignmentsAcceptable) {
 					Console.Error.WriteLine("ERROR: Those cards do not add up to {0}.", game.Cards.Count() - 3);
@@ -256,7 +203,7 @@ namespace ClueBuddyConsole {
 		void learnOwnHand() {
 			List<Card> cardsInHand = new List<Card>(interactivePlayer.CardsHeldCount);
 			for (int i = 0; i < interactivePlayer.CardsHeldCount; i++) {
-				Card card = choose("Indicate a card that you hold in your hand:", false, c => c.Name, game.Cards.Where(c2 => !cardsInHand.Contains(c2)).ToArray());
+				Card card = ConsoleHelper.Choose("Indicate a card that you hold in your hand:", false, c => c.Name, game.Cards.Where(c2 => !cardsInHand.Contains(c2)).ToArray());
 				cardsInHand.Add(card);
 			}
 			foreach (Card card in cardsInHand) {
@@ -274,7 +221,7 @@ namespace ClueBuddyConsole {
 						turnMenu.Add('S', "Make a suggestion");
 						turnMenu.Add('L', "Look at someone else's card");
 						turnMenu.Add('E', "End turn");
-						switch (choose("What do you want to do?", turnMenu, s => s).Key) {
+						switch (ConsoleHelper.Choose("What do you want to do?", turnMenu, s => s).Key) {
 							case 'S':
 								suggestion();
 								break;
@@ -290,7 +237,7 @@ namespace ClueBuddyConsole {
 					turnMenu.Add('S', "Make a suggestion");
 					turnMenu.Add('A', "Make an accusation");
 					turnMenu.Add('E', "End turn");
-					switch (choose("What do you want to do?", turnMenu, s => s).Key) {
+					switch (ConsoleHelper.Choose("What do you want to do?", turnMenu, s => s).Key) {
 						case 'S':
 							suggestion();
 							break;
@@ -348,7 +295,7 @@ namespace ClueBuddyConsole {
 			SpyCard clue = new SpyCard();
 			clue.Player = choosePlayer("Spy on which player?", true, false);
 			if (clue.Player == null) return;
-			clue.Card = choose("Which card did you see?", true, c => c.Name, clue.PossiblySeenCards.ToArray());
+			clue.Card = ConsoleHelper.Choose("Which card did you see?", true, c => c.Name, clue.PossiblySeenCards.ToArray());
 			if (clue.Card == null) return;
 			game.Clues.Add(clue);
 		}
@@ -368,20 +315,20 @@ namespace ClueBuddyConsole {
 
 		void suggestion() {
 			Suspicion suggestion = new Suspicion();
-			suggestion.Place = choose("Where?", true, p => getCardSuggestionStrength(p), game.Places.ToArray());
+			suggestion.Place = ConsoleHelper.Choose("Where?", true, p => getCardSuggestionStrength(p), game.Places.ToArray());
 			if (suggestion.Place == null) return;
-			suggestion.Suspect = choose("Who?", true, s => getCardSuggestionStrength(s), game.Suspects.ToArray());
+			suggestion.Suspect = ConsoleHelper.Choose("Who?", true, s => getCardSuggestionStrength(s), game.Suspects.ToArray());
 			if (suggestion.Suspect == null) return;
-			suggestion.Weapon = choose("How?", true, w => getCardSuggestionStrength(w), game.Weapons.ToArray());
+			suggestion.Weapon = ConsoleHelper.Choose("How?", true, w => getCardSuggestionStrength(w), game.Weapons.ToArray());
 			if (suggestion.Weapon == null) return;
 			foreach (Player opponent in game.PlayersInOrderAfter(suggestingPlayer)) {
 				bool? disproved;
 				// Do we already know whether this player could disprove it?
 				if ((disproved = opponent.HasAtLeastOneOf(suggestion.Cards)).HasValue) {
-					writeColor(questionColor, "{0} {1} disprove {2}.", opponent.Name, disproved.Value ? "CAN" : "CANNOT", suggestion);
+					ConsoleHelper.WriteColor(ConsoleHelper.QuestionColor, "{0} {1} disprove {2}.", opponent.Name, disproved.Value ? "CAN" : "CANNOT", suggestion);
 				} else {
 					// Ask the gamer if the opponent did.
-					switch (choose(string.Format("Could {0} disprove {1}?", opponent.Name, suggestion), false,
+					switch (ConsoleHelper.Choose(string.Format("Could {0} disprove {1}?", opponent.Name, suggestion), false,
 						new string[] { "Yes", "No", "Skip player", "Abort suggestion" })) {
 						case 0:
 							disproved = true;
@@ -403,10 +350,10 @@ namespace ClueBuddyConsole {
 														   (!n.IsSelected.HasValue || n.IsSelected.Value)
 														   select n.Card;
 					if (possiblyShownCards.Count() == 1) {
-						writeColor(questionColor, "{0} must have shown you {1}.", opponent,
+						ConsoleHelper.WriteColor(ConsoleHelper.QuestionColor, "{0} must have shown you {1}.", opponent,
 							alabi = possiblyShownCards.First());
 					} else {
-						alabi = choose(string.Format("Which card did {0} show you?", opponent),
+						alabi = ConsoleHelper.Choose(string.Format("Which card did {0} show you?", opponent),
 							true, c => c.Name, possiblyShownCards.ToArray());
 					}
 				}
@@ -422,13 +369,13 @@ namespace ClueBuddyConsole {
 
 		void accusation() {
 			Suspicion suggestion = new Suspicion();
-			suggestion.Place = choose("Where?", true, p => getCardSuggestionStrength(p), game.Places.ToArray());
+			suggestion.Place = ConsoleHelper.Choose("Where?", true, p => getCardSuggestionStrength(p), game.Places.ToArray());
 			if (suggestion.Place == null) return;
-			suggestion.Suspect = choose("Who?", true, s => getCardSuggestionStrength(s), game.Suspects.ToArray());
+			suggestion.Suspect = ConsoleHelper.Choose("Who?", true, s => getCardSuggestionStrength(s), game.Suspects.ToArray());
 			if (suggestion.Suspect == null) return;
-			suggestion.Weapon = choose("How?", true, w => getCardSuggestionStrength(w), game.Weapons.ToArray());
+			suggestion.Weapon = ConsoleHelper.Choose("How?", true, w => getCardSuggestionStrength(w), game.Weapons.ToArray());
 			if (suggestion.Weapon == null) return;
-			switch (choose(string.Format("Was the accusation correct ({0})?", suggestion), false,
+			switch (ConsoleHelper.Choose(string.Format("Was the accusation correct ({0})?", suggestion), false,
 				new string[] { "Yes", "No", "Abort accusation" })) {
 				case 0: // Correct
 					return; // game over
@@ -475,24 +422,9 @@ namespace ClueBuddyConsole {
 				if (n.IsSelected.HasValue) {
 					value = n.IsSelected.Value ? "1" : "0";
 				}
-				Console.Write(centerString(value, card.Name.Length, card.Name.Length + 1));
+				Console.Write(ConsoleHelper.CenterString(value, card.Name.Length, card.Name.Length + 1));
 			}
 			Console.WriteLine();
-		}
-
-		string centerString(string value, int maxLength, int spacing) {
-			Debug.Assert(maxLength <= spacing);
-			int actualCharactersFromValueToDisplay = Math.Min(maxLength, value.Length);
-			StringBuilder result = new StringBuilder(spacing);
-
-			int prefixCharacters, suffixCharacters;
-			prefixCharacters = (spacing - actualCharactersFromValueToDisplay) / 2;
-			suffixCharacters = (spacing - actualCharactersFromValueToDisplay) - prefixCharacters;
-
-			result.Append(' ', prefixCharacters);
-			result.Append(value, 0, actualCharactersFromValueToDisplay);
-			result.Append(' ', suffixCharacters);
-			return result.ToString();
 		}
 
 		void listClues() {
