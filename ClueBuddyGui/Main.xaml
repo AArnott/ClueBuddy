@@ -18,8 +18,8 @@
 		</Grid.RowDefinitions>
 		<ToolBar Height="29" Name="toolBar1" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0">
 			<Button x:Name="newGameButton" Click="newGameButton_Click">New</Button>
-			<Button x:Name="openGameButton">Open</Button>
-			<Button x:Name="saveGameButton">Save</Button>
+			<Button x:Name="openGameButton" Click="openGameButton_Click">Open</Button>
+			<Button x:Name="saveGameButton" Click="saveGameButton_Click">Save</Button>
 		</ToolBar>
 		<clueGui:ClueGrid Grid.Row="1" Grid.Column="0" x:Name="clueMatrix"/>
 

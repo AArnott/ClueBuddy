@@ -47,12 +47,15 @@ namespace ClueBuddyGui {
 				this.sidePanel.CurrentClue.Player = e.Player;
 			});
 			this.clueMatrix.CardClicked += new EventHandler<ClueGrid.CardClickedEventArgs>((sender, e) => {
-				if (e.Card is Weapon) {
-					this.sidePanel.CurrentClue.Suspicion.Weapon = e.Card as Weapon;
-				} else if (e.Card is Suspect) {
-					this.sidePanel.CurrentClue.Suspicion.Suspect = e.Card as Suspect;
-				} else if (e.Card is Place) {
-					this.sidePanel.CurrentClue.Suspicion.Place = e.Card as Place;
+				CompositeClue cc = this.sidePanel.CurrentClue as CompositeClue;
+				if (cc != null) {
+					if (e.Card is Weapon) {
+						cc.Suspicion.Weapon = e.Card as Weapon;
+					} else if (e.Card is Suspect) {
+						cc.Suspicion.Suspect = e.Card as Suspect;
+					} else if (e.Card is Place) {
+						cc.Suspicion.Place = e.Card as Place;
+					}
 				}
 			});
 			this.sidePanel.DataContext = game;
@@ -70,5 +73,25 @@ namespace ClueBuddyGui {
 			}
 		}
 
+		void openGameButton_Click(object sender, EventArgs e) {
+			OpenFileDialog dlg = new OpenFileDialog();
+			dlg.DefaultExt = "ClueBuddy";
+			bool? result = dlg.ShowDialog(this);
+			if (result.HasValue && result.Value) {
+
+			}
+		}
+
+		void saveGameButton_Click(object sender, EventArgs e) {
+			SaveFileDialog dlg = new SaveFileDialog ();
+			dlg.DefaultExt = "ClueBuddy";
+			bool? result = dlg.ShowDialog(this);
+			if (result.HasValue && result.Value) {
+				IFormatter formatter = new BinaryFormatter();
+				using (Stream s = dlg.OpenFile()) {
+					formatter.Serialize(s, game);
+				}
+			}
+		}
 	}
 }

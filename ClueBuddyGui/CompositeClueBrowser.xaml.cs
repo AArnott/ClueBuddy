@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,14 +24,41 @@ namespace ClueBuddyGui {
 			InitializeComponent();
 		}
 
+		protected override void OnInitialized(EventArgs e) {
+			base.OnInitialized(e);
+
+		}
+
+		bool templateChangeHooked;
+		void cluesDataView_CurrentChanged(object sender, EventArgs e) {
+			cc.ContentTemplate = (DataTemplate) Resources[cluesDataView.View.CurrentItem is CompositeClue ? "CompositeClueTemplate" : "SpyClueTemplate"];
+		}
+
 		Game game {
 			get { return DataContext as Game; }
 		}
 		CollectionViewSource cluesDataView {
 			get { return Resources["cluesDataView"] as CollectionViewSource; }
 		}
-		public CompositeClue CurrentClue {
-			get { return cluesDataView.View.CurrentItem as CompositeClue; }
+		public Clue CurrentClue {
+			get { return cluesDataView.View.CurrentItem as Clue; }
+		}
+
+		void possiblyHeldCardsDataView_Filter(object sender, FilterEventArgs e) {
+			SpyCard clue = CurrentClue as SpyCard;
+			if (clue != null && clue.Player != null) {
+				Player spiedPlayer = clue.Player;
+				Card possibleCard = (Card)e.Item;
+				Node node = game.Nodes.First(n => n.CardHolder == spiedPlayer && n.Card == possibleCard);
+				e.Accepted = !node.IsSelected.HasValue || node.IsSelected.Value;
+			}
+		}
+
+		void spiedPlayer_Changed(object sender, EventArgs e) {
+			ComboBox list = (ComboBox)sender;
+			Panel panel = (Panel)list.Parent;
+			ItemsControl lb = (ItemsControl)panel.FindName("spiedCard");
+			lb.Items.Refresh();
 		}
 
 		void suggestingPlayer_Changed(object sender, EventArgs e) {
@@ -50,8 +78,19 @@ namespace ClueBuddyGui {
 				cluesDataView.View.MoveCurrentToLast();
 		}
 
-		void newClueButton_Click(object sender, EventArgs e) {
+		void newCompositeClueButton_Click(object sender, EventArgs e) {
 			game.Clues.Add(new CompositeClue());
+			cluesDataView.View.MoveCurrentToLast();
+		}
+
+		void newSpyClueButton_Click(object sender, EventArgs e) {
+			// <HACK>
+			if (!templateChangeHooked) {
+				templateChangeHooked = true;
+				cluesDataView.View.CurrentChanged += new EventHandler(cluesDataView_CurrentChanged);
+			}
+			// </HACK>
+			game.Clues.Add(new SpyCard());
 			cluesDataView.View.MoveCurrentToLast();
 		}
 

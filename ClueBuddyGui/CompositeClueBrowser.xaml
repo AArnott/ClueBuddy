@@ -10,6 +10,9 @@
 		<CollectionViewSource x:Key="cluesDataView"
 			Source="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, 
 						Path=DataContext.Clues}" />
+		<CollectionViewSource x:Key="possiblyHeldCardsDataView" Filter="possiblyHeldCardsDataView_Filter"
+			Source="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, 
+						Path=DataContext.Cards}" />
 		<DataTemplate x:Key="suggestionResponse">
 			<StackPanel Orientation="Horizontal">
 				<CheckBox VerticalAlignment="Center" Margin="0,0,0,0" Padding="0,0,0,0"
@@ -22,7 +25,21 @@
 						Path=DataContext.CurrentItem.Suspicion.Cards}" />
 			</StackPanel>
 		</DataTemplate>
-		<DataTemplate x:Key="CompositeClueTemplate">
+		<DataTemplate x:Key="SpyClueTemplate" DataType="{x:Type clue:SpyCard}">
+			<WrapPanel>
+				<Label>You saw that</Label>
+				<ComboBox Height="26"
+					SelectedValue="{Binding Path=Player, UpdateSourceTrigger=LostFocus}"
+					SelectionChanged="spiedPlayer_Changed"
+					ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentControl}}, 
+									Path=DataContext.Players}" />
+				<Label>has</Label>
+					<ComboBox Height="26" x:Name="spiedCard"
+						SelectedValue="{Binding Path=Card}"
+						ItemsSource="{Binding Source={StaticResource possiblyHeldCardsDataView}}" />
+			</WrapPanel>
+		</DataTemplate>
+		<DataTemplate x:Key="CompositeClueTemplate" DataType="{x:Type clue:CompositeClue}">
 			<StackPanel Orientation="Vertical">
 				<StackPanel Orientation="Horizontal">
 					<ComboBox Height="26"
@@ -56,7 +73,8 @@
 		<StackPanel Orientation="Horizontal">
 			<Button x:Name="previousClueButton" Click="previousClueButton_Click">Prev</Button>
 			<Button x:Name="nextClueButton" Click="nextClueButton_Click">Next</Button>
-			<Button x:Name="newClueButton" Click="newClueButton_Click">New</Button>
+			<Button x:Name="newCompositeClueButton" Click="newCompositeClueButton_Click">New Suggestion</Button>
+			<Button x:Name="newSpyClueButton" Click="newSpyClueButton_Click">New spy card</Button>
 			<Button x:Name="deleteClueButton" Click="deleteClueButton_Click">Delete</Button>
 			<Button x:Name="refreshConstraintsButton" Click="refreshConstraintsButton_Click">Refresh constraints</Button>
 		</StackPanel>
