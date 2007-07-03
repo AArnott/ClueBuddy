@@ -132,9 +132,14 @@ namespace ClueBuddyConsole {
 					game.Clues.CollectionChanged -= new NotifyCollectionChangedEventHandler(Clues_CollectionChanged);
 					// Serialize the game state.
 					IFormatter formatter = new BinaryFormatter();
+					// Save to a memory stream first, to make sure that serialization will complete
+					// successfully before we knock out an existing file.
+					MemoryStream ms = new MemoryStream();
+					formatter.Serialize(ms, game);
+					formatter.Serialize(ms, interactivePlayer.Name);
+					// Now that we've gotten this far, go ahead and write to the actual file.
 					using (Stream s = saveGameDialog.OpenFile()) {
-						formatter.Serialize(s, game);
-						formatter.Serialize(s, interactivePlayer.Name);
+						ms.WriteTo(s);
 					}
 				} finally {
 					// Restore the event handlers.
