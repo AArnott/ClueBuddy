@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using ClueBuddy;
+using NerdBank.Algorithms.NodeConstraintSelection;
 
 namespace ClueBuddyTest {
 	[TestClass]

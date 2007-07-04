@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.20404</ProductVersion>
+    <ProductVersion>9.0.20627</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{2B6D298F-F56E-496E-B2BC-7DD9AC41640C}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -32,6 +32,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="NerdBank.Algorithms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0e8b42805099a438, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Resources\NerdBank.Algorithms.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -54,18 +58,13 @@
     <Compile Include="CaseFileTest.cs" />
     <Compile Include="ClueTestBase.cs" />
     <Compile Include="CompositeClueTest.cs" />
-    <Compile Include="CompositeConstraintTest.cs" />
-    <Compile Include="ConstraintBaseTest.cs" />
-    <Compile Include="ConstraintGeneratorTest.cs" />
     <Compile Include="DisprovedTest.cs" />
-    <Compile Include="DummyNode.cs" />
     <Compile Include="FullGameTest.cs" />
     <Compile Include="GameTest.cs" />
     <Compile Include="IntuitionTest.cs" />
     <Compile Include="NodeTest.cs" />
     <Compile Include="PlayerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SelectionCountConstraintTest.cs" />
     <Compile Include="SpyCardTest.cs" />
     <Compile Include="SuspicionTest.cs" />
     <Compile Include="TestBase.cs" />

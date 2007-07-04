@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using NerdBank.Algorithms.NodeConstraintSelection;
 
 namespace ClueBuddy {
 	[Serializable]

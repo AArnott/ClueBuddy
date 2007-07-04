@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.20404</ProductVersion>
+    <ProductVersion>9.0.20627</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F2B78728-49B8-4747-8321-6F7927605A84}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -33,6 +33,10 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NerdBank.Algorithms, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0e8b42805099a438, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Resources\NerdBank.Algorithms.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -47,25 +51,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BadAccusation.cs" />
-    <Compile Include="BrokenConstraintException.cs" />
     <Compile Include="CannotDisprove.cs" />
     <Compile Include="Card.cs" />
     <Compile Include="CaseFile.cs" />
     <Compile Include="Clue.cs" />
     <Compile Include="CompositeClue.cs" />
-    <Compile Include="CompositeConstraint.cs" />
-    <Compile Include="ConstraintBase.cs" />
-    <Compile Include="ConstraintGenerator.cs" />
     <Compile Include="Disproved.cs" />
     <Compile Include="GameVarieties.cs" />
     <Compile Include="ICardHolder.cs" />
-    <Compile Include="NodeBase.cs" />
-    <Compile Include="NodeSimulation.cs" />
-    <Compile Include="SelectionCountConstraint.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameRules.cs" />
-    <Compile Include="IConstraint.cs" />
-    <Compile Include="INode.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

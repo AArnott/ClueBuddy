@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ClueBuddy;
 using System.IO;
+using NerdBank.Algorithms.NodeConstraintSelection;
 
 namespace ClueBuddyTest {
 	static partial class Extensions {

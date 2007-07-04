@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio Codename Orcas
+# Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClueBuddy", "ClueBuddy\ClueBuddy.csproj", "{F2B78728-49B8-4747-8321-6F7927605A84}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClueBuddyTest", "ClueBuddyTest\ClueBuddyTest.csproj", "{2B6D298F-F56E-496E-B2BC-7DD9AC41640C}"

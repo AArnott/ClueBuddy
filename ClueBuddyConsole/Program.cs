@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Security;
 using System.Security.Permissions;
 using System.Collections.Specialized;
+using NerdBank.Algorithms.NodeConstraintSelection;
 
 namespace ClueBuddyConsole {
 	class Program {
