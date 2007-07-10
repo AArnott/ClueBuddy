@@ -15,16 +15,16 @@
     <Weapon Name="Wrench" />
   </Weapons>
   <Suspects>
-    <Suspect Name="Brunette" />
-    <Suspect Name="Gray" />
-    <Suspect Name="Green" />
-    <Suspect Name="Mustard" />
-    <Suspect Name="Peach" />
-    <Suspect Name="Peacock" />
-    <Suspect Name="Plum" />
-    <Suspect Name="Rose" />
-    <Suspect Name="Scarlet" />
-    <Suspect Name="White" />
+    <Suspect Name="Monsieur Brunette" />
+    <Suspect Name="Sergeant Grey" />
+    <Suspect Name="Mr. Green" />
+    <Suspect Name="Colonel Mustard" />
+    <Suspect Name="Ms. Peach" />
+    <Suspect Name="Mrs. Peacock" />
+    <Suspect Name="Professor Plum" />
+    <Suspect Name="Madame Rose" />
+    <Suspect Name="Ms. Scarlet" />
+    <Suspect Name="Mrs. White" />
   </Suspects>
   <Places>
     <Place Name="Billiard room" />

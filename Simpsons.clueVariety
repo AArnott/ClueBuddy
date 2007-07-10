@@ -13,12 +13,12 @@
     <Weapon Name="Extend-o-glove" />
   </Weapons>
   <Suspects>
-    <Suspect Name="Green" />
-    <Suspect Name="Mustard" />
-    <Suspect Name="Peacock" />
-    <Suspect Name="Plum" />
-    <Suspect Name="Scarlet" />
-    <Suspect Name="White" />
+    <Suspect Name="Mr. Green" />
+    <Suspect Name="Colonel Mustard" />
+    <Suspect Name="Mrs. Peacock" />
+    <Suspect Name="Professor Plum" />
+    <Suspect Name="Ms. Scarlet" />
+    <Suspect Name="Mrs. White" />
   </Suspects>
   <Places>
     <Place Name="Simpson house" />

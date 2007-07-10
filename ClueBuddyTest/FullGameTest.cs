@@ -29,7 +29,7 @@ namespace ClueBuddyTest {
 		}
 		Card find(string cardName) {
 			try {
-				return game.Cards.Where(c => c.Name == cardName).First();
+				return game.Cards.Where(c => c.Name.IndexOf(cardName) >= 0).First();
 			} catch (InvalidOperationException) {
 				throw new ArgumentOutOfRangeException("cardName", cardName, "Card does not exist.");
 			}
@@ -157,7 +157,7 @@ namespace ClueBuddyTest {
 			foreach (Card card in game.Cards) {
 				switch (card.Name) {
 					case "Barneys Bowl o rama":
-					case "White":
+					case "Mrs. White":
 					case "Plutonium rod":
 						Assert.IsTrue(node(game.CaseFile, card).Value);
 						break;
@@ -209,7 +209,7 @@ namespace ClueBuddyTest {
 			disproved(cheryl, "Gazebo");
 			game.Clues.Add(cc);
 
-			suggest(dan, "Billiard room", "Gray", "Knife");
+			suggest(dan, "Billiard room", "Grey", "Knife");
 			disproved(cheryl);
 			cannot_disprove(rebecca);
 			game.Clues.Add(cc);
@@ -247,9 +247,9 @@ namespace ClueBuddyTest {
 			disproved(rebecca);
 			game.Clues.Add(cc);
 
-			suggest(andrew, "Dining room", "Gray", "Lead pipe");
+			suggest(andrew, "Dining room", "Grey", "Lead pipe");
 			disproved(rebecca, "Lead pipe");
-			disproved(dan, "Gray");
+			disproved(dan, "Grey");
 			disproved(cheryl, "Dining room");
 			game.Clues.Add(cc);
 
@@ -258,7 +258,7 @@ namespace ClueBuddyTest {
 			foreach (Card card in game.Cards) {
 				switch (card.Name) {
 					case "Trophy room":
-					case "Green":
+					case "Mr. Green":
 						Assert.IsTrue(node(game.CaseFile, card).Value);
 						break;
 					case "Knife":
