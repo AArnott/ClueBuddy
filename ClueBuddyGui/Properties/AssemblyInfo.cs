@@ -4,6 +4,7 @@ using System.Resources;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Security.Permissions;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -49,3 +50,18 @@ using System.Windows;
 
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
+///* Minimum permissions required for game to run */
+//[assembly: UIPermission(SecurityAction.RequestMinimum, Unrestricted = true/* Window = UIPermissionWindow.SafeSubWindows*/)]
+//// Required for opening a game variety to play
+//[assembly: FileDialogPermission(SecurityAction.RequestMinimum, Open = true, Save = true)]
+
+///* Optional permissions that if granted will enhance the user experience */
+//// Required for loading/saving games
+//[assembly: SecurityPermission(SecurityAction.RequestOptional, SerializationFormatter = true)]
+//// Required for loading/saving games
+//[assembly: ReflectionPermission(SecurityAction.RequestOptional, MemberAccess = true)]
+//// Required for setting the FileDialog.Title, Filename properties
+////[assembly: FileIOPermission(SecurityAction.RequestOptional, Unrestricted = true)]
+
+///* Permissions we absolutely don't need */

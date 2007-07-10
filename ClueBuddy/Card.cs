@@ -56,8 +56,72 @@ namespace ClueBuddy {
 		public Suspect() { }
 		public Suspect(string name) : base(name) { }
 
+		StandardSuspect wellKnownSuspect = StandardSuspect.Other;
+		[XmlAttribute]
+		public StandardSuspect WellKnownSuspect {
+			get {
+				if (wellKnownSuspect == StandardSuspect.Other && Name != null) {
+					foreach (string standardSuspect in Enum.GetNames(typeof(StandardSuspect))) {
+						if (Name.IndexOf(standardSuspect) >= 0) {
+							wellKnownSuspect = (StandardSuspect)Enum.Parse(typeof(StandardSuspect), standardSuspect);
+							break;
+						}
+					}
+				}
+				return wellKnownSuspect;
+			}
+			set { wellKnownSuspect = value; }
+		}
+
+		SuspectGender gender = SuspectGender.Undetermined;
+		[XmlAttribute]
+		public SuspectGender Gender {
+			get {
+				if (gender == SuspectGender.Undetermined) {
+					switch (WellKnownSuspect) {
+						case StandardSuspect.Brunette:
+						case StandardSuspect.Green:
+						case StandardSuspect.Grey:
+						case StandardSuspect.Mustard:
+						case StandardSuspect.Plum:
+							gender = SuspectGender.Male;
+							break;
+						case StandardSuspect.Peach:
+						case StandardSuspect.Peacock:
+						case StandardSuspect.Rose:
+						case StandardSuspect.Scarlet:
+						case StandardSuspect.White:
+							gender = SuspectGender.Female;
+							break;
+					}
+				}
+				return gender;
+			}
+			set { gender = value; }
+		}
+
 		public static IEnumerable<Suspect> Generate(params string[] names) {
 			return from name in names select new Suspect(name);
+		}
+
+		public enum SuspectGender {
+			Undetermined,
+			Male,
+			Female
+		}
+
+		public enum StandardSuspect {
+			Other,
+			Peach,
+			Rose,
+			Scarlet,
+			White,
+			Peacock,
+			Green,
+			Plum,
+			Mustard,
+			Brunette,
+			Grey,
 		}
 	}
 }

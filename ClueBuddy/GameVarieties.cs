@@ -31,7 +31,7 @@ namespace ClueBuddy {
 		/// <see cref="GameVariety"/> instance.
 		/// </summary>
 		public Game Initialize() {
-			return new Game(Name, Rules, cards);
+			return new Game(Name, Rules, Cards);
 		}
 
 		GameRules rules;
@@ -71,7 +71,7 @@ namespace ClueBuddy {
 		}
 
 		[XmlIgnore]
-		IEnumerable<Card> cards {
+		public IEnumerable<Card> Cards {
 			get {
 				foreach (var card in Suspects) {
 					yield return card;
