@@ -29,6 +29,10 @@ namespace ClueBuddyGui {
 		public Main() {
 			InitializeComponent();
 
+			this.CommandBindings.Add(new CommandBinding(ApplicationCommands.New, newGame));
+			this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Open, openGame));
+			this.CommandBindings.Add(new CommandBinding(ApplicationCommands.Save, saveGame));
+
 			using (Stream s = new FileStream("Master Detective.clueVariety", FileMode.Open)) {
 				game = GameVariety.LoadFrom(s).Initialize();
 			}
@@ -63,7 +67,7 @@ namespace ClueBuddyGui {
 			game.Clues.Add(new CompositeClue());
 		}
 
-		void newGameButton_Click(object sender, EventArgs e) {
+		void newGame(object sender, ExecutedRoutedEventArgs e) {
 			StartGameWindow startGameWindow = new StartGameWindow();
 			startGameWindow.Owner = this;
 			bool? result = startGameWindow.ShowDialog();
@@ -71,18 +75,20 @@ namespace ClueBuddyGui {
 
 				MessageBox.Show("TODO: Start new game.");
 			}
+			e.Handled = true;
 		}
 
-		void openGameButton_Click(object sender, EventArgs e) {
+		void openGame(object sender, ExecutedRoutedEventArgs e) {
 			OpenFileDialog dlg = new OpenFileDialog();
 			dlg.DefaultExt = "ClueBuddy";
 			bool? result = dlg.ShowDialog(this);
 			if (result.HasValue && result.Value) {
 
 			}
+			e.Handled = true;
 		}
 
-		void saveGameButton_Click(object sender, EventArgs e) {
+		void saveGame(object sender, ExecutedRoutedEventArgs e) {
 			SaveFileDialog dlg = new SaveFileDialog ();
 			dlg.DefaultExt = "ClueBuddy";
 			bool? result = dlg.ShowDialog(this);
@@ -92,6 +98,7 @@ namespace ClueBuddyGui {
 					formatter.Serialize(s, game);
 				}
 			}
+			e.Handled = true;
 		}
 	}
 }

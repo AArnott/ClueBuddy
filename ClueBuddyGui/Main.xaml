@@ -16,11 +16,72 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
-		<ToolBar Height="29" Name="toolBar1" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0">
-			<Button x:Name="newGameButton" Click="newGameButton_Click">New</Button>
-			<Button x:Name="openGameButton" Click="openGameButton_Click">Open</Button>
-			<Button x:Name="saveGameButton" Click="saveGameButton_Click">Save</Button>
-		</ToolBar>
+		<ToolBarTray>
+			<ToolBar Height="29" Name="toolBar1" Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="0">
+				<Button x:Name="newGameButton" Command="New">
+					<Canvas Width="16" Height="16">
+						<Polygon Stroke="Black" StrokeThickness="0.5"
+								 Points="3,1 10,1 13,5 13,15 3,15" >
+							<Polygon.Fill>
+								<LinearGradientBrush EndPoint="1.304,0.594" StartPoint="0.304,0.594">
+									<GradientStop Color="#FFFFFFFF" Offset="0.202"/>
+									<GradientStop Color="#FFAAAAAA" Offset="0.7"/>
+								</LinearGradientBrush>
+							</Polygon.Fill>
+						</Polygon>
+						<Polygon Stroke="Black" Fill="DarkGray" StrokeThickness="0.5"
+								 StrokeLineJoin="Bevel" Points="10,1 10,5 13,5" />
+					</Canvas>
+				</Button>
+				<Button x:Name="openGameButton" Command="Open">
+					<Canvas Width="16" Height="16">
+						<Polygon Stroke="Black" StrokeThickness="0.5"
+								 Points="1,15 1,4 5.5,4 7.5,6 12,6 12,15">
+							<Polygon.Fill>
+								<LinearGradientBrush EndPoint="0.5,0.098" StartPoint="0.5,0.902">
+									<GradientStop Color="Khaki" Offset="0"/>
+									<GradientStop Color="Beige" Offset="1"/>
+								</LinearGradientBrush>
+							</Polygon.Fill>
+						</Polygon>
+						<Polygon Stroke="Black" StrokeThickness="0.5"
+								 Points="1.5,15 4,8 15,8 12,15" >
+							<Polygon.Fill>
+								<LinearGradientBrush EndPoint="0.5,-0.004" StartPoint="0.5,1.004">
+									<GradientStop Color="#FFDDBB77" Offset="0"/>
+									<GradientStop Color="Khaki" Offset="1"/>
+								</LinearGradientBrush>
+							</Polygon.Fill>
+						</Polygon>
+						<Path	 Stroke="Blue" StrokeThickness="1"
+								 Data="M 8,2 C 9,1 12,1 14,3" />
+						<Polygon Fill="Blue" Points="15,1 15.5,4.5 12,4" />
+					</Canvas>
+				</Button>
+				<Button x:Name="saveGameButton" Command="Save">
+					<Canvas Width="16" Height="16">
+						<Rectangle Stroke="#FF583E84" StrokeThickness="0.5" RadiusX="1" RadiusY="1" Width="16" Height="16" Canvas.Left="0" Canvas.Top="0">
+							<Rectangle.Fill>
+								<LinearGradientBrush EndPoint="0.559,0.5" StartPoint="0,0.5">
+									<GradientStop Color="#FFD7D7D7" Offset="0"/>
+									<GradientStop Color="#FF3F30EA" Offset="0.995"/>
+								</LinearGradientBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+						<Rectangle Stroke="#FF000000" StrokeThickness="0.3" Width="10" Height="8.2" Canvas.Left="3.25" Canvas.Top="0.25">
+							<Rectangle.Fill>
+								<LinearGradientBrush EndPoint="0.861,1.146" StartPoint="0.389,0.538">
+									<GradientStop Color="#FFE6E3EA" Offset="0.25"/>
+									<GradientStop Color="#FFA9A0B9" Offset="1"/>
+								</LinearGradientBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+						<Rectangle Fill="#FFA29292" Stroke="#FF583E84" StrokeThickness="0.5" Width="10" Height="4.75" Canvas.Left="3.25" Canvas.Top="11.25"/>
+						<Rectangle Fill="#D8000000" Stroke="{x:Null}" StrokeThickness="0.5" Width="1" Height="1" Canvas.Left="1.3" Canvas.Top="1.5"/>
+					</Canvas>
+				</Button>
+			</ToolBar>
+		</ToolBarTray>
 		<clueGui:ClueGrid Grid.Row="1" Grid.Column="0" x:Name="clueMatrix"/>
 
 		<GridSplitter Grid.Column="0" Grid.Row="2" Name="gridSplitter1" Height="5" 

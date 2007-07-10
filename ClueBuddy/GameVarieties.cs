@@ -9,6 +9,10 @@ using System.Xml.Serialization;
 namespace ClueBuddy {
 	[XmlType(Namespace = TypeNamespace)]
 	public class GameVariety {
+		/// <summary>
+		/// The default file extension for a saved game variety file.
+		/// Does not include the period.
+		/// </summary>
 		public const string DefaultFileExtension = "clueVariety";
 		const string TypeNamespace = "http://www.nerdbank.net/clue/variety";
 		static XmlSerializer getSerializer() {
