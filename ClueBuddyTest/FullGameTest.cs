@@ -274,5 +274,162 @@ namespace ClueBuddyTest {
 			GameTest.TestSerialize(TestContext, game);
 		}
 
+		[TestMethod]
+		public void Hancocks() {
+			game = MasterDetective;
+			game.AutoAnalysis = false; // speeds up test if we cal Analyze just once.
+
+			Player andrew, cheryl, sarah, sheldon;
+			game.Players.AddRange(new[] {
+				andrew = interactivePlayer = new Player("Andrew") { CardsHeldCount = 7 },
+				cheryl = new Player("Cheryl") { CardsHeldCount = 7 },
+				sarah = new Player("Sarah") { CardsHeldCount = 6 },
+				sheldon = new Player("Sheldon") { CardsHeldCount = 7 },
+			});
+			game.Start();
+			setupCards(andrew, "Poison", "Lead pipe", "Horseshoe", "Conservatory", "Rose", "Grey", "Mustard");
+
+			suggest(andrew, "Courtyard", "Brunette", "Candlestick");
+			disproved(cheryl, "Brunette");
+			cannot_disprove(sarah);
+			cannot_disprove(sheldon);
+			game.Clues.Add(cc);
+
+			suggest(sarah, "Trophy room", "Mustard", "Poison");
+			cannot_disprove(sheldon);
+			disproved(andrew);
+			cannot_disprove(cheryl);
+			game.Clues.Add(cc);
+
+			suggest(sheldon, "Courtyard", "Peach", "Horseshoe");
+			disproved(andrew);
+			disproved(cheryl);
+			cannot_disprove(sarah);
+			game.Clues.Add(cc);
+
+			suggest(sarah, "Kitchen", "Green", "Knife");
+			disproved(sheldon);
+			cannot_disprove(andrew);
+			cannot_disprove(cheryl);
+			game.Clues.Add(cc);
+
+			suggest(sheldon, "Gazebo", "Brunette", "Poison");
+			disproved(andrew);
+			disproved(cheryl);
+			cannot_disprove(sarah);
+			game.Clues.Add(cc);
+
+			suggest(andrew, "Kitchen", "Peach", "Candlestick");
+			disproved(cheryl, "Candlestick");
+			cannot_disprove(sarah);
+			disproved(sheldon, "Kitchen");
+			game.Clues.Add(cc);
+
+			suggest(sarah, "Library", "Grey", "Lead pipe");
+			cannot_disprove(sheldon);
+			disproved(andrew);
+			cannot_disprove(cheryl);
+			game.Clues.Add(cc);
+
+			spy(cheryl, "Studio");
+			spy(cheryl, "Drawing room");
+			spy(cheryl, "Brunette");
+			spy(cheryl, "Courtyard");
+			spy(cheryl, "Scarlet");
+			spy(cheryl, "Dining room");
+			spy(cheryl, "Candlestick");
+
+			suggest(sheldon, "Library", "Mustard", "Lead pipe");
+			disproved(andrew);
+			cannot_disprove(cheryl);
+			disproved(sarah);
+			game.Clues.Add(cc);
+
+			spy(sarah, "Carriage House");
+
+			suggest(sarah, "Gazebo", "Rose", "Revolver");
+			disproved(sheldon);
+			disproved(andrew);
+			cannot_disprove(cheryl);
+			game.Clues.Add(cc);
+
+			suggest(sheldon, "Billiard room", "Peach", "Revolver");
+			cannot_disprove(andrew);
+			cannot_disprove(cheryl);
+			disproved(sarah);
+			game.Clues.Add(cc);
+
+			spy(sheldon, "Peach");
+
+			suggest(andrew, "Trophy room", "White", "Rope");
+			cannot_disprove(cheryl);
+			disproved(sarah, "Rope");
+			cannot_disprove(sheldon);
+			game.Clues.Add(cc);
+
+			suggest(sarah, "Trophy room", "Peach", "Poison");
+			disproved(sheldon);
+			disproved(andrew);
+			cannot_disprove(cheryl);
+			game.Clues.Add(cc);
+
+			suggest(sheldon, "Library", "Peach", "Revolver");
+			cannot_disprove(andrew);
+			cannot_disprove(cheryl);
+			disproved(sarah);
+			game.Clues.Add(cc);
+
+			suggest(andrew, "Fountain", "Plum", "Wrench");
+			cannot_disprove(cheryl);
+			disproved(sarah, "Fountain");
+			disproved(sheldon, "Plum");
+			game.Clues.Add(cc);
+
+			spy(sheldon, "Knife");
+
+			suggest(sarah, "Conservatory", "Green", "Horseshoe");
+			cannot_disprove(sheldon);
+			disproved(andrew);
+			cannot_disprove(cheryl);
+			game.Clues.Add(cc);
+
+			suggest(sheldon, "Courtyard", "Rose", "Lead pipe");
+			disproved(andrew);
+			disproved(cheryl);
+			cannot_disprove(sarah);
+			game.Clues.Add(cc);
+
+			suggest(sarah, "Trophy room", "Plum", "Wrench");
+			disproved(sheldon);
+			cannot_disprove(andrew);
+			cannot_disprove(cheryl);
+			game.Clues.Add(cc);
+
+			suggest(sheldon, "Trophy room", "Green", "Revolver");
+			cannot_disprove(andrew);
+			cannot_disprove(cheryl);
+			cannot_disprove(sarah);
+			game.Clues.Add(cc);
+
+			game.Analyze();
+
+			foreach (Card card in game.Cards) {
+				switch (card.Name) {
+					case "Mr. Green":
+					case "Trophy room":
+						Assert.IsTrue(node(game.CaseFile, card).Value);
+						break;
+					case "Revolver":
+					case "Wrench":
+						Assert.IsFalse(node(game.CaseFile, card).HasValue);
+						break;
+					default:
+						Assert.IsFalse(node(game.CaseFile, card).Value);
+						break;
+				}
+			}
+
+			GameTest.TestSerialize(TestContext, game);
+		}
 	}
 }
