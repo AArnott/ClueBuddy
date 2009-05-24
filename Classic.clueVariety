@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<GameVariety xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="Classic" xmlns="http://www.nerdbank.net/clue/variety">
+	<Rules>
+		<DisprovalEndsTurn>true</DisprovalEndsTurn>
+		<HasSpyglass>false</HasSpyglass>
+	</Rules>
+	<Weapons>
+		<Weapon Name="Knife" />
+		<Weapon Name="Candlestick" />
+		<Weapon Name="Lead pipe" />
+		<Weapon Name="Revolver" />
+		<Weapon Name="Rope" />
+		<Weapon Name="Wrench" />
+	</Weapons>
+	<Suspects>
+		<Suspect Name="Mr. Green" />
+		<Suspect Name="Colonel Mustard" />
+		<Suspect Name="Mrs. Peacock" />
+		<Suspect Name="Professor Plum" />
+		<Suspect Name="Ms. Scarlet" />
+		<Suspect Name="Mrs. White" />
+	</Suspects>
+	<Places>
+		<Place Name="Billiard room" />
+		<Place Name="Ballroom" />
+		<Place Name="Conservatory" />
+		<Place Name="Dining room" />
+		<Place Name="Hall" />
+		<Place Name="Kitchen" />
+		<Place Name="Library" />
+		<Place Name="Lounge" />
+		<Place Name="Study" />
+	</Places>
+</GameVariety>
