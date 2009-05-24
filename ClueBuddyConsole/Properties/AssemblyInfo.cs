@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿//#define PARTIAL_TRUST
+
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
@@ -36,6 +38,7 @@ using System.Security.Permissions;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
+#if PARTIAL_TRUST
 /* Minimum permissions required for game to run */
 [assembly: UIPermission(SecurityAction.RequestMinimum, Unrestricted = true)]
 // Required for opening a game variety to play
@@ -50,3 +53,4 @@ using System.Security.Permissions;
 //[assembly: FileIOPermission(SecurityAction.RequestOptional, Unrestricted = true)]
 
 /* Permissions we absolutely don't need */
+#endif
