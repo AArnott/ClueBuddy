@@ -122,6 +122,18 @@ namespace ClueBuddyConsole {
 			// Hook into the CaseFile changed events so we are notified when the solution
 			// has been found.
 			game.Clues.CollectionChanged += new NotifyCollectionChangedEventHandler(Clues_CollectionChanged);
+			game.BadClueDetected += game_BadClueDetected;
+		}
+
+		void game_BadClueDetected(object sender, BadClueEventArgs e) {
+			Console.WriteLine("Conflicting clues exist.  Searching for suspect clues...");
+			var conflictingClues = e.SuspectClues.ToArray();
+			Clue badClue = ConsoleHelper.Choose("Which of these clues are incorrect?", true, clue => clue.ToString(), conflictingClues);
+			if (badClue != null) {
+				game.Clues.Remove(badClue);
+			}
+
+			e.SetHandled();
 		}
 
 		bool? saveGame() {
@@ -131,6 +143,8 @@ namespace ClueBuddyConsole {
 					// We remove the event handlers hooking to this console app so that
 					// we don't serialize an extra instance of it.
 					game.Clues.CollectionChanged -= new NotifyCollectionChangedEventHandler(Clues_CollectionChanged);
+					game.BadClueDetected -= game_BadClueDetected;
+
 					// Serialize the game state.
 					IFormatter formatter = new BinaryFormatter();
 					// Save to a memory stream first, to make sure that serialization will complete
@@ -145,6 +159,7 @@ namespace ClueBuddyConsole {
 				} finally {
 					// Restore the event handlers.
 					game.Clues.CollectionChanged += new NotifyCollectionChangedEventHandler(Clues_CollectionChanged);
+					game.BadClueDetected += game_BadClueDetected;
 				}
 			}
 			return result;
@@ -158,21 +173,11 @@ namespace ClueBuddyConsole {
 					game = (Game)formatter.Deserialize(s);
 					interactivePlayer = game.Players.First(p => p.Name.Equals(formatter.Deserialize(s)));
 
-					// Restore the event handlers.
-					game.Clues.CollectionChanged += new NotifyCollectionChangedEventHandler(Clues_CollectionChanged);
+					prepareNewOrLoadedGameState();
 
 					// Just in case the intelligence of this program has improved since this game was saved,
 					// recalculate everything.
-					try {
-						game.RegenerateConstraints();
-					} catch (BrokenConstraintException) {
-						Console.WriteLine("Conflicting clues exist.  Searching for suspect clues...");
-						var conflictingClues = game.FindContradictingClues().ToArray();
-						Clue badClue = ConsoleHelper.Choose("Which of these clues are incorrect?", true, clue => clue.ToString(), conflictingClues);
-						if (badClue != null) {
-							game.Clues.Remove(badClue);
-						}
-					}
+					game.RegenerateConstraints();
 				}
 				try {
 					saveGameDialog.FileName = openGameDialog.FileName;

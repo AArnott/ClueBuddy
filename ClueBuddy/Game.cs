@@ -134,6 +134,24 @@ namespace ClueBuddy {
 			get { return clues; }
 		}
 
+		public event EventHandler<BadClueEventArgs> BadClueDetected;
+		/// <summary>
+		/// Fires the <see cref="BadClueDetected event."/>
+		/// </summary>
+		/// <returns><c>true</c> if an event handler claims to have resolved the problem; <c>false otherwise</c>.</returns>
+		protected virtual bool OnBadClueDetected(BrokenConstraintException ex) {
+			var badClueDetected = BadClueDetected;
+			if (badClueDetected != null) {
+				var args = new BadClueEventArgs(this, ex);
+				badClueDetected(this, args);
+				return args.Handled;
+			}
+
+			return false;
+		}
+
+		public bool AreCluesConflicted { get; private set; }
+
 		internal const bool AutoConstraintRegenerationDefault = true;
 		bool autoConstraintRegeneration = AutoConstraintRegenerationDefault;
 		/// <summary>
@@ -245,6 +263,10 @@ namespace ClueBuddy {
 		}
 
 		void clues_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e) {
+			if (suspendClueChangeHandler) {
+				return;
+			}
+
 			if (e.NewItems != null)
 				foreach (Clue clue in e.NewItems) {
 					clue.PropertyChanged += new PropertyChangedEventHandler(clue_PropertyChanged);
@@ -252,14 +274,19 @@ namespace ClueBuddy {
 			if (e.OldItems != null)
 				foreach (Clue clue in e.OldItems)
 					clue.PropertyChanged -= new PropertyChangedEventHandler(clue_PropertyChanged);
+
 			switch (e.Action) {
 				case NotifyCollectionChangedAction.Add:
 					foreach (Clue clue in e.NewItems) {
 						if (clue == null) continue; // skip over any null clues.
 						constraints.AddRange(clue.GetConstraints(Nodes));
 					}
-					resolvePartially();
-					autoAnalyze();
+					try {
+						resolvePartially();
+						autoAnalyze();
+					} catch (BrokenConstraintException) {
+						RegenerateConstraints();
+					}
 					break;
 				default: // any other change is potentially devastating to current state, so recalculate everything.
 					if (AutoConstraintRegeneration) {
@@ -307,6 +334,20 @@ namespace ClueBuddy {
 		}
 
 		public void RegenerateConstraints() {
+			bool resolvedBadClues;
+			do {
+				resolvedBadClues = false;
+				try {
+					regenerateConstraintsCore();
+					AreCluesConflicted = false;
+				} catch (BrokenConstraintException ex) {
+					AreCluesConflicted = true;
+					resolvedBadClues = OnBadClueDetected(ex);
+				}
+			} while (resolvedBadClues);
+		}
+
+		private void regenerateConstraintsCore() {
 			constraints.Clear();
 			foreach (Node n in Nodes)
 				n.Reset();
@@ -319,16 +360,19 @@ namespace ClueBuddy {
 			autoAnalyze();
 		}
 
+		bool suspendClueChangeHandler;
+
 		public IEnumerable<Clue> FindContradictingClues() {
 			List<Clue> originalClues = Clues.ToList();
 			List<Clue> suspectClues = new List<Clue>();
 
+			suspendClueChangeHandler = true;
 			try {
 				for(int i = 0; i < Clues.Count;i++) {
 					Clues.RemoveAt(i);
 
 					try {
-						RegenerateConstraints();
+						regenerateConstraintsCore();
 
 						// Removing this clue solved the conflict.
 						suspectClues.Add(originalClues[i]);
@@ -343,6 +387,7 @@ namespace ClueBuddy {
 				// Restore original list of clues.
 				Clues.Clear();
 				originalClues.ForEach(clue => Clues.Add(clue));
+				suspendClueChangeHandler = false;
 			}
 
 			return suspectClues;

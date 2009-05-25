@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.20627</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F2B78728-49B8-4747-8321-6F7927605A84}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BadAccusation.cs" />
+    <Compile Include="BadClueEventArgs.cs" />
     <Compile Include="CannotDisprove.cs" />
     <Compile Include="Card.cs" />
     <Compile Include="CaseFile.cs" />
