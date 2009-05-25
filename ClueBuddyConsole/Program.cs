@@ -12,6 +12,7 @@ using System.Security;
 using System.Security.Permissions;
 using System.Collections.Specialized;
 using NerdBank.Algorithms.NodeConstraintSelection;
+using System.Globalization;
 
 namespace ClueBuddyConsole {
 	class Program {
@@ -69,6 +70,10 @@ namespace ClueBuddyConsole {
 			}
 			while (true) {
 				try {
+					if (game != null && game.AreCluesConflicted) {
+						resolveConflicts();
+					}
+
 					var mainMenu = new Dictionary<char, string>();
 					mainMenu.Add('L', "Load game");
 					mainMenu.Add('N', "New game");
@@ -77,6 +82,7 @@ namespace ClueBuddyConsole {
 						mainMenu.Add('T', "Play a Turn");
 						mainMenu.Add('G', "See Grid");
 						mainMenu.Add('C', "List Clues");
+						mainMenu.Add('F', "Force enter a clue");
 					}
 					mainMenu.Add('Q', "Quit");
 					switch (ConsoleHelper.Choose("Main menu:", mainMenu, s => s).Key) {
@@ -96,6 +102,9 @@ namespace ClueBuddyConsole {
 							break;
 						case 'T':
 							takeTurn();
+							break;
+						case 'F':
+							forceClue();
 							break;
 						case 'G':
 							printGrid();
@@ -126,14 +135,15 @@ namespace ClueBuddyConsole {
 		}
 
 		void game_BadClueDetected(object sender, BadClueEventArgs e) {
-			Console.WriteLine("Conflicting clues exist.  Searching for suspect clues...");
-			var conflictingClues = e.SuspectClues.ToArray();
+			ConsoleHelper.WriteColor(ConsoleColor.Red, "Conflicting clues exist!");
+		}
+		
+		void resolveConflicts() {
+			var conflictingClues = game.FindContradictingClues().ToArray();
 			Clue badClue = ConsoleHelper.Choose("Which of these clues are incorrect?", true, clue => clue.ToString(), conflictingClues);
 			if (badClue != null) {
 				game.Clues.Remove(badClue);
 			}
-
-			e.SetHandled();
 		}
 
 		bool? saveGame() {
@@ -174,10 +184,7 @@ namespace ClueBuddyConsole {
 					interactivePlayer = game.Players.First(p => p.Name.Equals(formatter.Deserialize(s)));
 
 					prepareNewOrLoadedGameState();
-
-					// Just in case the intelligence of this program has improved since this game was saved,
-					// recalculate everything.
-					game.RegenerateConstraints();
+					game.ResumeFromLoad();
 				}
 				try {
 					saveGameDialog.FileName = openGameDialog.FileName;
@@ -343,15 +350,51 @@ namespace ClueBuddyConsole {
 			return string.Format("{0,-20}", card.Name) + string.Format("{0,4}", strength);
 		}
 
-		void suggestion() {
+		void forceClue() {
+			Player player = choosePlayer("Who do you have information about?", true, false);
+			if (player == null) return;
+			int choice = ConsoleHelper.Choose(
+				string.Format(CultureInfo.CurrentCulture, "What do you know about {0}?", player.Name),
+				true,
+				new[] { "Has card", "Could not disprove", "Disproved" });
+			switch (choice) {
+				case 0: // has card
+					Card card = ConsoleHelper.Choose("Which card?", true, c => c.Name, game.Cards.ToArray());
+					if (card == null) return;
+					game.Clues.Add(new SpyCard(player, card));
+					break;
+				case 1: // could not disprove
+					var suggestion = getSuggestion();
+					if (suggestion == null) return;
+					game.Clues.Add(new CannotDisprove(player, suggestion));
+					break;
+				case 2: // disproved
+					suggestion = getSuggestion();
+					if (suggestion == null) return;
+					game.Clues.Add(new Disproved(player, suggestion));
+					break;
+				default:
+					return;
+			}
+		}
+
+		Suspicion getSuggestion() {
 			Suspicion suggestion = new Suspicion();
 			suggestion.Place = ConsoleHelper.Choose("Where?", true, p => getCardSuggestionStrength(p), game.Places.ToArray());
-			if (suggestion.Place == null) return;
+			if (suggestion.Place == null) return null;
 			suggestion.Suspect = ConsoleHelper.Choose("Who?", true, s => getCardSuggestionStrength(s), game.Suspects.ToArray());
-			if (suggestion.Suspect == null) return;
+			if (suggestion.Suspect == null) return null;
 			suggestion.Weapon = ConsoleHelper.Choose("How?", true, w => getCardSuggestionStrength(w), game.Weapons.ToArray());
-			if (suggestion.Weapon == null) return;
+			if (suggestion.Weapon == null) return null;
+			return suggestion;
+		}
+
+		void suggestion() {
+			Suspicion suggestion = getSuggestion();
+			if (suggestion == null) return;
+			List<Clue> deducedClues = new List<Clue>();
 			foreach (Player opponent in game.PlayersInOrderAfter(suggestingPlayer)) {
+				bool explicitAnswer = false;
 				bool? disproved;
 				// Do we already know whether this player could disprove it?
 				if ((disproved = opponent.HasAtLeastOneOf(suggestion.Cards)).HasValue) {
@@ -362,9 +405,11 @@ namespace ClueBuddyConsole {
 						new string[] { "Yes", "No", "Skip player", "Abort suggestion" })) {
 						case 0:
 							disproved = true;
+							explicitAnswer = true;
 							break;
 						case 1:
 							disproved = false;
+							explicitAnswer = true;
 							break;
 						case 2:
 							continue;
@@ -384,14 +429,30 @@ namespace ClueBuddyConsole {
 					}
 				}
 				if (disproved.HasValue) {
+					Clue clue;
 					if (disproved.Value) {
-						game.Clues.Add(new Disproved(opponent, suggestion, alabi));
-						if (game.Rules.DisprovalEndsTurn) {
-							break;
-						}
+						clue = new Disproved(opponent, suggestion, alabi);
 					} else {
-						game.Clues.Add(new CannotDisprove(opponent, suggestion));
+						clue = new CannotDisprove(opponent, suggestion);
 					}
+					if (!explicitAnswer)
+						deducedClues.Add(clue);
+					game.Clues.Add(clue);
+				}
+
+				if (disproved.HasValue && disproved.Value && game.Rules.DisprovalEndsTurn) {
+					break;
+				}
+			}
+
+			// We added clues that we could predict as explicit clues.
+			// But if one of them were wrong (due to a mistaken answer by another player or data entry error)
+			// we are increasing the strength of the mistake here by making a new clue based on our deductions.
+			// So remove the deduced clues if the operator found a problem.
+			if (deducedClues.Count > 0) {
+				if (!ConsoleHelper.AskYesOrNo("Were the deduced answers correct?", false).Value) {
+					deducedClues.ForEach(badClue => game.Clues.Remove(badClue));
+					Console.WriteLine("Deduced answers were removed from the set of clues.  Use Force to add the correct answer and resolve conflicts.");
 				}
 			}
 		}

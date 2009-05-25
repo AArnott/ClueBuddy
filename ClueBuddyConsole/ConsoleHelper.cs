@@ -39,6 +39,18 @@ namespace ClueBuddyConsole {
 			return indexOfSelection;
 		}
 
+		public static bool? AskYesOrNo(string prompt, bool includeSkip) {
+			int result = Choose(prompt, includeSkip, new[] { "Yes", "No" });
+			switch (result) {
+				case 0:
+					return true;
+				case 1:
+					return false;
+				default:
+					return null;
+			}
+		}
+
 		public static string AskString(string prompt) {
 			Console.Write(prompt + " ");
 			return Console.ReadLine();

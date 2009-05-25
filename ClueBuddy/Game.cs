@@ -219,6 +219,18 @@ namespace ClueBuddy {
 			addPredefinedConstraints();
 
 			clues = new ObservableCollection<Clue>();
+			prepareFromStartOrLoad();
+		}
+
+		public void ResumeFromLoad() {
+			prepareFromStartOrLoad();
+
+			// Just in case the intelligence of this program has improved since this game was saved,
+			// recalculate everything.
+			RegenerateConstraints();
+		}
+
+		void prepareFromStartOrLoad() {
 			clues.CollectionChanged += new NotifyCollectionChangedEventHandler(clues_CollectionChanged);
 		}
 
