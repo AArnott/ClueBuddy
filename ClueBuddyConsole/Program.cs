@@ -163,7 +163,16 @@ namespace ClueBuddyConsole {
 
 					// Just in case the intelligence of this program has improved since this game was saved,
 					// recalculate everything.
-					game.RegenerateConstraints();
+					try {
+						game.RegenerateConstraints();
+					} catch (BrokenConstraintException) {
+						Console.WriteLine("Conflicting clues exist.  Searching for suspect clues...");
+						var conflictingClues = game.FindContradictingClues().ToArray();
+						Clue badClue = ConsoleHelper.Choose("Which of these clues are incorrect?", true, clue => clue.ToString(), conflictingClues);
+						if (badClue != null) {
+							game.Clues.Remove(badClue);
+						}
+					}
 				}
 				try {
 					saveGameDialog.FileName = openGameDialog.FileName;

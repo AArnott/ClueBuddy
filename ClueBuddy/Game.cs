@@ -319,6 +319,35 @@ namespace ClueBuddy {
 			autoAnalyze();
 		}
 
+		public IEnumerable<Clue> FindContradictingClues() {
+			List<Clue> originalClues = Clues.ToList();
+			List<Clue> suspectClues = new List<Clue>();
+
+			try {
+				for(int i = 0; i < Clues.Count;i++) {
+					Clues.RemoveAt(i);
+
+					try {
+						RegenerateConstraints();
+
+						// Removing this clue solved the conflict.
+						suspectClues.Add(originalClues[i]);
+					} catch (BrokenConstraintException) {
+						// The conflict still exists, so the clue we just removed
+						// isn't likely to blame.
+					}
+
+					Clues.Insert(i, originalClues[i]);
+				}
+			} finally {
+				// Restore original list of clues.
+				Clues.Clear();
+				originalClues.ForEach(clue => Clues.Add(clue));
+			}
+
+			return suspectClues;
+		}
+
 		public bool? IsCardHeld(ICardHolder playerOrCaseFile, Card card) {
 			return Nodes.Where(n => n.CardHolder == playerOrCaseFile && n.Card == card).First().IsSelected;
 		}
