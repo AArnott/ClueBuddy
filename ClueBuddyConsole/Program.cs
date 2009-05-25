@@ -157,6 +157,13 @@ namespace ClueBuddyConsole {
 				using (Stream s = openGameDialog.OpenFile()) {
 					game = (Game)formatter.Deserialize(s);
 					interactivePlayer = game.Players.First(p => p.Name.Equals(formatter.Deserialize(s)));
+
+					// Restore the event handlers.
+					game.Clues.CollectionChanged += new NotifyCollectionChangedEventHandler(Clues_CollectionChanged);
+
+					// Just in case the intelligence of this program has improved since this game was saved,
+					// recalculate everything.
+					game.RegenerateConstraints();
 				}
 				try {
 					saveGameDialog.FileName = openGameDialog.FileName;
