@@ -213,6 +213,7 @@ namespace ClueBuddyConsole {
 
 		void setupPlayers() {
 			int players = ConsoleHelper.AskNumber("How many players?");
+			Console.WriteLine("In clockwise order...");
 			for (int i = 0; i < players; i++) {
 				game.Players.Add(new Player(ConsoleHelper.AskString(string.Format("Player {0} name:", i + 1))));
 			}
