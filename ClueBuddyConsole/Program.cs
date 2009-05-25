@@ -364,6 +364,9 @@ namespace ClueBuddyConsole {
 				if (disproved.HasValue) {
 					if (disproved.Value) {
 						game.Clues.Add(new Disproved(opponent, suggestion, alabi));
+						if (game.Rules.DisprovalEndsTurn) {
+							break;
+						}
 					} else {
 						game.Clues.Add(new CannotDisprove(opponent, suggestion));
 					}
