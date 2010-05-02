@@ -1,4 +1,10 @@
-﻿namespace ClueBuddy {
+﻿//-----------------------------------------------------------------------
+// <copyright file="Player.cs" company="Andrew Arnott">
+//     Copyright (c) Andrew Arnott. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace ClueBuddy {
 	using System;
 	using System.Collections.Generic;
 	using System.ComponentModel;
@@ -152,11 +158,13 @@
 		#region INotifyPropertyChanged Methods
 
 		/// <summary>
-		/// Called when a property changed.
+		/// Fires the <see cref="PropertyChanged"/> event.
 		/// </summary>
-		/// <param name="propertyName">Name of the property.</param>
+		/// <param name="propertyName">
+		/// Name of the property.
+		/// </param>
 		protected virtual void OnPropertyChanged(string propertyName) {
-			PropertyChangedEventHandler propertyChanged = PropertyChanged;
+			var propertyChanged = this.PropertyChanged;
 			if (propertyChanged != null) {
 				propertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}

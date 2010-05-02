@@ -1,9 +1,11 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ClueBuddy;
-
-namespace ClueBuddyTest
+﻿namespace ClueBuddyTest
 {
+	using System;
+
+	using ClueBuddy;
+
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 	[TestClass]
 	public class PlayerTest :TestBase{
 		[TestInitialize]

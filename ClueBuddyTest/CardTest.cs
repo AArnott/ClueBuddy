@@ -1,21 +1,19 @@
-﻿namespace ClueBuddyTest {
+﻿//-----------------------------------------------------------------------
+// <copyright file="CardTest.cs" company="Andrew Arnott">
+//     Copyright (c) Andrew Arnott. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace ClueBuddyTest {
 	using System;
-
-	using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 	using ClueBuddy;
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 	[TestClass()]
 	public class CardTest : TestBase {
 		[TestInitialize]
 		public override void Setup() {
 			base.Setup();
-		}
-
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void ConstructorNullNameTest() {
-			new Place(null);
 		}
 
 		[TestMethod]

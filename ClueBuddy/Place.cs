@@ -4,9 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace ClueBuddy
-{
+namespace ClueBuddy {
 	using System;
+	using System.Diagnostics.Contracts;
 
 	/// <summary>
 	/// A card representing a room or place.
@@ -26,7 +26,10 @@ namespace ClueBuddy
 		/// <param name="name">
 		/// The name of the place.
 		/// </param>
-		public Place(string name) : base(name) { }
+		public Place(string name)
+			: base(name) {
+			Contract.Requires<ArgumentException>(!String.IsNullOrEmpty(name));
+		}
 
 		#endregion
 	}

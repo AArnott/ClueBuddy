@@ -13,18 +13,6 @@
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void NodeConstructorNullPlayerTest() {
-			new Node(null, new Suspect("test"));
-		}
-
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void NodeConstructorNullCardTest() {
-			new Node(new Player("test"), null);
-		}
-
-		[TestMethod]
 		public void NodeInitializationAndPropertyTest() {
 			Player p = new Player("test");
 			Card c = new Suspect("test");

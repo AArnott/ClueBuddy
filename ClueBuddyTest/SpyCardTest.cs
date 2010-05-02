@@ -1,4 +1,10 @@
-﻿namespace ClueBuddyTest {
+﻿//-----------------------------------------------------------------------
+// <copyright file="SpyCardTest.cs" company="Andrew Arnott">
+//     Copyright (c) Andrew Arnott. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace ClueBuddyTest {
 	using System;
 	using System.Collections.Generic;
 	using System.Diagnostics;
@@ -24,18 +30,6 @@
 			SpyCard target = new SpyCard(playerShowingCard, cardSeen);
 			Assert.AreSame(playerShowingCard, target.Player);
 			Assert.AreSame(cardSeen, target.Card);
-		}
-
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void SpyCardConstructorNullPlayerTest() {
-			new SpyCard(null, new Weapon("card"));
-		}
-
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void SpyCardConstructorNullCardTest() {
-			new SpyCard(new Player("player"), null);
 		}
 
 		[TestMethod]

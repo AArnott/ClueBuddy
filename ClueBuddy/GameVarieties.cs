@@ -91,7 +91,7 @@ namespace ClueBuddy {
 		/// </summary>
 		/// <returns>A new game instance.</returns>
 		public Game Initialize() {
-			return new Game(this.Name, this.Rules, Cards);
+			return new Game(this.Name, this.Rules, this.Cards);
 		}
 
 		/// <summary>

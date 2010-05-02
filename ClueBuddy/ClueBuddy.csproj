@@ -112,12 +112,14 @@
     <Compile Include="Card.cs" />
     <Compile Include="CaseFile.cs" />
     <Compile Include="Clue.cs" />
+    <Compile Include="ClueContract.cs" />
     <Compile Include="CompositeClue.cs" />
     <Compile Include="Disproved.cs" />
     <Compile Include="GameVarieties.cs" />
     <Compile Include="ICardHolder.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameRules.cs" />
+    <Compile Include="ICardHolderContract.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="Place.cs" />
     <Compile Include="Player.cs" />

@@ -1,11 +1,8 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Game.cs" company="">
-//   
+﻿//-----------------------------------------------------------------------
+// <copyright file="Game.cs" company="Andrew Arnott">
+//     Copyright (c) Andrew Arnott. All rights reserved.
 // </copyright>
-// <summary>
-//   The game.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------
 
 namespace ClueBuddy {
 	using System;
@@ -100,7 +97,7 @@ namespace ClueBuddy {
 		public event EventHandler<BadClueEventArgs> BadClueDetected;
 
 		/// <summary>
-		/// The property changed.
+		/// Occurs when a property value changes.
 		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -217,7 +214,10 @@ namespace ClueBuddy {
 		/// Gets the weapons in the game.
 		/// </summary>
 		public IEnumerable<Weapon> Weapons {
-			get { return this.GetCardsOfType<Weapon>(); }
+			get {
+				Contract.Ensures(Contract.Result<IEnumerable<Weapon>>() != null);
+				return this.Cards.OfType<Weapon>();
+			}
 		}
 
 		/// <summary>
@@ -276,6 +276,7 @@ namespace ClueBuddy {
 		public void AssignApproximatePlayerHandSizes() {
 			Contract.Requires<InvalidOperationException>(this.Players.Count > 0, Strings.PlayersRequired);
 			Contract.Requires<InvalidOperationException>(this.Players.All(p => p.Game != null));
+			Contract.Ensures(this.Players.All(p => p.CardsHeldCount > 0));
 
 			for (int i = 0; i < this.Players.Count; i++) {
 				int handSize = (this.Cards.Count() - CaseFile.CardsInCaseFile) / this.Players.Count;
@@ -438,10 +439,10 @@ namespace ClueBuddy {
 		}
 
 		/// <summary>
-		/// The on property changed.
+		/// Fires the <see cref="PropertyChanged"/> event.
 		/// </summary>
 		/// <param name="propertyName">
-		/// The property name.
+		/// Name of the property.
 		/// </param>
 		protected virtual void OnPropertyChanged(string propertyName) {
 			PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
@@ -571,15 +572,6 @@ namespace ClueBuddy {
 					}
 					break;
 			}
-		}
-
-		/// <summary>
-		/// Gets the type of the cards of.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <returns></returns>
-		private IEnumerable<T> GetCardsOfType<T>() where T : Card {
-			return from c in this.Cards where c is T select (T)c;
 		}
 
 		/// <summary>

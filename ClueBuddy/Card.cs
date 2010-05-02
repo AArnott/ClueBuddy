@@ -55,10 +55,6 @@ namespace ClueBuddy {
 			return this.Name ?? string.Empty;
 		}
 
-		[ContractInvariantMethod]
-		private void ObjectInvariant() {
-		}
-
 		#endregion
 	}
 }

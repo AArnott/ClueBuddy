@@ -1,12 +1,15 @@
-﻿using System;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ClueBuddy;
-using NerdBank.Algorithms.NodeConstraintSelection;
+﻿namespace ClueBuddyTest {
+	using System;
+	using System.Collections.Generic;
+	using System.Diagnostics;
+	using System.Linq;
 
-namespace ClueBuddyTest {
+	using ClueBuddy;
+
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+	using NerdBank.Algorithms.NodeConstraintSelection;
+
 	[TestClass]
 	public class CompositeClueTest : TestBase {
 		[TestInitialize]

@@ -1,10 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿//-----------------------------------------------------------------------
+// <copyright file="CaseFile.cs" company="Andrew Arnott">
+//     Copyright (c) Andrew Arnott. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace ClueBuddy {
+	using System;
+	using System.Collections.Generic;
 	using System.Diagnostics.Contracts;
+	using System.Linq;
+	using System.Text;
 
 	/// <summary>
 	/// The "Case File" envelope in which the murderer, murder weapon, and location

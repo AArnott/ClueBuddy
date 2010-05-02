@@ -1,15 +1,22 @@
-﻿using System;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ClueBuddy;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using NerdBank.Algorithms.NodeConstraintSelection;
+﻿//-----------------------------------------------------------------------
+// <copyright file="GameTest.cs" company="Andrew Arnott">
+//     Copyright (c) Andrew Arnott. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace ClueBuddyTest {
+	using System;
+	using System.IO;
+	using System.Linq;
+	using System.Runtime.Serialization;
+	using System.Runtime.Serialization.Formatters.Binary;
+
+	using ClueBuddy;
+
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+	using NerdBank.Algorithms.NodeConstraintSelection;
+
 	[TestClass]
 	public class GameTest : TestBase {
 		[TestInitialize]
@@ -18,18 +25,10 @@ namespace ClueBuddyTest {
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(InvalidOperationException))]
-		public void StartWithNoPlayersTest() {
-			Game g = MasterDetective;
-			g.Start();
-		}
-
-		[TestMethod]
-		[ExpectedException(typeof(InvalidOperationException))]
-		public void StartWithPlayersWithoutHandSizesTest() {
+		public void CardAssignmentsAcceptable() {
 			Game g = MasterDetective;
 			g.Players.AddRange(players);
-			g.Start();
+			Assert.IsFalse(g.CardAssignmentsAcceptable);
 		}
 
 		[TestMethod]
@@ -38,9 +37,8 @@ namespace ClueBuddyTest {
 			Game g = MasterDetective;
 			g.Players.AddRange(players);
 			g.AssignApproximatePlayerHandSizes();
-			Debug.Assert(players[0].CardsHeldCount > 1);
 			players[0].CardsHeldCount--;
-			g.Start();
+			Assert.IsFalse(g.CardAssignmentsAcceptable);
 		}
 
 		[TestMethod]
@@ -53,7 +51,9 @@ namespace ClueBuddyTest {
 				Assert.AreEqual(g.Cards.Count(), g.Nodes.Where(n => n.CardHolder == p).Count());
 			}
 			foreach (Card c in g.Cards)
+			{
 				Assert.AreEqual(g.Players.Count + 1, g.Nodes.Where(n => n.Card == c).Count());
+			}
 		}
 
 		[TestMethod]
@@ -113,12 +113,6 @@ namespace ClueBuddyTest {
 		}
 
 		[TestMethod]
-		[ExpectedException(typeof(InvalidOperationException))]
-		public void AssignApproximatePlayerHandSizesBeforeAddingPlayersTest() {
-			MasterDetective.AssignApproximatePlayerHandSizes();
-		}
-
-		[TestMethod]
 		public void AssignApproximatePlayerHandSizesTest() {
 			Game g = MasterDetective;
 			g.Players.AddRange(players);
@@ -147,7 +141,7 @@ namespace ClueBuddyTest {
 				Suspicion = new Suspicion(game.Suspects.First(), game.Weapons.First(), game.Places.First())
 			});
 			game.Clues.Add(new SpyCard(game.Players[1], game.Weapons.First()));
-			TestSerialize(TestContext, game);
+			TestSerialize(this.TestContext, game);
 		}
 
 		internal static void TestSerialize(TestContext context, Game game) {

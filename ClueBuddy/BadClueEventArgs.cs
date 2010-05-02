@@ -35,16 +35,19 @@ namespace ClueBuddy {
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this <see cref="BadClueEventArgs"/> is handled.
+		/// Gets a value indicating whether this <see cref="BadClueEventArgs"/> is handled.
 		/// </summary>
 		/// <value><c>true</c> if handled; otherwise, <c>false</c>.</value>
 		public bool Handled { get; private set; }
 
 		/// <summary>
-		/// Gets or sets the exception describing the constraint violation.
+		/// Gets the exception describing the constraint violation.
 		/// </summary>
 		public BrokenConstraintException Exception { get; private set; }
 
+		/// <summary>
+		/// Gets the clues that contradict each other.
+		/// </summary>
 		public IEnumerable<Clue> SuspectClues {
 			get { return this.game.FindContradictingClues(); }
 		}

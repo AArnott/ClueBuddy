@@ -255,20 +255,17 @@ namespace ClueBuddyConsole {
 			Suspicion suggestion = new Suspicion();
 			suggestion.Place = ConsoleHelper.Choose(
 				"Where?", true, this.GetCardSuggestionStrength, this.game.Places.ToArray());
-			if (suggestion.Place == null)
-			{
+			if (suggestion.Place == null) {
 				return null;
 			}
 			suggestion.Suspect = ConsoleHelper.Choose(
 				"Who?", true, this.GetCardSuggestionStrength, this.game.Suspects.ToArray());
-			if (suggestion.Suspect == null)
-			{
+			if (suggestion.Suspect == null) {
 				return null;
 			}
 			suggestion.Weapon = ConsoleHelper.Choose(
 				"How?", true, this.GetCardSuggestionStrength, this.game.Weapons.ToArray());
-			if (suggestion.Weapon == null)
-			{
+			if (suggestion.Weapon == null) {
 				return null;
 			}
 			return suggestion;
@@ -315,7 +312,9 @@ namespace ClueBuddyConsole {
 				}
 				try {
 					this.saveGameDialog.FileName = this.openGameDialog.FileName;
-				} catch (SecurityException) { } // just a convenience that we'll ignore if we can't do it.
+				} catch (SecurityException) {
+					// just a convenience that we'll ignore if we can't do it.
+				}
 			}
 			this.prepareNewOrLoadedGameState();
 			return result;
@@ -582,11 +581,16 @@ namespace ClueBuddyConsole {
 			}
 
 			// Begin spying
-			SpyCard clue = new SpyCard();
-			clue.Player = this.ChoosePlayer("Spy on which player?", true, false);
-			if (clue.Player == null) return;
+			var clue = new SpyCard { Player = this.ChoosePlayer("Spy on which player?", true, false) };
+			if (clue.Player == null)
+			{
+				return;
+			}
 			clue.Card = ConsoleHelper.Choose("Which card did you see?", true, c => c.Name, clue.PossiblySeenCards.ToArray());
-			if (clue.Card == null) return;
+			if (clue.Card == null)
+			{
+				return;
+			}
 			this.game.Clues.Add(clue);
 		}
 

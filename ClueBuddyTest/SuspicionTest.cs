@@ -26,23 +26,5 @@
 			CollectionAssert.Contains(cards, l);
 			Assert.AreEqual(3, cards.Count);
 		}
-
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void SuspicionConstructorNullSuspectTest() {
-			new Suspicion(null, new Weapon("weapon"), new Place("location"));
-		}
-
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void SuspicionConstructorNullWeaponTest() {
-			new Suspicion(new Suspect("suspect"), null, new Place("location"));
-		}
-
-		[TestMethod]
-		[ExpectedException(typeof(ArgumentNullException))]
-		public void SuspicionConstructorNullLocationTest() {
-			new Suspicion(new Suspect("suspect"), new Weapon("weapon"), null);
-		}
 	}
 }

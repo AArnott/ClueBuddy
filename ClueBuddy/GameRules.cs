@@ -7,6 +7,9 @@
 namespace ClueBuddy {
 	using System;
 
+	/// <summary>
+	/// The rules for a particular variety of the game.
+	/// </summary>
 	[Serializable]
 	public struct GameRules {
 		/// <summary>

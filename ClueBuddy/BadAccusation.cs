@@ -22,7 +22,7 @@ namespace ClueBuddy {
 		/// The case file.
 		/// </summary>
 		private readonly CaseFile caseFile;
-		
+
 		/// <summary>
 		/// The suggestion.
 		/// </summary>

@@ -144,8 +144,9 @@ namespace ClueBuddy {
 		internal override IEnumerable<IConstraint> GetConstraints(IEnumerable<Node> nodes) {
 			if (this.CardShown == null) {
 				var constrainedNodes = nodes.Where(n => n.CardHolder == this.Player && this.Suspicion.Cards.Contains(n.Card)).OfType<INode>();
-				if (constrainedNodes.Count() != this.Suspicion.Cards.Count())
+				if (constrainedNodes.Count() != this.Suspicion.Cards.Count()) {
 					throw new ArgumentException(Strings.IncompleteNodesList, "nodes");
+				}
 				yield return SelectionCountConstraint.MinSelected(1, constrainedNodes);
 			} else {
 				var constrainedNodes = nodes.Where(n => n.CardHolder == this.Player && n.Card == this.CardShown).OfType<INode>();

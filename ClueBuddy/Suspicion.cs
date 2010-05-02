@@ -66,7 +66,7 @@ namespace ClueBuddy {
 		#region Events
 
 		/// <summary>
-		/// The property changed.
+		/// Occurs when a property value changes.
 		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -157,10 +157,10 @@ namespace ClueBuddy {
 		#region Methods
 
 		/// <summary>
-		/// The on property changed.
+		/// Fires the <see cref="PropertyChanged"/> event.
 		/// </summary>
 		/// <param name="propertyName">
-		/// The property name.
+		/// Name of the property.
 		/// </param>
 		protected virtual void OnPropertyChanged(string propertyName) {
 			var propertyChanged = this.PropertyChanged;

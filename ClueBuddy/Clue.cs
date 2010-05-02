@@ -43,9 +43,11 @@ namespace ClueBuddy {
 		public event EventHandler ConstraintsChanged;
 
 		/// <summary>
-		/// The player the clue is regarding.
-		/// Either the player making the suggestion or the player whose card was seen.
+		/// Gets or sets the player the clue is regarding.
 		/// </summary>
+		/// <value>
+		/// Either the player making the suggestion or the player whose card was seen.
+		/// </value>
 		public virtual Player Player {
 			get {
 				return this.player;
@@ -78,7 +80,17 @@ namespace ClueBuddy {
 
 		#region INotifyPropertyChanged Members
 
+		/// <summary>
+		/// Occurs when a property value changes.
+		/// </summary>
 		public event PropertyChangedEventHandler PropertyChanged;
+
+		/// <summary>
+		/// Fires the <see cref="PropertyChanged"/> event.
+		/// </summary>
+		/// <param name="propertyName">
+		/// Name of the property.
+		/// </param>
 		protected virtual void OnPropertyChanged(string propertyName) {
 			PropertyChangedEventHandler propertyChanged = PropertyChanged;
 			if (propertyChanged != null) {
@@ -88,29 +100,4 @@ namespace ClueBuddy {
 
 		#endregion
 	}
-
-	/// <summary>
-	/// Contract class for the <see cref="Clue"/> class.
-	/// </summary>
-	[ContractClassFor(typeof(Clue))]
-	internal abstract class ClueContract : Clue {
-		/// <summary>
-		/// Prevents a default instance of the <see cref="ClueContract"/> class from being created.
-		/// </summary>
-		private ClueContract() {
-		}
-
-		/// <summary>
-		/// Gets the constraints that can be inferred from the clue.
-		/// </summary>
-		/// <param name="nodes">The nodes from which to construct the constraints.</param>
-		/// <returns>
-		/// A sequence of constraints that the clue creates.
-		/// </returns>
-		internal override IEnumerable<IConstraint> GetConstraints(IEnumerable<Node> nodes) {
-			Contract.Requires<ArgumentNullException>(nodes != null, "nodes");
-			throw new NotImplementedException();
-		}
-	}
-
 }

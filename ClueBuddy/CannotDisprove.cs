@@ -1,4 +1,10 @@
-﻿namespace ClueBuddy {
+﻿//-----------------------------------------------------------------------
+// <copyright file="CannotDisprove.cs" company="Andrew Arnott">
+//     Copyright (c) Andrew Arnott. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace ClueBuddy {
 	using System;
 	using System.Collections.Generic;
 	using System.Diagnostics;
