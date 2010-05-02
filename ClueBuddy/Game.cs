@@ -85,6 +85,10 @@ namespace ClueBuddy {
 			this.VarietyName = varietyName;
 			this.Rules = rules;
 			this.cards = cards.ToList();
+
+			this.Clues = new ObservableCollection<Clue>();
+			this.Nodes = new List<Node>();
+			this.Constraints = new List<IConstraint>();
 		}
 
 		#endregion
@@ -292,8 +296,6 @@ namespace ClueBuddy {
 		/// </summary>
 		/// <returns>A sequence of clues.</returns>
 		public IEnumerable<Clue> FindContradictingClues() {
-			Contract.Requires<InvalidOperationException>(this.Clues != null);
-			Contract.Requires<InvalidOperationException>(this.Nodes != null);
 			Contract.Ensures(Contract.Result<IEnumerable<Clue>>() != null);
 
 			var originalClues = this.Clues.ToList();
@@ -374,9 +376,9 @@ namespace ClueBuddy {
 			this.players.ForEach(player => player.Game = null);
 			this.players.Clear();
 			this.CaseFile = null;
-			this.Nodes = null;
-			this.Constraints = null;
-			this.Clues = null;
+			this.Nodes.Clear();
+			this.Constraints.Clear();
+			this.Clues.Clear();
 		}
 
 		/// <summary>
@@ -409,10 +411,9 @@ namespace ClueBuddy {
 			this.CreateNodes();
 
 			// Create the initial set of constraints...
-			this.Constraints = new List<IConstraint>();
+			this.Constraints.Clear();
 			this.AddPredefinedConstraints();
 
-			this.Clues = new ObservableCollection<Clue>();
 			this.PrepareFromStartOrLoad();
 		}
 
@@ -455,8 +456,7 @@ namespace ClueBuddy {
 		/// The add predefined constraints.
 		/// </summary>
 		private void AddPredefinedConstraints() {
-			Contract.Requires(this.Constraints != null && this.Constraints.Count == 0);
-			Contract.Requires<InvalidOperationException>(this.Nodes != null);
+			Contract.Requires(this.Constraints.Count == 0);
 			Contract.Ensures(this.Constraints.All(c => c.IsSatisfiable), "Initial constraints are already failing.");
 
 			// Each card can only be held once.
@@ -487,9 +487,9 @@ namespace ClueBuddy {
 		/// </summary>
 		private void CreateNodes() {
 			// Create all the nodes
-			this.Nodes = (from h in this.CardHolders
-						  from c in this.Cards
-						  select new Node(h, c)).ToList();
+			this.Nodes.AddRange(from h in this.CardHolders
+								from c in this.Cards
+								select new Node(h, c));
 		}
 
 		/// <summary>
@@ -578,7 +578,6 @@ namespace ClueBuddy {
 		/// The regenerate constraints core.
 		/// </summary>
 		private void RegenerateConstraintsCore() {
-			Contract.Requires(this.Constraints != null);
 			Contract.Requires(this.Nodes != null);
 			Contract.Requires(this.Clues != null);
 
@@ -587,7 +586,7 @@ namespace ClueBuddy {
 				n.Reset();
 			}
 			this.AddPredefinedConstraints();
-			foreach (Clue clue in this.Clues.Where(c => c != null)) {
+			foreach (Clue clue in this.Clues) {
 				this.Constraints.AddRange(clue.GetConstraints(this.Nodes));
 			}
 			this.ResolvePartially();
@@ -596,11 +595,12 @@ namespace ClueBuddy {
 
 		[ContractInvariantMethod]
 		private void ObjectInvariant() {
-			Contract.Invariant(this.Nodes == null || this.Nodes.All(n => n != null));
+			Contract.Invariant(this.Nodes != null && this.Nodes.All(n => n != null));
+			Contract.Invariant(this.Clues != null && this.Clues.All(c => c != null));
 			Contract.Invariant(this.cards != null);
 			Contract.Invariant(this.players.All(p => p != null));
+			Contract.Invariant(this.Constraints != null);
 		}
-
 
 		#endregion
 	}

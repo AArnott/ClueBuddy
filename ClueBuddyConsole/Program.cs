@@ -252,7 +252,7 @@ namespace ClueBuddyConsole {
 		/// </summary>
 		/// <returns>The suggestion.</returns>
 		private Suspicion GetSuggestion() {
-			Suspicion suggestion = new Suspicion();
+			var suggestion = new Suspicion();
 			suggestion.Place = ConsoleHelper.Choose(
 				"Where?", true, this.GetCardSuggestionStrength, this.game.Places.ToArray());
 			if (suggestion.Place == null) {
@@ -275,7 +275,7 @@ namespace ClueBuddyConsole {
 		/// Learns what cards the interactive player is holding.
 		/// </summary>
 		private void LearnOwnHand() {
-			List<Card> cardsInHand = new List<Card>(this.interactivePlayer.CardsHeldCount);
+			var cardsInHand = new List<Card>(this.interactivePlayer.CardsHeldCount);
 			for (int i = 0; i < this.interactivePlayer.CardsHeldCount; i++) {
 				Card card = ConsoleHelper.Choose("Indicate a card that you hold in your hand:", false, c => c.Name, this.game.Cards.Where(c2 => !cardsInHand.Contains(c2)).ToArray());
 				cardsInHand.Add(card);
@@ -582,13 +582,11 @@ namespace ClueBuddyConsole {
 
 			// Begin spying
 			var clue = new SpyCard { Player = this.ChoosePlayer("Spy on which player?", true, false) };
-			if (clue.Player == null)
-			{
+			if (clue.Player == null) {
 				return;
 			}
 			clue.Card = ConsoleHelper.Choose("Which card did you see?", true, c => c.Name, clue.PossiblySeenCards.ToArray());
-			if (clue.Card == null)
-			{
+			if (clue.Card == null) {
 				return;
 			}
 			this.game.Clues.Add(clue);
@@ -599,8 +597,10 @@ namespace ClueBuddyConsole {
 		/// </summary>
 		private void Suggestion() {
 			Suspicion suggestion = this.GetSuggestion();
-			if (suggestion == null) return;
-			List<Clue> deducedClues = new List<Clue>();
+			if (suggestion == null) {
+				return;
+			}
+			var deducedClues = new List<Clue>();
 			foreach (Player opponent in this.game.PlayersInOrderAfter(this.suggestingPlayer)) {
 				bool explicitAnswer = false;
 				bool? disproved;
@@ -680,7 +680,9 @@ namespace ClueBuddyConsole {
 		/// </summary>
 		private void TakeTurn() {
 			this.suggestingPlayer = this.ChoosePlayer("Whose turn is it?", true, true);
-			if (this.suggestingPlayer == null) return;
+			if (this.suggestingPlayer == null) {
+				return;
+			}
 			try {
 				if (this.suggestingPlayer == this.interactivePlayer && this.game.Rules.HasSpyglass) {
 					while (true) {

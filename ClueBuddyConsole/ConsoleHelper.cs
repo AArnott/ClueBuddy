@@ -31,10 +31,12 @@ namespace ClueBuddyConsole {
 				Debug.Assert(pair.Key == pair.Key.ToString().ToUpper()[0]);
 				Console.WriteLine("{0}. {1}", pair.Key.ToString().ToUpper(), toString(pair.Value));
 			}
+
 			Console.Write("Selection: ");
 			char keyPressed = ' ';
-			while (!options.ContainsKey(keyPressed))
+			while (!options.ContainsKey(keyPressed)) {
 				keyPressed = Console.ReadKey(true).KeyChar.ToString().ToUpper()[0];
+			}
 			Console.WriteLine(keyPressed);
 			return new KeyValuePair<char, T>(keyPressed, options[keyPressed]);
 		}

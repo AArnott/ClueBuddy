@@ -21,16 +21,19 @@
 	/// Interaction logic for CompositeClueBrowser.xaml
 	/// </summary>
 	public partial class CompositeClueBrowser : System.Windows.Controls.UserControl {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CompositeClueBrowser"/> class.
+		/// </summary>
 		public CompositeClueBrowser() {
 			InitializeComponent();
 		}
 
 		protected override void OnInitialized(EventArgs e) {
 			base.OnInitialized(e);
-
 		}
 
-		bool templateChangeHooked;
+		private bool templateChangeHooked;
+
 		void cluesDataView_CurrentChanged(object sender, EventArgs e) {
 			cc.ContentTemplate = (DataTemplate) Resources[cluesDataView.View.CurrentItem is CompositeClue ? "CompositeClueTemplate" : "SpyClueTemplate"];
 		}
@@ -38,14 +41,16 @@
 		Game game {
 			get { return DataContext as Game; }
 		}
-		CollectionViewSource cluesDataView {
+
+		private CollectionViewSource cluesDataView {
 			get { return Resources["cluesDataView"] as CollectionViewSource; }
 		}
+
 		public Clue CurrentClue {
 			get { return cluesDataView.View.CurrentItem as Clue; }
 		}
 
-		void possiblyHeldCardsDataView_Filter(object sender, FilterEventArgs e) {
+		private void possiblyHeldCardsDataView_Filter(object sender, FilterEventArgs e) {
 			SpyCard clue = CurrentClue as SpyCard;
 			if (clue != null && clue.Player != null) {
 				Player spiedPlayer = clue.Player;

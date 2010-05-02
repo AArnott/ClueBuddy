@@ -32,13 +32,53 @@
 				if (game == value) return;
 				game = value;
 				if (game != null) {
-					initializeGame();
+					this.InitializeGame();
 				}
 			}
 		}
 
-		void initializeGame() {
-			clearControls();
+		public event EventHandler<PlayerClickedEventArgs> PlayerClicked;
+
+		public event EventHandler<CardClickedEventArgs> CardClicked;
+
+		protected virtual void OnCardClicked(Card card) {
+			if (card == null) throw new ArgumentNullException("card");
+			var cardClicked = CardClicked;
+			if (cardClicked != null) {
+				cardClicked(this, new CardClickedEventArgs(card));
+			}
+		}
+
+		private void MatrixMouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
+			object target = this.GetClickedObject(e.Device.Target);
+			Node targetNode = target as Node;
+			Card targetCard = target as Card;
+			Player targetPlayer = target as Player;
+			if (targetNode != null) {
+				// TODO:
+			} else if (targetCard != null) {
+				OnCardClicked(targetCard);
+			} else if (targetPlayer != null) {
+				OnPlayerClicked(targetPlayer);
+			}
+		}
+
+		private object GetClickedObject(IInputElement target) {
+			TextBlock tb = target as TextBlock;
+			if (tb != null) {
+				object dc = tb.DataContext;
+				if (dc is Card)
+					return dc;
+				if (dc is Node)
+					return dc;
+				if (dc is string)
+					return game.Players.Where(p => p.Name.Equals(dc)).First();
+			}
+			return null;
+		}
+
+		private void InitializeGame() {
+			this.ClearControls();
 			// set game title
 			title.DataContext = game;
 			title.SetBinding(TextBlock.TextProperty, "VarietyName");
@@ -59,9 +99,9 @@
 			matrix.ColumnDefinitions.RemoveRange(1, matrix.ColumnDefinitions.Count - 1);
 			var columnWidth = new GridLength(0.75 / game.Cards.Count(), GridUnitType.Star);
 
-			addCardColumn(columnWidth, game.Suspects.OfType<Card>());
-			addCardColumn(columnWidth, game.Weapons.OfType<Card>());
-			addCardColumn(columnWidth, game.Places.OfType<Card>());
+			this.AddCardColumn(columnWidth, game.Suspects.OfType<Card>());
+			this.AddCardColumn(columnWidth, game.Weapons.OfType<Card>());
+			this.AddCardColumn(columnWidth, game.Places.OfType<Card>());
 
 			suspectsLabel.SetValue(Grid.ColumnSpanProperty, game.Suspects.Count());
 			weaponsLabel.SetValue(Grid.ColumnProperty, game.Suspects.Count());
@@ -86,7 +126,7 @@
 			}
 		}
 
-		void addCardColumn(GridLength columnWidth, IEnumerable<Card> cardGroup) {
+		private void AddCardColumn(GridLength columnWidth, IEnumerable<Card> cardGroup) {
 			foreach (Card c in cardGroup) {
 				matrix.ColumnDefinitions.Add(new ColumnDefinition() { Width = columnWidth });
 				TextBlock cardBlock = new TextBlock() {
@@ -111,7 +151,7 @@
 			}
 		}
 
-		void clearControls() {
+		private void ClearControls() {
 			Control[] sampleControls = (from ui in matrix.Children.OfType<UIElement>()
 										let c = ui as Control
 										where c != null && (
@@ -123,14 +163,6 @@
 				matrix.Children.Remove(c);
 		}
 
-		public class PlayerClickedEventArgs : EventArgs {
-			public PlayerClickedEventArgs(Player player) {
-				this.player = player;
-			}
-			Player player;
-			public Player Player { get { return player; } }
-		}
-		public event EventHandler<PlayerClickedEventArgs> PlayerClicked;
 		protected virtual void OnPlayerClicked(Player player) {
 			if (player == null) throw new ArgumentNullException("player");
 			var playerClicked = PlayerClicked;
@@ -138,48 +170,21 @@
 				playerClicked(this, new PlayerClickedEventArgs(player));
 			}
 		}
+		
+		public class PlayerClickedEventArgs : EventArgs {
+			public PlayerClickedEventArgs(Player player) {
+				this.player = player;
+			}
+			Player player;
+			public Player Player { get { return player; } }
+		}
+
 		public class CardClickedEventArgs : EventArgs {
 			public CardClickedEventArgs(Card card) {
 				this.card = card;
 			}
 			Card card;
 			public Card Card { get { return card; } }
-		}
-		public event EventHandler<CardClickedEventArgs> CardClicked;
-		protected virtual void OnCardClicked(Card card) {
-			if (card == null) throw new ArgumentNullException("card");
-			var cardClicked = CardClicked;
-			if (cardClicked != null) {
-				cardClicked(this, new CardClickedEventArgs(card));
-			}
-		}
-
-		void matrix_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) {
-			object target = getClickedObject(e.Device.Target);
-			Node targetNode = target as Node;
-			Card targetCard = target as Card;
-			Player targetPlayer = target as Player;
-			if (targetNode != null) {
-				// TODO:
-			} else if (targetCard != null) {
-				OnCardClicked(targetCard);
-			} else if (targetPlayer != null) {
-				OnPlayerClicked(targetPlayer);
-			}
-		}
-
-		object getClickedObject(IInputElement target) {
-			TextBlock tb = target as TextBlock;
-			if (tb != null) {
-				object dc = tb.DataContext;
-				if (dc is Card)
-					return dc;
-				if (dc is Node)
-					return dc;
-				if (dc is string)
-					return game.Players.Where(p => p.Name.Equals(dc)).First();
-			}
-			return null;
 		}
 	}
 }
