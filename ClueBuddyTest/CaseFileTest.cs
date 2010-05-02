@@ -1,9 +1,11 @@
-﻿using System;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ClueBuddy;
+﻿namespace ClueBuddyTest {
+	using System;
+	using System.Linq;
 
-namespace ClueBuddyTest {
+	using ClueBuddy;
+
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 	[TestClass]
 	public class CaseFileTest : TestBase {
 		[TestInitialize]

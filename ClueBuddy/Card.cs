@@ -1,127 +1,64 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
+﻿//-----------------------------------------------------------------------
+// <copyright file="Card.cs" company="Andrew Arnott">
+//     Copyright (c) Andrew Arnott. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace ClueBuddy {
+	using System;
+	using System.Diagnostics.Contracts;
+	using System.Xml.Serialization;
+
+	/// <summary>
+	/// A playing card.
+	/// </summary>
 	[Serializable]
 	public class Card {
-		public Card() { }
+		#region Constructors and Destructors
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Card"/> class.
+		/// </summary>
+		public Card() {
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Card"/> class.
+		/// </summary>
+		/// <param name="name">The character, place or weapon on the card.</param>
 		protected Card(string name) {
-			if (string.IsNullOrEmpty(name)) throw new ArgumentNullException("name");
+			Contract.Requires<ArgumentException>(!String.IsNullOrEmpty(name));
 			this.Name = name;
 		}
 
-		public static IEnumerable<Card> Generate(IEnumerable<Suspect> suspects, IEnumerable<Weapon> weapons, IEnumerable<Place> places) {
-			foreach (Card c in suspects) yield return c;
-			foreach (Card c in weapons) yield return c;
-			foreach (Card c in places) yield return c;
-		}
+		#endregion
 
-		string name;
+		#region Properties
+
 		/// <summary>
-		/// The name of the weapon, place or suspect.
+		/// Gets or sets the name of the weapon, place or suspect.
 		/// </summary>
 		[XmlAttribute]
-		public string Name {
-			get { return name; }
-			set { name = value; }
-		}
+		public string Name { get; set; }
 
+		#endregion
+
+		#region Public Methods
+
+		/// <summary>
+		/// Returns a <see cref="System.String"/> that represents this instance.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="System.String"/> that represents this instance.
+		/// </returns>
 		public override string ToString() {
-			return Name;
-		}
-	}
-	[Serializable]
-	public class Weapon : Card {
-		public Weapon() { }
-		public Weapon(string name) : base(name) { }
-
-		public static IEnumerable<Weapon> Generate(params string[] names) {
-			return from name in names select new Weapon(name);
-		}
-	}
-	[Serializable]
-	public class Place : Card {
-		public Place() { }
-		public Place(string name) : base(name) { }
-
-		public static IEnumerable<Place> Generate(params string[] names) {
-			return from name in names select new Place(name);
-		}
-	}
-	[Serializable]
-	public class Suspect : Card {
-		public Suspect() { }
-		public Suspect(string name) : base(name) { }
-
-		StandardSuspect wellKnownSuspect = StandardSuspect.Other;
-		[XmlAttribute]
-		public StandardSuspect WellKnownSuspect {
-			get {
-				if (wellKnownSuspect == StandardSuspect.Other && Name != null) {
-					foreach (string standardSuspect in Enum.GetNames(typeof(StandardSuspect))) {
-						if (Name.IndexOf(standardSuspect) >= 0) {
-							wellKnownSuspect = (StandardSuspect)Enum.Parse(typeof(StandardSuspect), standardSuspect);
-							break;
-						}
-					}
-				}
-				return wellKnownSuspect;
-			}
-			set { wellKnownSuspect = value; }
+			return this.Name ?? string.Empty;
 		}
 
-		SuspectGender gender = SuspectGender.Undetermined;
-		[XmlAttribute]
-		public SuspectGender Gender {
-			get {
-				if (gender == SuspectGender.Undetermined) {
-					switch (WellKnownSuspect) {
-						case StandardSuspect.Brunette:
-						case StandardSuspect.Green:
-						case StandardSuspect.Grey:
-						case StandardSuspect.Mustard:
-						case StandardSuspect.Plum:
-							gender = SuspectGender.Male;
-							break;
-						case StandardSuspect.Peach:
-						case StandardSuspect.Peacock:
-						case StandardSuspect.Rose:
-						case StandardSuspect.Scarlet:
-						case StandardSuspect.White:
-							gender = SuspectGender.Female;
-							break;
-					}
-				}
-				return gender;
-			}
-			set { gender = value; }
+		[ContractInvariantMethod]
+		private void ObjectInvariant() {
 		}
 
-		public static IEnumerable<Suspect> Generate(params string[] names) {
-			return from name in names select new Suspect(name);
-		}
-
-		public enum SuspectGender {
-			Undetermined,
-			Male,
-			Female
-		}
-
-		public enum StandardSuspect {
-			Other,
-			Peach,
-			Rose,
-			Scarlet,
-			White,
-			Peacock,
-			Green,
-			Plum,
-			Mustard,
-			Brunette,
-			Grey,
-		}
+		#endregion
 	}
 }

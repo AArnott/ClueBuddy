@@ -1,10 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
+﻿//-----------------------------------------------------------------------
+// <copyright file="ConsoleHelper.cs" company="Andrew Arnott">
+//     Copyright (c) Andrew Arnott. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace ClueBuddyConsole {
+	using System;
+	using System.Collections.Generic;
+	using System.Diagnostics;
+	using System.Linq;
+	using System.Text;
+
 	internal static class ConsoleHelper {
 		public static ConsoleColor QuestionColor = ConsoleColor.Yellow;
 

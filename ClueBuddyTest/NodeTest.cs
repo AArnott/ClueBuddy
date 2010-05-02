@@ -1,8 +1,10 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ClueBuddy;
+﻿namespace ClueBuddyTest {
+	using System;
 
-namespace ClueBuddyTest {
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+	using ClueBuddy;
+
 	[TestClass]
 	public class NodeTest : TestBase {
 		[TestInitialize]

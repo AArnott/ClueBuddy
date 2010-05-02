@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
-using ClueBuddy;
+﻿namespace ClueBuddyTest {
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
 
-namespace ClueBuddyTest {
+	using ClueBuddy;
+
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 	[TestClass]
 	public class SuspicionTest : TestBase {
 		[TestInitialize]

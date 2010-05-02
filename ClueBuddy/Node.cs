@@ -1,40 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NerdBank.Algorithms.NodeConstraintSelection;
+﻿namespace ClueBuddy {
+	using System;
+	using System.Diagnostics.Contracts;
 
-namespace ClueBuddy {
+	using NerdBank.Algorithms.NodeConstraintSelection;
+
+	/// <summary>
+	/// Represents the possibility that a particular card is held by a player or the case file.
+	/// </summary>
 	[Serializable]
-	class Node : NodeBase {
+	internal class Node : NodeBase {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Node"/> class.
+		/// </summary>
+		/// <param name="cardHolder">The card holder.</param>
+		/// <param name="card">The card.</param>
 		public Node(ICardHolder cardHolder, Card card) {
-			if (cardHolder == null) throw new ArgumentNullException("cardHolder");
-			if (card == null) throw new ArgumentNullException("card");
+			Contract.Requires<ArgumentNullException>(cardHolder != null, "cardHolder");
+			Contract.Requires<ArgumentNullException>(card != null, "card");
 
 			this.CardHolder = cardHolder;
 			this.Card = card;
 		}
 
-		private Card card;
 		/// <summary>
-		/// The card that may be held by <see cref="Player"/>.
+		/// Gets the card that may be held by <see cref="Player"/>.
 		/// </summary>
-		public Card Card {
-			get { return card; }
-			private set { card = value; }
-		}
+		public Card Card { get; private set; }
 
-		private ICardHolder cardHolder;
 		/// <summary>
-		/// The player or Case File who may hold <see cref="Card"/>.
+		/// Gets the player or Case File who may hold <see cref="Card"/>.
 		/// </summary>
-		public ICardHolder CardHolder {
-			get { return cardHolder; }
-			private set { cardHolder = value; }
-		}
+		public ICardHolder CardHolder { get; private set; }
 
+		/// <summary>
+		/// Returns a <see cref="System.String"/> that represents this instance.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="System.String"/> that represents this instance.
+		/// </returns>
 		public override string ToString() {
-			return string.Format("({0}, {1}) = {2}", CardHolder, Card, IsSelected.HasValue ? IsSelected.Value.ToString() : "?");
+			return string.Format("({0}, {1}) = {2}", this.CardHolder, this.Card, IsSelected.HasValue ? IsSelected.Value.ToString() : "?");
+		}
+
+		[ContractInvariantMethod]
+		private void ObjectInvariant() {
+			Contract.Invariant(this.Card != null);
+			Contract.Invariant(this.CardHolder != null);
 		}
 	}
 }

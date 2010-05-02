@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ClueBuddy;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿namespace ClueBuddyTest {
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Text;
 
-namespace ClueBuddyTest {
+	using ClueBuddy;
+
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 	public class ClueTestBase : TestBase {
 		protected Player disprovingPlayer = new Player("opponent");
 		protected Suspicion suggestion = new Suspicion(new Suspect("test"), new Weapon("test"), new Place("test"));
