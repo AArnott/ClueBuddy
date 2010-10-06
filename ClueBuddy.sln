@@ -1,24 +1,15 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClueBuddy", "ClueBuddy\ClueBuddy.csproj", "{F2B78728-49B8-4747-8321-6F7927605A84}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClueBuddyTest", "ClueBuddyTest\ClueBuddyTest.csproj", "{2B6D298F-F56E-496E-B2BC-7DD9AC41640C}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C8443383-C38E-4117-988F-4FD058D926B7}"
-	ProjectSection(SolutionItems) = preProject
-		ClueBuddy.vsmdi = ClueBuddy.vsmdi
-		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClueBuddyGui", "ClueBuddyGui\ClueBuddyGui.csproj", "{A5303796-E41F-4752-90ED-EB0FCCAE2593}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClueBuddyConsole", "ClueBuddyConsole\ClueBuddyConsole.csproj", "{4A04D848-3462-4FF4-8010-3CD15A573C57}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClueBuddyGui", "ClueBuddyGui\ClueBuddyGui.csproj", "{A5303796-E41F-4752-90ED-EB0FCCAE2593}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClueBuddyTest", "ClueBuddyTest\ClueBuddyTest.csproj", "{2B6D298F-F56E-496E-B2BC-7DD9AC41640C}"
+EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = ClueBuddy.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -28,18 +19,18 @@ Global
 		{F2B78728-49B8-4747-8321-6F7927605A84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2B78728-49B8-4747-8321-6F7927605A84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2B78728-49B8-4747-8321-6F7927605A84}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2B6D298F-F56E-496E-B2BC-7DD9AC41640C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B6D298F-F56E-496E-B2BC-7DD9AC41640C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2B6D298F-F56E-496E-B2BC-7DD9AC41640C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2B6D298F-F56E-496E-B2BC-7DD9AC41640C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A5303796-E41F-4752-90ED-EB0FCCAE2593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A5303796-E41F-4752-90ED-EB0FCCAE2593}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A5303796-E41F-4752-90ED-EB0FCCAE2593}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A5303796-E41F-4752-90ED-EB0FCCAE2593}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4A04D848-3462-4FF4-8010-3CD15A573C57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4A04D848-3462-4FF4-8010-3CD15A573C57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A04D848-3462-4FF4-8010-3CD15A573C57}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A04D848-3462-4FF4-8010-3CD15A573C57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5303796-E41F-4752-90ED-EB0FCCAE2593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5303796-E41F-4752-90ED-EB0FCCAE2593}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5303796-E41F-4752-90ED-EB0FCCAE2593}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5303796-E41F-4752-90ED-EB0FCCAE2593}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B6D298F-F56E-496E-B2BC-7DD9AC41640C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B6D298F-F56E-496E-B2BC-7DD9AC41640C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B6D298F-F56E-496E-B2BC-7DD9AC41640C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B6D298F-F56E-496E-B2BC-7DD9AC41640C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

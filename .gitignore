@@ -6,6 +6,8 @@ TestResult.xml
 drops
 *.VisualState.xml
 StyleCop.Cache
+UpgradeLog*.XML
+_UpgradeReport_Files
 *.LDF
 *~
 PrecompiledWeb
